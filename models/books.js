@@ -19,4 +19,4 @@ const BookSchema = new Schema({
     uniqueBarcode: {typeof: String, required: true, maxLength: 200},
 })
 
-module.exports = mongoose.model("Book", BookSchema):
+module.exports = mongoose.model("Book", BookSchema);
