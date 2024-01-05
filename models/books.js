@@ -17,6 +17,18 @@ const BookSchema = new Schema({
     ISBN_thirteenDigits: {typeof: String, required: true},
     coverPicturePath: {typeof: String, maxLength: 500},
     uniqueBarcode: {typeof: String, required: true, maxLength: 200},
+    comments: [
+        {
+            memberID: {typeof: Schema.Types.ObjectId, ref: "User", required: true},
+            textComment: {typeof: String, maxLength: 500},
+            deleteStatus: {typeof: Boolean, default: false},
+            deleteReason: {typeof: String, maxLength: 500},
+            editorID: {typeof: Schema.Types.ObjectId, ref: "User"},
+            rating: {typeof: Number},
+            date: {typeof: Date, required: true},
+            isEdited: {typeof: Boolean},
+        }
+    ]
 })
 
 module.exports = mongoose.model("Book", BookSchema);
