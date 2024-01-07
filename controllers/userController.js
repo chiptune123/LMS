@@ -3,11 +3,16 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: User list");
+    const allUsers = await User.find({}, "username name email")
+        .sort({ username: 1 })
+        .exec();
+    res.render("user_list", { title: "User List", user_list: allUsers });
 })
 
-exports.user_detail = asyncHandler((req, res, next) => {
-    res.send("NOT IMPLEMENTED: User detail");
+exports.user_detail = asyncHandler(async (req, res, next) => {
+    const userDetail = await User.findOne({username: req.params.id}).exec();
+    console.log(userDetail.username);
+    res.render("user_detail", { user_information: userDetail });
 })
 
 // User manipulate on GET HTTP method
@@ -36,7 +41,7 @@ exports.user_create_post = [
         .isLength({ min: 1 })
         .escape()
         .withMessage("Password must be specified"),
-        body("name")
+    body("name")
         .trim()
         .isLength({ min: 1 })
         .escape()

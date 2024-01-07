@@ -16,4 +16,9 @@ const UserSchema = new Schema({
     deleteReason: {type: String, maxLength: 500, default: ""},
 })
 
+// This virtual instance return a url direct to a user
+UserSchema.virtual("getUserUrl").get(function() {
+    return `/users/${this.username}`;
+})
+
 module.exports = mongoose.model("User", UserSchema);
