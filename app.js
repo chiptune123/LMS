@@ -12,10 +12,11 @@ var app = express();
 const mongoose = require('mongoose');
 const { error } = require('console');
 mongoose.set("strictQuery",false);
+const mongoDBConnect = process.env.mongoDBConnectionString;
 
 async function main(){
   await mongoose.connect(mongoDBConnect);
-  console.log(mongoose.connection.readyState);
+  console.log(`MongoDB connect Status: ${mongoose.connection.readyState}`);
 }
 
 main().catch(err => console.log(error));
