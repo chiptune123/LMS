@@ -54,3 +54,10 @@
     <textarea id="deleteReason" name="deleteReason" rows="4" cols="50"><%= user.deleteReason %></textarea><br>
     <button type="submit">Submit</button>
 </form>
+<% if (typeof errors != "undefined") { %>
+    <ul>
+        <% for( let value of errors) { %>
+            <li><%= value.msg %></li>
+        <% } %>
+    </ul>
+<% } %>
