@@ -82,16 +82,6 @@ exports.user_create_post = [
 ]
 
 exports.user_update_post = [
-    body("username")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Username must be specified."),
-    body("password")
-        .trim()
-        .isLength({ min: 1 })
-        .escape()
-        .withMessage("Password must be specified"),
     body("name")
         .trim()
         .isLength({ min: 1 })
@@ -111,8 +101,7 @@ exports.user_update_post = [
 
         //Create User object with validation data
         const NewUser = new User({
-            username: req.body.username,
-            password: req.body.password,
+            username: req.params.id,
             name: req.body.name,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
@@ -127,13 +116,23 @@ exports.user_update_post = [
 
         if (!errors.isEmpty()) {
             // If there are errors, render the form again with validation data and errors object
-            res.render("sign_up_form", {
+            res.render("user_update_form", {
                 title: "Update User",
                 user: NewUser,
                 errors: errors.array(),
             })
         } else {
-            await NewUser.save();
+            const updateUser = await User.findOneAndUpdate({username: req.params.id}, {$set:{
+            name: req.body.name,
+            email: req.body.email,
+            phoneNumber: req.body.phoneNumber,
+            address: req.body.address,
+            role: req.body.role,
+            verificationStatus: req.body.verificationStatus,
+            profilePicture: req.body.profilePicture,
+            deleteStatus: req.body.deleteStatus,
+            deleteReason: req.body.deleteReason
+            }});
             res.redirect('/login');
         }
     })
