@@ -16,7 +16,7 @@ router.get('/:id/delete', user_controller.user_delete_get);
 
 router.post("/:id/delete", user_controller.user_delete_post);
 
-router.get('/:id/update', user_controller.user_delete_get);
+router.get('/:id/update', user_controller.user_update_get);
 
 router.post("/:id/update", user_controller.user_update_post);
 
