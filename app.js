@@ -3,19 +3,23 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/usersRoutes');
 
 var app = express();
 const mongoose = require('mongoose');
+const { error } = require('console');
 mongoose.set("strictQuery",false);
-const mongoDBConnectionString = "";
+const mongoDBConnect = process.env.mongoDBConnectionString;
 
 async function main(){
-  await mongoose.connect(mongoDBConnectionString);
+  await mongoose.connect(mongoDBConnect);
+  console.log(`MongoDB connect Status: ${mongoose.connection.readyState}`);
 }
+
+main().catch(err => console.log(error));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
