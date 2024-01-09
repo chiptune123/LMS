@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AnnouncementSchema = new Schema({
-    creationDate: {type: Date, required: true},
+    creationDate: {type: Date},
     announcementContent: {type: Date, required: true},
     writeID: {type: Schema.Types.ObjectId, ref:"User", required: true }
 })
