@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const AnnouncementSchema = new Schema({
     creationDate: {type: Date},
-    announcementContent: {type: Date, required: true},
+    announcementContent: {type: String, required: true},
     writeID: {type: String, required: true }
 })
 
