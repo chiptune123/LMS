@@ -11,11 +11,19 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
 })
 
 exports.announcement_create_get = asyncHandler(async (req,res,next) =>{
-    res.render("announcement_create_form", {title:"Create announcement"});
+    res.render("announcement_create_form", {title:"Create Announcement"});
 })
 
 exports.announcement_create_post = asyncHandler(async(req,res,next) =>{
-    res.send("Not implement create post");
+    const currentDate = new Date();
+    const NewAnnouncement = new Announcement({
+        creationDate: currentDate,
+        announcementContent: req.body.announcementContent,
+        writer: req.params.id
+    }) 
+
+    await NewAnnouncement.save();
+    res.redirect('/announcements');
 })
 
 exports.announcement_detail = asyncHandler(async(req,res,next) =>{
