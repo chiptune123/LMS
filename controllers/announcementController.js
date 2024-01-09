@@ -11,7 +11,7 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
 })
 
 exports.announcement_create_get = asyncHandler(async (req,res,next) =>{
-    res.send("Not implement create get");
+    res.render("announcement_create_form", {title:"Create announcement"});
 })
 
 exports.announcement_create_post = asyncHandler(async(req,res,next) =>{
