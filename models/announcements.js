@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const AnnouncementSchema = new Schema({
     creationDate: {type: Date},
     announcementContent: {type: Date, required: true},
-    writeID: {type: Schema.Types.ObjectId, ref:"User", required: true }
+    writeID: {type: String, required: true }
 })
 
 module.exports = mongoose.model("Announcement", AnnouncementSchema);
