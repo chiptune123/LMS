@@ -27,7 +27,8 @@ exports.announcement_create_post = asyncHandler(async(req,res,next) =>{
 })
 
 exports.announcement_detail = asyncHandler(async(req,res,next) =>{
-    res.send("Not implement announcement detail");
+  const announcementDetail = Announcement.findById(req.params.id).exec();
+  res.render("announcement_detail", {title: "Announcement Detail", announcement_detail: announcementDetail});
 })
 
 exports.announcement_delete_get = asyncHandler(async(req,res,next) =>{
