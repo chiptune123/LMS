@@ -8,4 +8,8 @@ const AnnouncementSchema = new Schema({
     writerID: {type: String, required: true }
 })
 
+AnnouncementSchema.virtual("getAnnouncementObjectID").get(function(){
+  return `/announcements/${this.id}`;
+})
+
 module.exports = mongoose.model("Announcement", AnnouncementSchema);
