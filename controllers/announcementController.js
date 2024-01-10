@@ -19,7 +19,7 @@ exports.announcement_create_post = asyncHandler(async(req,res,next) =>{
     const NewAnnouncement = new Announcement({
         creationDate: currentDate,
         announcementContent: req.body.announcementContent,
-        writer: req.params.id
+        writerID: req.params.id
     }) 
 
     await NewAnnouncement.save();
