@@ -1,7 +1,7 @@
 <h4><%= title %></h4>
 <ul>
     <% for(let value of announcement_list){ %>
-        <li>ObjectID: <%= value.id %></li>
+        <a href="/announcements/<%= value.id %>">ObjectID: <%= value.id %><a>
         <li>Creation Date: <%= value.creationDate %></li>
         <li>Announcement content: <%= value.announcementContent %></li>
     <% } %>
