@@ -16,8 +16,8 @@ router.get("/:id/delete", annoucement_controller.announcement_delete_get );
 
 router.post("/:id/delete", annoucement_controller.announcement_delete_post);
 // Announcememt update routes
-router.get("/:id/update", annoucement_controller.announcement_update_get);
+router.get("/:username/:id/update", annoucement_controller.announcement_update_get);
 
-router.post("/:id/update", annoucement_controller.announcement_update_post);
+router.post("/:username/:id/update", annoucement_controller.announcement_update_post);
 
 module.exports = router;

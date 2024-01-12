@@ -47,7 +47,8 @@ exports.announcement_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.announcement_update_get = asyncHandler(async (req, res, next) => {
-  res.send("Not implement annoucement update get");
+  const currentAnnouncement = Announcement.findById(req.params.id);
+  res.render("announcement_create_form", {current_announcement: currentAnnouncement});
 });
 
 exports.announcement_update_post = asyncHandler(async (req, res, next) => {
