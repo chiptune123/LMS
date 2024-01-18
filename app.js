@@ -16,7 +16,11 @@ mongoose.set("strictQuery",false);
 const mongoDBConnect = process.env.mongoDBConnectionString;
 
 async function main(){
-  await mongoose.connect(mongoDBConnect);
+  await mongoose.connect(mongoDBConnect).then(() => {
+    console.log("Connecting to MongoDB...");
+  }).catch((err) => {
+    console.log("Not connected to database: ", err);
+  })
   console.log(`MongoDB connect Status: ${mongoose.connection.readyState}`);
 }
 
