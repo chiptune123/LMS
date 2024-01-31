@@ -12,9 +12,9 @@ router.post("/:id/create", annoucement_controller.announcement_create_post);
 // Announcement detail routes
 router.get("/:id", annoucement_controller.announcement_detail);
 // Announcement delete routes
-router.get("/:id/delete", annoucement_controller.announcement_delete_get );
+router.get("/:username/:id/delete", annoucement_controller.announcement_delete_get );
 
-router.post("/:id/delete", annoucement_controller.announcement_delete_post);
+router.post("/:username/:id/delete", annoucement_controller.announcement_delete_post);
 // Announcememt update routes
 router.get("/:username/:id/update", annoucement_controller.announcement_update_get);
 
