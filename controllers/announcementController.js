@@ -35,7 +35,6 @@ exports.announcement_create_post = asyncHandler(async (req, res, next) => {
 
 exports.announcement_detail = asyncHandler(async (req, res, next) => {
   const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
-  console.log(announcementDetail);
   res.render("announcement_detail", {
     title: "Announcement Detail",
     announcement_detail: announcementDetail,
@@ -43,7 +42,8 @@ exports.announcement_detail = asyncHandler(async (req, res, next) => {
 });
 
 exports.announcement_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("Not implement announcement delete get");
+  const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
+
 });
 
 exports.announcement_delete_post = asyncHandler(async (req, res, next) => {
