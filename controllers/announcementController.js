@@ -43,7 +43,10 @@ exports.announcement_detail = asyncHandler(async (req, res, next) => {
 
 exports.announcement_delete_get = asyncHandler(async (req, res, next) => {
   const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
-
+  res.render("announcement_delete_form", {
+    title: "Announcement Delete",
+    announcement_detail: announcementDetail,
+  });
 });
 
 exports.announcement_delete_post = asyncHandler(async (req, res, next) => {
