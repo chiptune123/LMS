@@ -15,7 +15,9 @@ exports.feedback_list = asyncHandler(async (req, res, next) => {
 
 exports.feedback_detail = asyncHandler(async (req, res, next) => { });
 
-exports.feedback_create_get = asyncHandler(async (req, res, next) => { });
+exports.feedback_create_get = asyncHandler(async (req, res, next) => {
+    res.render("feedback_create_form", {title: "Feedback Create"})
+});
 
 exports.feedback_create_post = asyncHandler(async (req, res, next) => { });
 
