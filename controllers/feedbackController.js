@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 
 exports.feedback_list = asyncHandler(async (req, res, next) => {
     const feedbackList = await FeedbackModel
-        .find({}, "creationDate name email")
+        .find({}, "creationDate name email feedbackStatus")
         .sort({ creationDate: 1 })
         .exec();
     res.render("feedback_list", {
