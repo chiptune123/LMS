@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.router();
+var router = express.Router();
 
 // Import feedback Controller 
 const feedback_controller = require("../controllers/feedbackController");
@@ -19,3 +19,5 @@ router.post("/:username/:id/update", feedback_controller.feedback_update_post);
 router.get("/:username/:id/delete", feedback_controller.feedback_delete_get);
 
 router.post("/:username/:id/delete", feedback_controller.feedback_delete_post);
+
+module.exports = router;
