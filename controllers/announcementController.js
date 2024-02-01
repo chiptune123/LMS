@@ -8,7 +8,6 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
     .populate('writerID')
     .sort({ creationDate: 1 })
     .exec();
-  console.log(announcementList);
   res.render("announcement_list", {
     title: "Announcement List",
     announcement_list: announcementList,
