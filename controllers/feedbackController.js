@@ -13,7 +13,13 @@ exports.feedback_list = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.feedback_detail = asyncHandler(async (req, res, next) => { });
+exports.feedback_detail = asyncHandler(async (req, res, next) => { 
+    const feedbackDetail = await FeedbackModel.findById(req.params.id).exec();
+    res.render("feedback_detail", {
+        title: "Feedback Detail",
+        feedback_detail: feedbackDetail
+    })
+});
 
 exports.feedback_create_get = asyncHandler(async (req, res, next) => {
     res.render("feedback_create_form", { title: "Feedback Create" })
