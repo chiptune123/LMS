@@ -25,15 +25,31 @@ verifyToken = asyncHandler(async (req, res, next) => {
 
 isAdmin = asyncHandler(async (req, res, next) => {
     User.findById(req.userID).exec((err, user) => {
-        if(err) {
-            res.status(500).send({message: err});
+        if (err) {
+            res.status(500).send({ message: err });
             return;
         }
 
-        if(user.role === "Admin"){
+        if (user.role === "Admin") {
             next();
         } else {
-            res.status(403).send({ message: "Require Admin Role!"});
+            res.status(403).send({ message: "Require Admin Role!" });
+            return;
+        }
+    })
+})
+
+isLibrarian = asyncHandler(async (req, res, next) => {
+    User.findById(req.userID).exec((err, user) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+
+        if(user.role === "Librarian"){
+            next();
+        } else {
+            res.status(403).send({ message: "Require Librarian Role!"});
             return;
         }
     })
