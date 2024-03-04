@@ -1,6 +1,10 @@
 const User = require('../models/users');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const config = require("../config/auth.config");
+
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
 
 exports.user_list = asyncHandler(async (req, res, next) => {
     const allUsers = await User.find({}, "username name email")
@@ -61,7 +65,7 @@ exports.user_create_post = [
         //Create User object with validation data
         const NewUser = new User({
             username: req.body.username,
-            password: req.body.password,
+            password: bcrypt.hashSync(req.body.password, 8),
             name: req.body.name,
             email: req.body.email,
             // Other field has default value for user to optional setup
