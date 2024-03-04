@@ -148,7 +148,7 @@ exports.user_delete_post = asyncHandler((req, res, next) => {
     res.send("NOT IMPLEMENTED: User delete post ");
 })
 
-exports.user_sign_in = asyncHandler((req, res, next) => {
+exports.user_sign_in = asyncHandler(async (req, res, next) => {
     User.findOne({
         username: req.body.username,
     })
@@ -187,4 +187,13 @@ exports.user_sign_in = asyncHandler((req, res, next) => {
                 role: user.role
             });
         })
+})
+
+exports.user_sign_out = asyncHandler(async (req, res, next) => {
+    try{
+        req.session = null;
+        return res.status(200).send({ message: "You've been signed out!"});
+    } catch(err) {
+        this.next(err);
+    }
 })
