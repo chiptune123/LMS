@@ -25,7 +25,7 @@ exports.user_create_get = asyncHandler((req, res, next) => {
 
 exports.user_update_get = asyncHandler(async (req, res, next) => {
     const userDetail = await User.findOne({ username: req.params.id }).exec();
-    res.render("user_update_form", {title: "User Update", user: userDetail });
+    res.render("user_update_form", { title: "User Update", user: userDetail });
 })
 
 exports.user_delete_get = asyncHandler((req, res, next) => {
@@ -126,17 +126,19 @@ exports.user_update_post = [
                 errors: errors.array(),
             })
         } else {
-            const updateUser = await User.findOneAndUpdate({username: req.params.id}, {$set:{
-            name: req.body.name,
-            email: req.body.email,
-            phoneNumber: req.body.phoneNumber,
-            address: req.body.address,
-            role: req.body.role,
-            verificationStatus: req.body.verificationStatus,
-            profilePicture: req.body.profilePicture,
-            deleteStatus: req.body.deleteStatus,
-            deleteReason: req.body.deleteReason
-            }});
+            const updateUser = await User.findOneAndUpdate({ username: req.params.id }, {
+                $set: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    phoneNumber: req.body.phoneNumber,
+                    address: req.body.address,
+                    role: req.body.role,
+                    verificationStatus: req.body.verificationStatus,
+                    profilePicture: req.body.profilePicture,
+                    deleteStatus: req.body.deleteStatus,
+                    deleteReason: req.body.deleteReason
+                }
+            });
             res.redirect('/login');
         }
     })
@@ -144,4 +146,45 @@ exports.user_update_post = [
 
 exports.user_delete_post = asyncHandler((req, res, next) => {
     res.send("NOT IMPLEMENTED: User delete post ");
+})
+
+exports.user_sign_in = asyncHandler((req, res, next) => {
+    User.findOne({
+        username: req.body.username,
+    })
+        .exec((err, user) => {
+            if (err) {
+                res.status(500).send({ message: err });
+                return;
+            }
+
+            if (!user) {
+                return res.status(404).send({ message: "User not found." });
+            }
+
+            var passwordIsValid = bcrypt.compareSync(
+                req.body.password,
+                user.password
+            )
+
+            if (!passwordIsValid) {
+                return res.status(401).send({ message: "Invalid Password!" });
+            }
+
+            const token = jwt.sign({ id: user.id }, config.secret,
+                {
+                    algorithm: 'HS526',
+                    allowInsecureKeySizes: true,
+                    expiresIn: 86400
+                }) // 24 hours
+
+            req.session.token = token;
+
+            res.status(200).send({
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            });
+        })
 })
