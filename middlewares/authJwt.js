@@ -21,3 +21,20 @@ verifyToken = asyncHandler(async (req, res, next) => {
         next();
     })
 })
+
+
+isAdmin = asyncHandler(async (req, res, next) => {
+    User.findById(req.userID).exec((err, user) => {
+        if(err) {
+            res.status(500).send({message: err});
+            return;
+        }
+
+        if(user.role === "Admin"){
+            next();
+        } else {
+            res.status(403).send({ message: "Require Admin Role!"});
+            return;
+        }
+    })
+})
