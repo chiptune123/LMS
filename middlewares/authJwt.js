@@ -54,3 +54,11 @@ isLibrarian = asyncHandler(async (req, res, next) => {
         }
     })
 })
+
+const authJwt = {
+    verifyToken,
+    isAdmin,
+    isLibrarian,
+};
+
+module.exports = authJwt;
