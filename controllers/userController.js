@@ -249,6 +249,6 @@ exports.adminBoard = (req, res) => {
   res.status(200).send("Admin content.");
 }
 
-exports.moderatorBoard = (req, res) => {
-  res.status(200).send("Moderator content.");
+exports.librarianBoard = (req, res) => {
+  res.status(200).send("Librarian content.");
 }
