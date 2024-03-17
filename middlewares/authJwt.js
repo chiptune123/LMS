@@ -61,4 +61,4 @@ const authJwt = {
     isLibrarian,
 };
 
-module.exports = authJwt;
+module.exports.authJwt = authJwt;
