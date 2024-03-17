@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const { authJwt } = require("../middlewares/authJwt") 
+const { authJwt } = require("../middlewares/authJwt");
 
 // Import User controller module
 const user_controller = require("../controllers/userController");
