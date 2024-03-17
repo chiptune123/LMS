@@ -16,3 +16,5 @@ router.post("/api/auth/signup", [verifySignUp.checkDuplicateUsernameOrEmail], co
 router.post("/api/auth/signin", controller.user_sign_in);
 
 router.post("/api/auth/signout", controller.user_sign_out);
+
+module.exports = router;
