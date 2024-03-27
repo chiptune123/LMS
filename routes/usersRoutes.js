@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const { authJwt } = require("../middlewares/authJwt");
+const { verifySignUp } = require("../middlewares/verifySignUp");
 
 // Import User controller module
 const user_controller = require("../controllers/userController");
@@ -14,7 +15,7 @@ router.get("/", user_controller.user_list);
 
 router.get("/create", user_controller.user_create_get);
 
-router.post("/create", user_controller.user_create_post);
+router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail , user_controller.user_create_post);
 
 router.get("/:id", user_controller.user_detail);
 
