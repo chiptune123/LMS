@@ -13,3 +13,11 @@
     <br>
     <button type="submit">Submit</button>
 </form>
+
+<% if(errors) { %>
+    <ul>
+        <% for(value of errors) { %>
+                <li><%= value.msg %></li>
+        <% } %>
+    </ul>
+<% } %>
