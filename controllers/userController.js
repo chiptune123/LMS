@@ -153,10 +153,10 @@ exports.user_delete_post = asyncHandler((req, res, next) => {
 
 exports.user_sign_in = asyncHandler(async (req, res, next) => {
   try {
-    const user = User.findOne({
+    const user = await User.findOne({
       username: req.body.username,
     }).exec();
-
+ 
     if (!user) {
       return res.status(404).send({ message: "User not found." });
     }
