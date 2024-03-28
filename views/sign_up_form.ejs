@@ -1,15 +1,27 @@
 <form method="post" action="">
     <label for="username">First Name:</label>
-    <input id="username" type="text" name="username" placeholder="Enter your username">
+    <input id="username" type="text" name="username" placeholder="Enter your username" 
+    <% if (user) { %>
+        value="<%= user.username %>"
+    <% } %>
+    >
     <br>
     <label for="password">Password:</label>
     <input id="password" type="password" name="password">
     <br>
     <label for="name">Name:</label>
-    <input id="name" type="text" name="name" placeholder="Enter your name">
+    <input id="name" type="text" name="name" placeholder="Enter your name" 
+    <% if (user) { %>
+        value="<%= user.name %>"
+    <% } %>
+    >
     <br>
     <label for="email">Email:</label>
-    <input id="email" type="text" name="email" placeholder="Enter your email">
+    <input id="email" type="text" name="email" placeholder="Enter your email"
+    <% if (user) { %>
+        value="<%= user.email %>"
+    <% } %>
+    >
     <br>
     <button type="submit">Submit</button>
 </form>
