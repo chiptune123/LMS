@@ -168,7 +168,7 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
     }
 
     const token = jwt.sign({ id: user.id }, config.secret, {
-      algorithm: "HS526",
+      algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: 86400,
     }); // 24 hours
