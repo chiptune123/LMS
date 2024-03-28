@@ -12,6 +12,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usersRoutes');
 var announcementRouter = require('./routes/announcementRoutes');
 var feedbackRouter = require('./routes/feedbackRoutes');
+var authenticationRoutes = require('./routes/authenticationRoutes');
 
 var app = express();
 const mongoose = require('mongoose');
@@ -59,7 +60,7 @@ app.get('/login', (req, res) => {
 })
 
 // Routers configuration
-app.use('/', indexRouter);
+app.use('/', authenticationRoutes);
 app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
 app.use('/feedbacks', feedbackRouter);
