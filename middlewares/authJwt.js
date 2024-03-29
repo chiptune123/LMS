@@ -35,7 +35,7 @@ isAdmin = asyncHandler(async (req, res, next) => {
             res.status(403).send({ message: "Require Admin Role!" });
         }
     } catch (err) {
-        res.status(500).send({message: err});
+        res.status(500).send({ message: err });
         return;
     }
 
@@ -55,19 +55,31 @@ isAdmin = asyncHandler(async (req, res, next) => {
 })
 
 isLibrarian = asyncHandler(async (req, res, next) => {
-    User.findById(req.userID).exec((err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
+    try {
+        const user = await User.findById(req.userID).exec();
 
         if (user.role === "Librarian") {
             next();
         } else {
             res.status(403).send({ message: "Require Librarian Role!" });
-            return;
         }
-    })
+    } catch (err) {
+        res.status(500).send({ message: err });
+    }
+
+    // User.findById(req.userID).exec((err, user) => {
+    //     if (err) {
+    //         res.status(500).send({ message: err });
+    //         return;
+    //     }
+
+    //     if (user.role === "Librarian") {
+    //         next();
+    //     } else {
+    //         res.status(403).send({ message: "Require Librarian Role!" });
+    //         return;
+    //     }
+    // })
 })
 
 const authJwt = {
