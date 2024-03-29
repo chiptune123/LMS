@@ -13,7 +13,7 @@ exports.feedback_list = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.feedback_detail = asyncHandler(async (req, res, next) => { 
+exports.feedback_detail = asyncHandler(async (req, res, next) => {
     const feedbackDetail = await FeedbackModel.findById(req.params.id).exec();
     res.render("feedback_detail", {
         title: "Feedback Detail",
@@ -42,7 +42,15 @@ exports.feedback_create_post = asyncHandler(async (req, res, next) => {
     res.redirect("/feedbacks");
 });
 
-exports.feedback_update_get = asyncHandler(async (req, res, next) => { });
+exports.feedback_update_get = asyncHandler(async (req, res, next) => {
+    const feedbackDetail = FeedbackModel.findById(req.params.id);
+
+    if (!feedbackDetail) {
+        res.render("errorPage", { errorStatus: 404 });
+    } else {
+        res.render("feedback_update_form.ejs", { title: "Feedback Update", feedback: feedbackDetail });
+    }
+});
 
 exports.feedback_update_post = asyncHandler(async (req, res, next) => { });
 
