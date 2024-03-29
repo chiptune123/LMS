@@ -33,6 +33,6 @@ router.get("/api/test/user", [authJwt.verifyToken], user_controller.userBoard);
 
 router.get("/api/test/librarian", [authJwt.verifyToken, authJwt.isLibrarian], user_controller.librarianBoard);
 
-router.get("/api/test/admin", [authJwt.isAdmin, authJwt.isAdmin], user_controller.adminBoard);
+router.get("/api/test/admin", [authJwt.verifyToken, authJwt.isAdmin], user_controller.adminBoard);
 
 module.exports = router;
