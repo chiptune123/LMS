@@ -15,7 +15,7 @@ router.get("/", user_controller.user_list);
 
 router.get("/create", user_controller.user_create_get);
 
-router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail , user_controller.user_create_post);
+router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail, user_controller.user_create_post);
 
 router.get("/:id", user_controller.user_detail);
 
@@ -31,8 +31,8 @@ router.get("/api/test/all", user_controller.allAccess);
 
 router.get("/api/test/user", [authJwt.verifyToken], user_controller.userBoard);
 
-router.get("/api/test/librarian", [authJwt.isLibrarian], user_controller.librarianBoard);
+router.get("/api/test/librarian", [authJwt.verifyToken, authJwt.isLibrarian], user_controller.librarianBoard);
 
-router.get("/api/test/admin", [authJwt.isAdmin], user_controller.adminBoard);
+router.get("/api/test/admin", [authJwt.isAdmin, authJwt.isAdmin], user_controller.adminBoard);
 
 module.exports = router;
