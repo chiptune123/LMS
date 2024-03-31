@@ -48,7 +48,7 @@ exports.feedback_update_get = asyncHandler(async (req, res, next) => {
     if (!feedbackDetail) {
         res.render("errorPage", { errorStatus: 404 });
     } else {
-        res.render("feedback_update_form.ejs", { title: "Feedback Update", feedback: feedbackDetail });
+        res.render("feedback_update_form", { title: "Feedback Update", feedback: feedbackDetail });
     }
 });
 
@@ -75,6 +75,14 @@ exports.feedback_update_post = asyncHandler(async (req, res, next) => {
     res.redirect("/feedbacks");
 });
 
-exports.feedback_delete_get = asyncHandler(async (req, res, next) => { });
+exports.feedback_delete_get = asyncHandler(async (req, res, next) => {
+    const feedbackDetail = FeedbackModel.findById(req.params.id);
+
+    if (!feedbackDetail) {
+        res.render("errorPage", { errorStatus: 404 });
+    } else {
+        res.render("feedback_update_form", { feedback: feedbackDetail });
+    }
+});
 
 exports.feedback_delete_post = asyncHandler(async (req, res, next) => { });
