@@ -52,7 +52,28 @@ exports.feedback_update_get = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.feedback_update_post = asyncHandler(async (req, res, next) => { });
+exports.feedback_update_post = asyncHandler(async (req, res, next) => {
+    const currentDate = new Date();
+
+    const NewFeedback = await FeedbackModel.findOne(req.params.id);
+
+    FeedbackModel.updateOne({ id: req.params.id },
+        {
+            $set: {
+                creationDate: currentDate,
+                name: req.body.name,
+                email: req.body.email,
+                phoneNumber: req.body.phoneNumber,
+                feedbackType: req.body.feedback,
+                feedbackMessage: req.body.feedbackMessage,
+                feedbackStatus: req.body.feedbackStatus,
+                attachment: req.body.attachment,
+            }
+        }
+    )
+
+    res.redirect("/feedbacks");
+});
 
 exports.feedback_delete_get = asyncHandler(async (req, res, next) => { });
 
