@@ -18,7 +18,7 @@ verifyToken = asyncHandler(async (req, res, next) => {
             })
         }
 
-        // set request object with userID properties.
+        // set request object with userID properties for the verify middleware chain
         req.userID = decoded.id;
         next();
     })
@@ -80,6 +80,22 @@ isLibrarian = asyncHandler(async (req, res, next) => {
     //         return;
     //     }
     // })
+})
+
+isAdminOrLibrarian = asyncHandler(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.userID).exec();
+
+        if (user.role === "Admin" | user.role === "Librarian") {
+            next();
+        } else {
+            res.status(403).send({ message: "Require Admin Role!" });
+        }
+    } catch (err) {
+        res.status(500).send({ message: err });
+        return;
+    }
+
 })
 
 const authJwt = {
