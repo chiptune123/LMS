@@ -55,8 +55,7 @@ exports.feedback_update_get = asyncHandler(async (req, res, next) => {
 exports.feedback_update_post = asyncHandler(async (req, res, next) => {
     const currentDate = new Date();
 
-    const NewFeedback = await FeedbackModel.findOne(req.params.id);
-
+    //const NewFeedback = await FeedbackModel.findOne(req.params.id);
     FeedbackModel.updateOne({ id: req.params.id },
         {
             $set: {
@@ -85,4 +84,10 @@ exports.feedback_delete_get = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.feedback_delete_post = asyncHandler(async (req, res, next) => { });
+exports.feedback_delete_post = asyncHandler(async (req, res, next) => {
+    try {
+        FeedbackModel.findByIdAndDelete(req.params.id).exec();
+    } catch (err) {
+        res.render("errorPage", { message: err, status: 404 });
+    }
+});
