@@ -102,6 +102,7 @@ const authJwt = {
     verifyToken,
     isAdmin,
     isLibrarian,
+    isAdminOrLibrarian,
 };
 
 module.exports.authJwt = authJwt;
