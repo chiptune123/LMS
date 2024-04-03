@@ -11,10 +11,10 @@ router.use(function(req, res, next) {
   next();
 })
 
-router.post("/api/auth/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
+router.post("/auth/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
 
-router.post("/api/auth/signin", user_controller.user_sign_in);
+router.post("/auth/login", user_controller.user_sign_in);
 
-router.post("/api/auth/signout", user_controller.user_sign_out);
+router.post("/auth/logout", user_controller.user_sign_out);
 
 module.exports = router;
