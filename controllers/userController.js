@@ -252,3 +252,7 @@ exports.adminBoard = (req, res) => {
 exports.librarianBoard = (req, res) => {
   res.status(200).send("Librarian content.");
 }
+
+exports.userLogin_post = asyncHandler(async (req, res, next) => {
+  res.render("login", {title: "Login Page"});
+})
