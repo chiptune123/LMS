@@ -11,6 +11,8 @@ router.use(function(req, res, next) {
   next();
 })
 
+router.get("/auth/login", user_controller.userLogin_post);
+
 router.post("/auth/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
 
 router.post("/auth/login", user_controller.user_sign_in);
