@@ -11,12 +11,12 @@ router.use(function(req, res, next) {
   next();
 })
 
-router.get("/auth/login", user_controller.userLogin_post);
+router.get("/login", user_controller.userLogin_post);
 
-router.post("/auth/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
+router.post("/login", user_controller.user_sign_in);
 
-router.post("/auth/login", user_controller.user_sign_in);
+router.post("/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
 
-router.post("/auth/logout", user_controller.user_sign_out);
+router.post("/logout", user_controller.user_sign_out);
 
 module.exports = router;

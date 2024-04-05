@@ -60,7 +60,7 @@ app.get('/login', (req, res) => {
 })
 
 // Routers configuration
-app.use('/', authenticationRoutes);
+app.use('/auth', authenticationRoutes);
 app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
 app.use('/feedbacks', feedbackRouter);
