@@ -1,0 +1,22 @@
+const { verifySignUp } = require("../middlewares/verifySignUp.js");
+const user_controller = require("../controllers/userController");
+const express = require("express");
+const router = express.Router();
+
+router.use(function(req, res, next) {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, Content-Type, Accept"
+  )
+  next();
+})
+
+router.get("/login", user_controller.userLogin_post);
+
+router.post("/login", user_controller.user_sign_in);
+
+router.post("/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
+
+router.post("/logout", user_controller.user_sign_out);
+
+module.exports = router;

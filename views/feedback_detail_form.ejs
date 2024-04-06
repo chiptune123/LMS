@@ -1,0 +1,22 @@
+<h1><%= title %></h1>
+
+<p>Date: <%= feedback_detail.creationDate %></p>
+<p>Full name: <%= feedback_detail.name %></p>
+<p>Email: <%= feedback_detail.email %></p>
+<p>Phone Number: <%= feedback_detail.phoneNumber %></p>
+<p>Type of Feedback: <%= feedback_detail.feedbackType %></p>
+<p>Feedback Message: <%= feedback_detail.feedbackMessage %></p>
+<p>Attachment: <a href="<%= feedback_detail.attachment %>"><%= feedback_detail.attachment %></a> </p>
+
+<p>Feedback Status:</p>
+<form method="post" action="/feedbacks/<%= feedback_detail.id %>/updateFeedbackStatus">
+  <input type="radio" name="feedbackStatus" value="Pending" checked>
+  <label for="Pending">Pending</label>
+  <input type="radio" name="feedbackStatus" value="Completed">
+  <label for="Completed">Completed</label> <br>
+  <input type="submit" value="Submit">
+</form>
+
+<a href="/feedbacks/<%= feedback_detail.id %>/delete">Delete</a>
+  
+  

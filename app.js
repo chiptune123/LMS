@@ -3,28 +3,39 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cookieSession = require("cookie-session");
+var cors = require("cors");
 require('dotenv').config();
 
+// Import Routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usersRoutes');
 var announcementRouter = require('./routes/announcementRoutes');
+var feedbackRouter = require('./routes/feedbackRoutes');
+var authenticationRoutes = require('./routes/authenticationRoutes');
 
 var app = express();
 const mongoose = require('mongoose');
 const { error } = require('console');
-mongoose.set("strictQuery",false);
+mongoose.set("strictQuery", false);
 const mongoDBConnect = process.env.mongoDBConnectionString;
 
-async function main(){
+async function main() {
   await mongoose.connect(mongoDBConnect).then(() => {
-    console.log("Connecting to MongoDB...");
+    console.log(`Successfully connect to MongoDB: ${mongoose.connection.readyState}`);
   }).catch((err) => {
     console.log("Not connected to database: ", err);
   })
-  console.log(`MongoDB connect Status: ${mongoose.connection.readyState}`);
 }
 
 main().catch(err => console.log(error));
+
+// Cors Setup
+var corsOptions = {
+  origin: "http://localhost:3000",
+}
+
+app.use(cors(corsOptions));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,17 +47,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use(
+  cookieSession({
+    name: "Chiptune-session",
+    keys: ["COOKIE_SECRET"],
+    httpOnly: true
+  })
+)
+
+app.get('/login', (req, res) => {
+  res.json({message: "Welcome to the login page"});
+})
+
+// Routers configuration
+app.use('/auth', authenticationRoutes);
 app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
+app.use('/feedbacks', feedbackRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

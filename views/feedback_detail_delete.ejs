@@ -1,0 +1,15 @@
+<h1><%= title %></h1>
+<h3>Do you really want to delete this feedback?</h3>
+
+<p>Date: <%= feedback_detail.creationDate %></p>
+<p>Full name: <%= feedback_detail.name %></p>
+<p>Email: <%= feedback_detail.email %></p>
+<p>Phone Number: <%= feedback_detail.phoneNumber %></p>
+<p>Type of Feedback: <%= feedback_detail.feedbackType %></p>
+<p>Feedback Message: <%= feedback_detail.feedbackMessage %></p>
+<p>Attachment: <a href="<%= feedback_detail.attachment %>"><%= feedback_detail.attachment %></a> </p>
+
+<p>Feedback Status: <%= feedback_detail.feedbackStatus %></p>
+<form method="post" action="">
+    <button type="submit">Delete</button>
+</form>
