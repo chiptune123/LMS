@@ -67,7 +67,7 @@ exports.feedback_update_post = asyncHandler(async (req, res, next) => {
 
   //const NewFeedback = await FeedbackModel.findOne(req.params.id);
   FeedbackModel.updateOne(
-    { id: req.params.id },
+    { _id: req.params.id },
     {
       $set: {
         creationDate: currentDate,
@@ -112,13 +112,15 @@ exports.feedback_update_status = asyncHandler(async (req, res, next) => {
       feedback_status = true;
     }
 
-    await FeedbackModel.updateOne({ id: req.params.id },
+    await FeedbackModel.updateOne({ _id: req.params.id },
       {
         $set: {
           creationDate: currentDate,
           feedbackStatus: feedback_status
         }
       }).exec();
+
+    res.redirect("/feedbacks");
   } catch (err) {
     res.render("errorPage", { message: err, status: 404 });
   }
