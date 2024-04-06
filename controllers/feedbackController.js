@@ -24,7 +24,7 @@ exports.feedback_detail = asyncHandler(async (req, res, next) => {
       feedbackDetail: feedback_detail,
     });
   } else {
-    res.render("errorPage", {status: 404, message: "Feedback not found!"})
+    res.render("errorPage", { status: 404, message: "Feedback not found!" })
   }
 });
 
@@ -97,7 +97,28 @@ exports.feedback_delete_get = asyncHandler(async (req, res, next) => {
 
 exports.feedback_delete_post = asyncHandler(async (req, res, next) => {
   try {
-    FeedbackModel.findByIdAndDelete(req.params.id).exec();
+    await FeedbackModel.findByIdAndDelete(req.params.id).exec();
+  } catch (err) {
+    res.render("errorPage", { message: err, status: 404 });
+  }
+});
+
+exports.feedback_update_status = asyncHandler(async (req, res, next) => {
+  try {
+    const currentDate = new Date();
+    let feedback_status = false;
+
+    if (req.params.feedbackStatus === "Completed") {
+      feedback_status = true;
+    }
+
+    await FeedbackModel.updateOne({ id: req.params.id },
+      {
+        $set: {
+          creationDate: currentDate,
+          feedbackStatus: feedback_status
+        }
+      }).exec();
   } catch (err) {
     res.render("errorPage", { message: err, status: 404 });
   }
