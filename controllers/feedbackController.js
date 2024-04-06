@@ -21,7 +21,7 @@ exports.feedback_detail = asyncHandler(async (req, res, next) => {
   if (feedbackDetail) {
     res.render("feedback_detail", {
       title: "Feedback Detail",
-      feedbackDetail: feedback_detail,
+      feedback_detail: feedbackDetail,
     });
   } else {
     res.render("errorPage", { status: 404, message: "Feedback not found!" })
