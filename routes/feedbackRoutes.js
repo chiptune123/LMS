@@ -21,6 +21,6 @@ router.post("/:id/update", [authJwt.verifyToken, authJwt.isAdminOrLibrarian] ,fe
 
 router.get("/:id/delete", [authJwt.verifyToken, authJwt.isAdminOrLibrarian] , feedback_controller.feedback_delete_get);
 
-router.post("/:id/delete", [authJwt.verifyToken, authJwt.isAdminOrLibrarian] , feedback_controller.feedback_delete_post);
+router.post("/:id/updateFeedbackStatus", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_update_status);
 
 module.exports = router;
