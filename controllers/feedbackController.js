@@ -19,7 +19,7 @@ exports.feedback_detail = asyncHandler(async (req, res, next) => {
   const feedbackDetail = await FeedbackModel.findById(req.params.id).exec();
 
   if (feedbackDetail) {
-    res.render("feedback_detail", {
+    res.render("feedback_detail_form", {
       title: "Feedback Detail",
       feedback_detail: feedbackDetail,
     });
