@@ -108,7 +108,7 @@ exports.feedback_update_status = asyncHandler(async (req, res, next) => {
     const currentDate = new Date();
     let feedback_status = false;
 
-    if (req.params.feedbackStatus === "Completed") {
+    if (req.body.feedbackStatus === "Completed") {
       feedback_status = true;
     }
 
