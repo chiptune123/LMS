@@ -8,8 +8,8 @@
 <p>Attachment: <a href="<%= feedback_detail.attachment %>"><%= feedback_detail.attachment %></a> </p>
 
 <p>Feedback Status:</p>
-<form method="post" action="/<%= feedback_detail.id %>/updateFeedbackStatus">
-  <input type="radio" name="feedbackStatus" value="Pending">
+<form method="post" action="/feedbacks/<%= feedback_detail.id %>/updateFeedbackStatus">
+  <input type="radio" name="feedbackStatus" value="Pending" checked>
   <label for="Pending">Pending</label>
   <input type="radio" name="feedbackStatus" value="Completed">
   <label for="Completed">Completed</label> <br>
