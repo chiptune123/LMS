@@ -86,12 +86,12 @@ exports.feedback_update_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.feedback_delete_get = asyncHandler(async (req, res, next) => {
-  const feedbackDetail = FeedbackModel.findById(req.params.id);
+  const feedbackDetail = await FeedbackModel.findById(req.params.id);
 
   if (!feedbackDetail) {
     res.render("errorPage", { errorStatus: 404 });
   } else {
-    res.render("feedback_update_form", { feedback: feedbackDetail });
+    res.render("feedback_detail_delete", { title: "Feedback Delete", feedback_detail: feedbackDetail });
   }
 });
 
