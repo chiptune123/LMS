@@ -16,7 +16,7 @@ exports.author_list = asyncHandler(async (req, res, next) => {
     } catch (err) {
         res.render("errorPage", { message: err, status: 500 });
     }
-})
+});
 
 exports.author_detail = asyncHandler(async (req, res, next) => {
     try {
@@ -30,28 +30,28 @@ exports.author_detail = asyncHandler(async (req, res, next) => {
     } catch (err) {
         res.render.status(500).render("errorPage", { message: err, status: 404});
     }
-})
+});
 
 exports.author_create_get = asyncHandler(async (req, res, next) => {
 
-})
+});
 
 exports.author_create_post = asyncHandler(async (req, res, next) => {
 
-})
+});
 
 exports.author_update_get = asyncHandler(async (req, res, next) => {
 
-})
+});
 
 exports.author_update_post = asyncHandler(async (req, res, next) => {
 
-})
+});
 
 exports.author_delete_get = asyncHandler(async (req, res, next) => {
 
-})
+});
 
 exports.author_delete_post = asyncHandler(async (req, res, next) => {
 
-})
+});
