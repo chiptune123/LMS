@@ -41,7 +41,20 @@ exports.author_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.author_create_post = asyncHandler(async (req, res, next) => {
+    try {
+        const newAuthor = new AuthorModel({
+            name: req.body.name,
+            bio: req.body.bio,
+            profilePicturePath: req.body.profilePicturePath,
+            // Other field will have their own default values
+        })
 
+        await newAuthor.save();
+        res.redirect("/authors");
+
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, status: 500 });
+    }
 });
 
 exports.author_update_get = asyncHandler(async (req, res, next) => {
