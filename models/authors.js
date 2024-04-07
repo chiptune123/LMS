@@ -7,7 +7,7 @@ const AuthorSchema = new Schema({
     bio: { type: String, required: true, maxLength: 500 },
     profilePicturePath: { type: String, maxLength: 500 },
     deleteStatus: { type: Boolean, require: true, default: false },
-    deleteReason: { type: String, maxLength: 500 },
+    deleteReason: { type: String, maxLength: 500, default: "" },
 })
 
 module.exports = mongoose.model("Author",AuthorSchema);
