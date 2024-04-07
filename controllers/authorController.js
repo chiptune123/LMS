@@ -58,6 +58,20 @@ exports.author_create_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.author_update_get = asyncHandler(async (req, res, next) => {
+    try {
+        const authorDetail = await AuthorModel.findOne({ _id: req.params.id }).exec();
+
+        if (authorDetail) {
+            res.render("author_update_form", { title: "Author Update", author_detail: authorDetail });
+        } else {
+            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+        }
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, status: 500 });
+    }
+});
+
+exports.author_update_post = asyncHandler(async (req, res, next) => {
 
 });
 
