@@ -72,7 +72,21 @@ exports.author_update_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.author_update_post = asyncHandler(async (req, res, next) => {
+    try {
+        AuthorModel.findOneAndUpdate({ _id: req.params.id }, {
+            $set: {
+                name: req.body.name,
+                bio: req.body.bio,
+                deleteReason: req.body.deleteReason,
+                deleteStatus: req.body.deleteStatus,
+                profilePicturePath: req.body.profilePicturePath,
+            }
+        });
 
+        res.redirect("/authors");
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, status: 500 });
+    }
 });
 
 exports.author_update_post = asyncHandler(async (req, res, next) => {
