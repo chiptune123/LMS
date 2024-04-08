@@ -20,3 +20,5 @@ router.post("/:id/update", author_controller.author_update_post);
 router.get("/:id/delete", author_controller.author_delete_get);
 
 router.post("/:id/delete", author_controller.author_delete_post);
+
+module.exports = router;
