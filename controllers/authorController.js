@@ -89,10 +89,6 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.author_update_post = asyncHandler(async (req, res, next) => {
-
-});
-
 exports.author_delete_get = asyncHandler(async (req, res, next) => {
 
 });
