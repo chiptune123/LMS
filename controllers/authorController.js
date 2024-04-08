@@ -90,7 +90,17 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.author_delete_get = asyncHandler(async (req, res, next) => {
+    try {
+        const authorDetail = AuthorModel.findOne({ _id: req.params.id });
 
+        if (authorDetail) {
+            res.render("author_delete_form", { title: "Author Delete", author_detail: authorDetail });
+        } else {
+            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+        }
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, status: 500 });
+    }
 });
 
 exports.author_delete_post = asyncHandler(async (req, res, next) => {
