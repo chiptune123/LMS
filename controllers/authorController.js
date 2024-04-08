@@ -1,4 +1,5 @@
 const AuthorModel = require("../models/authors");
+const BookModel = require("../models/books");
 const asyncHandler = require("express-async-handler");
 const { body, validatorResult } = require("express-validator");
 
@@ -104,5 +105,27 @@ exports.author_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.author_delete_post = asyncHandler(async (req, res, next) => {
+    try {
+        const [authorDetail, allBookByAuthor] = await Promise.all([
+            AuthorModel.findById(req.params.id).exec(),
+            BookModel.find({ author: req.params.id }, "title author description")
+        ]);
 
+        if (authorDetail === null) {
+            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+        }
+
+        // If the author has any associate book -> render the delete form again with error and all book which associate.
+        if (allBookByAuthor.length > 0) {
+            res.status(500).render("author_delete_form", {
+                author_detail: authorDetail,
+                all_book_by_author: allBookByAuthor,
+            });
+        }
+
+        await AuthorModel.findByIdAndDelete(req.params.id);
+        res.redirect("/authors");
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, status: 500 });
+    }
 });
