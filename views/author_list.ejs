@@ -1,0 +1,10 @@
+<h1><%= title %></h1>
+<ul>
+<% for(value of author_list) { %>
+    <li><%= value.name %></li>
+    <li><%= value.bio %></li>
+    <li><%= value.profilePicturePath %></li>
+    <li><%= value.deleteStatus %></li>
+    <li><%= value.deleteReason %></li>
+<% } %>
+</ul>
