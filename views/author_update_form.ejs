@@ -1,0 +1,26 @@
+<h1><%= title %></h1>
+<form method="post" action="">
+  <label for="authorName">Author name:</label> 
+  <input type="text" id="authorName" name="authorName" placeholder="Enter author name" value="<%= author_detail.name %>"> <br>
+  <label for="biography">Biography:</label> 
+  <input type="text" id="biography" name="biography" placeholder="Enter author biography" value="<%= author_detail.bio %>"> <br>
+  <label for="profilePicturePath">Profile picture path:</label> 
+  <input type="text" id="profilePicturePath" name="profilePicturePath" placeholder="Enter profile picture path" value="<%= author_detail.profilePicturePath %>"> <br>
+  
+  <p>Delete status:</p>
+  <input type="radio" id="deleteStatus" name="deleteStatus" value="true" <% if (author_detail.deleteStatus === true) { %>
+      checked
+  <% } %>>
+  <label for="deleteStatus">True</label>
+  <input type="radio" id="deleteStatus" name="deleteStatus" value="false" <% if (author_detail.deleteStatus === false) { %>
+      checked
+  <% } %>>
+  <label for="deleteStatus">false</label>
+    <br>
+    
+  <label for="deleteReason">Delete Reason:</label>
+  <input type="text" id="deleteReason" name="deleteReason" placeholder="Enter author delete reason" value="<%= author_detail.deleteReason %>">
+
+
+  <input type="submit" id="deleteStatus" name="deleteStatus" value="submit">
+</form>
