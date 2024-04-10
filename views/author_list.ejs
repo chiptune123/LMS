@@ -1,10 +1,12 @@
 <h1><%= title %></h1>
 <ul>
 <% for(value of author_list) { %>
-    <li><%= value.name %></li>
-    <li><%= value.bio %></li>
-    <li><%= value.profilePicturePath %></li>
-    <li><%= value.deleteStatus %></li>
-    <li><%= value.deleteReason %></li>
+  <li>
+    Author name: <%= value.name %> <br>
+    Biography: <%= value.bio %> <br>
+    Profile picture path: <%= value.profilePicturePath %> <br>
+    Delete status: <%= value.deleteStatus %> <br>
+    Delete reason: <%= value.deleteReason %> <br> <br>
+  </li>
 <% } %>
 </ul>
