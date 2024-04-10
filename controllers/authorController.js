@@ -92,10 +92,14 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
 
 exports.author_delete_get = asyncHandler(async (req, res, next) => {
     try {
-        const authorDetail = await AuthorModel.findOne({ _id: req.params.id });
+        //const authorDetail = await AuthorModel.findOne({ _id: req.params.id });
+        const [authorDetail, allBookByAuthor] = await Promise.all([
+          AuthorModel.findById(req.params.id).exec(),
+          BookModel.find({author: req.params.id}).exec()
+        ]);
 
         if (authorDetail) {
-            res.render("author_delete_form", { title: "Author Delete", author_detail: authorDetail });
+            res.render("author_delete_form", { title: "Author Delete", author_detail: authorDetail, all_book_by_author: allBookByAuthor });
         } else {
             res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
         }
