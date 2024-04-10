@@ -2,6 +2,7 @@
 <ul>
 <% for(value of author_list) { %>
   <li>
+    <a href="/authors/<%= value.id %>/">id: <%= value.id %></a> <br>
     Author name: <%= value.name %> <br>
     Biography: <%= value.bio %> <br>
     Profile picture path: <%= value.profilePicturePath %> <br>
