@@ -1,0 +1,13 @@
+<h1><%= title %></h1>
+<ul>
+<% for(value of author_list) { %>
+  <li>
+    <a href="/authors/<%= value.id %>/">id: <%= value.id %></a> <br>
+    Author name: <%= value.name %> <br>
+    Biography: <%= value.bio %> <br>
+    Profile picture path: <%= value.profilePicturePath %> <br>
+    Delete status: <%= value.deleteStatus %> <br>
+    Delete reason: <%= value.deleteReason %> <br> <br>
+  </li>
+<% } %>
+</ul>
