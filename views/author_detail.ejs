@@ -1,9 +1,9 @@
 <h1><%= title %></h1>
-<p><%= author_detail.name %></p>
-<p><%= author_detail.bio %></p>
-<p><%= author_detail.profilePicturePath %></p>
-<p><%= author_detail.deleteStatus %></p>
-<p><%= author_detail.deleteReason %></p>
+<p>Author name: <%= author_detail.name %></p>
+<p>Biography: <%= author_detail.bio %></p>
+<p>Profile picture path: <%= author_detail.profilePicturePath %></p>
+<p>Delete status: <%= author_detail.deleteStatus %></p>
+<p>Delete reason: <%= author_detail.deleteReason %></p>
 
 <a href="/authors/<%= author_detail.id %>/delete">Delete</a>
 <a href="/authors/<%= author_detail.id %>/Update">Update</a>
