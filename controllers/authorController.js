@@ -76,8 +76,8 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
     try {
         await AuthorModel.findOneAndUpdate({ _id: req.params.id }, {
             $set: {
-                name: req.body.name,
-                bio: req.body.bio,
+                name: req.body.authorName,
+                bio: req.body.biography,
                 deleteReason: req.body.deleteReason,
                 deleteStatus: req.body.deleteStatus,
                 profilePicturePath: req.body.profilePicturePath,
