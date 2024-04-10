@@ -44,8 +44,8 @@ exports.author_create_get = asyncHandler(async (req, res, next) => {
 exports.author_create_post = asyncHandler(async (req, res, next) => {
     try {
         const newAuthor = new AuthorModel({
-            name: req.body.name,
-            bio: req.body.bio,
+            name: req.body.authorName,
+            bio: req.body.biography,
             profilePicturePath: req.body.profilePicturePath,
             // Other field will have their own default values
         })
