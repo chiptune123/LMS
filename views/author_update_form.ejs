@@ -8,19 +8,19 @@
   <input type="text" id="profilePicturePath" name="profilePicturePath" placeholder="Enter profile picture path" value="<%= author_detail.profilePicturePath %>"> <br>
   
   <p>Delete status:</p>
+
+  <label for="deleteStatus">True</label>
   <input type="radio" id="deleteStatus" name="deleteStatus" value="true" <% if (author_detail.deleteStatus === true) { %>
       checked
   <% } %>>
-  <label for="deleteStatus">True</label>
+  <label for="deleteStatus">False</label>
   <input type="radio" id="deleteStatus" name="deleteStatus" value="false" <% if (author_detail.deleteStatus === false) { %>
       checked
   <% } %>>
-  <label for="deleteStatus">false</label>
-    <br>
+  <br>
     
   <label for="deleteReason">Delete Reason:</label>
   <input type="text" id="deleteReason" name="deleteReason" placeholder="Enter author delete reason" value="<%= author_detail.deleteReason %>">
 
-
-  <input type="submit" id="deleteStatus" name="deleteStatus" value="submit">
+  <input type="submit" value="submit">
 </form>
