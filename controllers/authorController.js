@@ -12,10 +12,10 @@ exports.author_list = asyncHandler(async (req, res, next) => {
         if (allAuthors) {
             res.render("author_list", { title: "Author List", author_list: allAuthors });
         } else {
-            res.status(404).render("errorPage", { message: "No Author Found!", status: 404 });
+            res.status(404).render("errorPage", { message: "No Author Found!", errorStatus: 404 });
         }
     } catch (err) {
-        res.render("errorPage", { message: err, status: 500 });
+        res.render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -26,10 +26,10 @@ exports.author_detail = asyncHandler(async (req, res, next) => {
         if (authorDetail) {
             res.render("author_detail", { title: "Author Detail", author_detail: authorDetail });
         } else {
-            res.status(404).render("errorPage", { message: "Author detail not found!", status: 404 });
+            res.status(404).render("errorPage", { message: "Author detail not found!", errorStatus: 404 });
         }
     } catch (err) {
-        res.render.status(500).render("errorPage", { message: err, status: 404 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -37,7 +37,7 @@ exports.author_create_get = asyncHandler(async (req, res, next) => {
     try {
         res.render("author_create_form", { title: "Author Create" });
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 404 });
+        res.status(500).render("errorPage", { message: err, status: 500 });
     }
 });
 
@@ -54,7 +54,7 @@ exports.author_create_post = asyncHandler(async (req, res, next) => {
         res.redirect("/authors");
 
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -65,10 +65,10 @@ exports.author_update_get = asyncHandler(async (req, res, next) => {
         if (authorDetail) {
             res.render("author_update_form", { title: "Author Update", author_detail: authorDetail });
         } else {
-            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
         }
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -86,7 +86,7 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
 
         res.redirect("/authors");
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -97,10 +97,10 @@ exports.author_delete_get = asyncHandler(async (req, res, next) => {
         if (authorDetail) {
             res.render("author_delete_form", { title: "Author Delete", author_detail: authorDetail });
         } else {
-            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
         }
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
 
@@ -112,7 +112,7 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
         ]);
 
         if (authorDetail === null) {
-            res.status(404).render("errorPage", { message: "Author not found!", status: 404 });
+            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
         }
 
         // If the author has any associate book -> render the delete form again with error and all book which associate.
@@ -126,6 +126,6 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
         await AuthorModel.findByIdAndDelete(req.params.id);
         res.redirect("/authors");
     } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
 });
