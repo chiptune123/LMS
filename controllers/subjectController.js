@@ -66,6 +66,24 @@ exports.subject_update_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.subject_delete_get = asyncHandler(async (req, res, next) => {});
+exports.subject_delete_get = asyncHandler(async (req, res, next) => {
+  try {
+    const subjectDetail = await SubjectModel.findById(req.params.id);
+
+    if (subjectDetail) {
+      res.render("subject_delete_form", {
+        title: "Subject Delete",
+        subject_detail: subjectDetail,
+      });
+    } else {
+      res.render("errorPage", {
+        message: "Subject detail not found!",
+        status: 500,
+      });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, status: 500 });
+  }
+});
 
 exports.subject_delete_post = asyncHandler(async (req, res, next) => {});
