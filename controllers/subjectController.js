@@ -45,7 +45,9 @@ exports.subject_create_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.subject_update_get = asyncHandler((req, res, next) => {});
+exports.subject_update_get = asyncHandler((req, res, next) => {
+  res.render("subject_update_get", {title: "Subject Update"});
+});
 
 exports.subject_update_post = asyncHandler((req, res, next) => {});
 
