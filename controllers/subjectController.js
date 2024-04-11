@@ -46,10 +46,25 @@ exports.subject_create_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.subject_update_get = asyncHandler((req, res, next) => {
-  res.render("subject_update_get", {title: "Subject Update"});
+  res.render("subject_update_get", { title: "Subject Update" });
 });
 
-exports.subject_update_post = asyncHandler((req, res, next) => {});
+exports.subject_update_post = asyncHandler(async (req, res, next) => {
+  try {
+    await SubjectModel.findOne(
+      { _id: req.params.id },
+      {
+        $set: {
+          name: req.body.subjectName,
+          deleteStatus: req.body.deleteStatus,
+          deleteReason: req.body.deleteReason,
+        },
+      }
+    );
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, status: 500 });
+  }
+});
 
 exports.subject_delete_get = asyncHandler((req, res, next) => {});
 
