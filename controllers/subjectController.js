@@ -12,7 +12,17 @@ exports.subject_list = asyncHandler((req, res, next) => {
   }
 });
 
-exports.subject_detail = asyncHandler((req, res, next) => {});
+exports.subject_detail = asyncHandler((req, res, next) => {
+  try{
+    const subjectDetail = SubjectModel.findById(req.params.id);
+
+    if(subjectDetail) {
+      res.render("subject_detail", {subject_detail: subjectDetail});
+    } else {
+      res.status(404).render("errorPage", {message: "Subject not found!", status: 404});
+    }
+  }
+});
 
 exports.subject_create_get = asyncHandler((req, res, next) => {});
 
