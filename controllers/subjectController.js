@@ -2,9 +2,9 @@ const asyncHandler = require("express-async-handler");
 const BookModel = require("../models/books");
 const SubjectModel = require("../models/subjects");
 
-exports.subject_list = asyncHandler((req, res, next) => {
+exports.subject_list = asyncHandler(async (req, res, next) => {
   try {
-    const allSubject = SubjectModel.find({});
+    const allSubject = await SubjectModel.find({});
 
     res.render("subject_list", { all_subject: allSubject });
   } catch (err) {
@@ -12,9 +12,9 @@ exports.subject_list = asyncHandler((req, res, next) => {
   }
 });
 
-exports.subject_detail = asyncHandler((req, res, next) => {
+exports.subject_detail = asyncHandler(async (req, res, next) => {
   try {
-    const subjectDetail = SubjectModel.findById(req.params.id);
+    const subjectDetail = await SubjectModel.findById(req.params.id);
 
     if (subjectDetail) {
       res.render("subject_detail", { subject_detail: subjectDetail });
@@ -28,7 +28,7 @@ exports.subject_detail = asyncHandler((req, res, next) => {
   }
 });
 
-exports.subject_create_get = asyncHandler((req, res, next) => {
+exports.subject_create_get = asyncHandler(async (req, res, next) => {
   res.render("subject_create_form", { title: "Subject Create" });
 });
 
@@ -45,7 +45,7 @@ exports.subject_create_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.subject_update_get = asyncHandler((req, res, next) => {
+exports.subject_update_get = asyncHandler(async (req, res, next) => {
   res.render("subject_update_get", { title: "Subject Update" });
 });
 
@@ -66,6 +66,6 @@ exports.subject_update_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.subject_delete_get = asyncHandler((req, res, next) => {});
+exports.subject_delete_get = asyncHandler(async (req, res, next) => {});
 
-exports.subject_delete_post = asyncHandler((req, res, next) => {});
+exports.subject_delete_post = asyncHandler(async (req, res, next) => {});
