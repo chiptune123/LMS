@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
 const SubjectSchema = new Schema({
-    name: {typeof: String, required: true, maxLength: 100},
-    deleteStatus: {typeof: Boolean, required: true, default: 0},
-    deleteReason: {typeof: String, maxLength:500},
-})
+  name: { type: String, required: true, maxLength: 100 },
+  deleteStatus: { type: Boolean, required: true, default: false },
+  deleteReason: { type: String, maxLength: 500 },
+});
 
 module.exports = mongoose.model("Subject", SubjectSchema);
