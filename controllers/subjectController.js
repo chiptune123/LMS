@@ -21,6 +21,8 @@ exports.subject_detail = asyncHandler((req, res, next) => {
     } else {
       res.status(404).render("errorPage", {message: "Subject not found!", status: 404});
     }
+  } catch (err) {
+    res.status(500).render("errorPage", {message: err, status: 500});
   }
 });
 
