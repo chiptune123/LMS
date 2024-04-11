@@ -13,22 +13,37 @@ exports.subject_list = asyncHandler((req, res, next) => {
 });
 
 exports.subject_detail = asyncHandler((req, res, next) => {
-  try{
+  try {
     const subjectDetail = SubjectModel.findById(req.params.id);
 
-    if(subjectDetail) {
-      res.render("subject_detail", {subject_detail: subjectDetail});
+    if (subjectDetail) {
+      res.render("subject_detail", { subject_detail: subjectDetail });
     } else {
-      res.status(404).render("errorPage", {message: "Subject not found!", status: 404});
+      res
+        .status(404)
+        .render("errorPage", { message: "Subject not found!", status: 404 });
     }
   } catch (err) {
-    res.status(500).render("errorPage", {message: err, status: 500});
+    res.status(500).render("errorPage", { message: err, status: 500 });
   }
 });
 
-exports.subject_create_get = asyncHandler((req, res, next) => {});
+exports.subject_create_get = asyncHandler((req, res, next) => {
+  res.render("subject_create_form", { title: "Subject Create" });
+});
 
-exports.subject_create_post = asyncHandler((req, res, next) => {});
+exports.subject_create_post = asyncHandler(async (req, res, next) => {
+  try {
+    const newSubject = new SubjectModel({
+      name: req.params.subjectName,
+    });
+    await newSubject.save();
+
+    res.redirect("/subjects/");
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, status: 500 });
+  }
+});
 
 exports.subject_update_get = asyncHandler((req, res, next) => {});
 
