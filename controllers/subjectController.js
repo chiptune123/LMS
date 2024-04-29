@@ -51,7 +51,14 @@ exports.subject_create_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.subject_update_get = asyncHandler(async (req, res, next) => {
-  res.render("subject_update_form", { title: "Subject Update" });
+  const subjectDetail = await SubjectModel.findById(req.params.id);
+
+  if(subjectDetail) {
+    res.render("subject_update_form", { title: "Subject Update", subject_detail: subjectDetail });
+  } else {
+    res.status(500).render("errorPage", { message: "Subject not found!", status: 500 });
+  }
+  
 });
 
 exports.subject_update_post = asyncHandler(async (req, res, next) => {
