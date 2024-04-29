@@ -6,12 +6,16 @@ exports.subject_list = asyncHandler(async (req, res, next) => {
   try {
     const allSubject = await SubjectModel.find({});
 
-    if(allSubject) {
+    if (allSubject) {
       res.render("subject_list", { subject_list: allSubject });
     } else {
-      res.status(404).render("errorPage", { message: "No subjects found!", errorStatus: 404});
+      res
+        .status(404)
+        .render("errorPage", {
+          message: "No subjects found!",
+          errorStatus: 404,
+        });
     }
-    
   } catch (err) {
     res.status(500).render("errorPage", { message: err, status: 500 });
   }
@@ -53,26 +57,43 @@ exports.subject_create_post = asyncHandler(async (req, res, next) => {
 exports.subject_update_get = asyncHandler(async (req, res, next) => {
   const subjectDetail = await SubjectModel.findById(req.params.id);
 
-  if(subjectDetail) {
-    res.render("subject_update_form", { title: "Subject Update", subject_detail: subjectDetail });
+  if (subjectDetail) {
+    res.render("subject_update_form", {
+      title: "Subject Update",
+      subject_detail: subjectDetail,
+    });
   } else {
-    res.status(500).render("errorPage", { message: "Subject not found!", status: 500 });
+    res
+      .status(500)
+      .render("errorPage", { message: "Subject not found!", status: 500 });
   }
-  
 });
 
 exports.subject_update_post = asyncHandler(async (req, res, next) => {
   try {
-    await SubjectModel.findOne(
+    // await SubjectModel.findOne(
+    //   { _id: req.params.id },
+    //   {
+    //     $set: {
+    //       name: req.body.subjectName,
+    //       deleteStatus: req.body.deleteStatus,
+    //       deleteReason: req.body.deleteReason,
+    //     },
+    //   }
+    // );
+    const newSubject = new SubjectModel({});
+    await SubjectModel.findOneAndUpdate(
       { _id: req.params.id },
       {
         $set: {
           name: req.body.subjectName,
-          deleteStatus: req.body.deleteStatus,
           deleteReason: req.body.deleteReason,
-        },
+          deleteStatus: req.body.deleteStatus,
+        }
       }
     );
+
+    res.redirect("/subjects");
   } catch (err) {
     res.status(500).render("errorPage", { message: err, status: 500 });
   }
