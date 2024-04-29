@@ -91,4 +91,20 @@ exports.subject_delete_get = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.subject_delete_post = asyncHandler(async (req, res, next) => {});
+exports.subject_delete_post = asyncHandler(async (req, res, next) => {
+  try {
+    const subjectDetail = await SubjectModel.findById(req.params.id);
+
+    if (subjectDetail) {
+      SubjectModel.findByIdAndDelete(req.params.id);
+      res.redirect("/subjects");
+    } else {
+      res.render("errorPage", {
+        message: "Subject detail not found!",
+        status: 500,
+      });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, status: 500 });
+  }
+});
