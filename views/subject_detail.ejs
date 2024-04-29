@@ -1,0 +1,9 @@
+<h4><%= title %></h4>
+<ul>
+  <li>Announcement ID: <%= announcement_detail.id %></li>
+  <li>Creation Date: <%= announcement_detail.creationDate %></li>
+  <li>Announcement Content: <%= announcement_detail.announcementContent %></li>
+  <li>Writer: <%= announcement_detail.writerID.username %></li>
+  <a href="/announcements/<%= announcement_detail.writerID.username %>/<%= announcement_detail.id %>/update">Update Announcement</a>
+  <a href="/announcements/<%= announcement_detail.writerID.username %>/<%= announcement_detail.id %>/delete">Delete Announcement</a>
+</ul>
