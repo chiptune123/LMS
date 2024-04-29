@@ -7,7 +7,7 @@ exports.subject_list = asyncHandler(async (req, res, next) => {
     const allSubject = await SubjectModel.find({});
 
     if(allSubject) {
-      res.render("subject_list", { all_subject: allSubject });
+      res.render("subject_list", { subject_list: allSubject });
     } else {
       res.status(404).render("errorPage", { message: "No subjects found!", errorStatus: 404});
     }
