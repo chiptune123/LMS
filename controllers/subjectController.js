@@ -44,13 +44,13 @@ exports.subject_create_get = asyncHandler(async (req, res, next) => {
 exports.subject_create_post = asyncHandler(async (req, res, next) => {
   try {
     const newSubject = new SubjectModel({
-      name: req.params.subjectName,
+      name: req.body.name,
     });
     await newSubject.save();
 
     res.redirect("/subjects/");
   } catch (err) {
-    res.status(500).render("errorPage", { message: err, status: 500 });
+    res.status(500).render("errorPage", { message: err, errorStatus : 500 });
   }
 });
 
