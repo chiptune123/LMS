@@ -26,7 +26,7 @@ exports.subject_detail = asyncHandler(async (req, res, next) => {
     const subjectDetail = await SubjectModel.findById(req.params.id);
 
     if (subjectDetail) {
-      res.render("subject_detail", { subject_detail: subjectDetail });
+      res.render("subject_detail", { subject_detail: subjectDetail, title: "Subject Detail" });
     } else {
       res
         .status(404)
