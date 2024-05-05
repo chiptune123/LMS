@@ -7,7 +7,7 @@ exports.subject_list = asyncHandler(async (req, res, next) => {
     const allSubject = await SubjectModel.find({});
 
     if (allSubject) {
-      res.render("subject_list", { subject_list: allSubject });
+      res.render("subject_list", { subject_list: allSubject, title: "Subject List" });
     } else {
       res
         .status(404)
