@@ -124,7 +124,8 @@ exports.subject_delete_post = asyncHandler(async (req, res, next) => {
     const subjectDetail = await SubjectModel.findById(req.params.id);
 
     if (subjectDetail) {
-      SubjectModel.findByIdAndDelete(req.params.id);
+      await SubjectModel.findByIdAndDelete(req.params.id);
+      console.log(req.params.id);
       res.redirect("/subjects");
     } else {
       res.render("errorPage", {
