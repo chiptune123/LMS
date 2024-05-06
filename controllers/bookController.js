@@ -82,25 +82,57 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
       res.redirect("/books");
     }
   } catch (err) {
-    res.status(500).render("errorPage", {message: err, errorStatus: 500});
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
 
 exports.book_update_get = asyncHandler(async (req, res, next) => {
-  try{
+  try {
     const bookDetail = BookModel.findById(req.params.id);
 
-    if(bookDetail) {
-      res.render("book_update_form", {title: "Book Update", book_detail: bookDetail});
+    if (bookDetail) {
+      res.render("book_update_form", {
+        title: "Book Update",
+        book_detail: bookDetail,
+      });
     } else {
-      res.status(404).render("errorPage", {message: "Book Not Found", errorStatus: 404});
+      res
+        .status(404)
+        .render("errorPage", { message: "Book Not Found", errorStatus: 404 });
     }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
+exports.book_update_post = asyncHandler(async (req, res, next) => {
+  try {
+    await BookModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          title: req.body.bookTitle,
+          author: req.body.bookAuthor,
+          subject: req.body.bookSubject,
+          description: req.body.bookDescription,
+          publisher: req.body.publisher,
+          publish_date: req.body.publish_date,
+          page_numbers: req.body.page_numbers,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          ISBN_tenDigits: req.body.bookISBN_tenDigits,
+          ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
+          coverPicturePath: req.body.coverPicturePath,
+          uniqueBarcode: req.body.bookUniqueBarcode,
+        },
+      }
+    );
+    
+    res.redirect("/books");
   } catch (err) {
     res.status(500).render("errorPage", {message: err, errorStatus: 500});
   }
 });
-
-exports.book_update_post = asyncHandler(async (req, res, next) => {});
 
 exports.book_delete_get = asyncHandler(async (req, res, next) => {});
 
