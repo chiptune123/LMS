@@ -134,6 +134,18 @@ exports.book_update_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.book_delete_get = asyncHandler(async (req, res, next) => {});
+exports.book_delete_get = asyncHandler(async (req, res, next) => {
+  try{
+    const bookDetail = BookModel.findById(req.params.id);
+
+    if(bookDetail) {
+      res.render("book_delete_form", {title: "Book Delete", book_detail: bookDetail});
+    } else {
+      res.status(404).render("errorPage", {message: "Book not found", errorStatus: 500});
+    }
+  } catch(err) {
+    res.status(500).render("errorPage", {message: err, errorStatus: 500});
+  }
+}); 
 
 exports.book_delete_post = asyncHandler(async (req, res, next) => {});
