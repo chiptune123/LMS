@@ -33,7 +33,11 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_create_get = asyncHandler(async (req, res, next) => {
-
+    try {
+        res.render("book_create_get", { title: "Book Create" });
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err });
+    }
 });
 
 exports.book_create_post = asyncHandler(async (req, res, next) => {
