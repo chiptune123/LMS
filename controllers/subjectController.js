@@ -115,7 +115,7 @@ exports.subject_delete_get = asyncHandler(async (req, res, next) => {
       });
     }
   } catch (err) {
-    res.status(500).render("errorPage", { message: err, status: 500 });
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
 
@@ -133,6 +133,6 @@ exports.subject_delete_post = asyncHandler(async (req, res, next) => {
       });
     }
   } catch (err) {
-    res.status(500).render("errorPage", { message: err, status: 500 });
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
