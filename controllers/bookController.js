@@ -19,7 +19,17 @@ exports.book_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_detail = asyncHandler(async (req, res, next) => {
+    try {
+        const bookDetail = await BookModel.findById(req.params.id).exec();
 
+        if (bookDetail) {
+            res.render("book_detail", { title: "Book Detail", book_detail: bookDetail });
+        } else {
+            res.status(404).render("errorPage", { message: "No Book Found", errorStatus: 404 });
+        }
+    } catch (err) {
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+    }
 });
 
 exports.book_create_get = asyncHandler(async (req, res, next) => {
