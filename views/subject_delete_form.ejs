@@ -1,0 +1,22 @@
+<h1><%= title %></h1>
+<form method="post" action="">
+  <label for="subjectName">Subject name:</label> 
+  <input type="text" id="subjectName" name="subjectName" placeholder="Enter author name" value="<%= subject_detail.name %>"> <br>
+
+  <p>Delete status:</p>
+
+  <label for="deleteStatus">True</label>
+  <input type="radio" id="deleteStatus" name="deleteStatus" value="true" <% if (subject_detail.deleteStatus === true) { %>
+      checked
+  <% } %>>
+  <label for="deleteStatus">False</label>
+  <input type="radio" id="deleteStatus" name="deleteStatus" value="false" <% if (subject_detail.deleteStatus === false) { %>
+      checked
+  <% } %>>
+  <br>
+    
+  <label for="deleteReason">Delete Reason:</label>
+  <input type="text" id="deleteReason" name="deleteReason" placeholder="Enter author delete reason" value="<%= subject_detail.deleteReason %>">
+
+  <input type="submit" value="submit">
+</form>

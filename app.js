@@ -14,6 +14,7 @@ var announcementRouter = require('./routes/announcementRoutes');
 var feedbackRouter = require('./routes/feedbackRoutes');
 var authenticationRoutes = require('./routes/authenticationRoutes');
 var authorRouter = require('./routes/authorRoutes');
+var subjectRouter = require('./routes/subjectRoutes');
 
 var app = express();
 const mongoose = require('mongoose');
@@ -66,6 +67,7 @@ app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
 app.use('/feedbacks', feedbackRouter);
 app.use('/authors', authorRouter);
+app.use('/subjects', subjectRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

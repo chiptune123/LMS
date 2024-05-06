@@ -1,0 +1,13 @@
+<h1><%= title %></h1>
+<ul>
+<% for(value of subject_list) { %>
+  <li>
+    <a href="/subjects/<%= value.id %>/">id: <%= value.id %></a> <br>
+    Subject Name: <%= value.name %> <br>
+    Delete status: <%= value.deleteStatus %> <br>
+    Delete reason: <%= value.deleteReason %> <br>
+  </li>
+<% } %>
+</ul>
+
+<a href="/subjects/create">Create Subject</a> <br>

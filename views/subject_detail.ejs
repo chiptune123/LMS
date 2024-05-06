@@ -1,0 +1,8 @@
+<h4><%= title %></h4>
+<ul>
+  <li>Id: <%= subject_detail.id %></li>
+  <li>Delete Status: <%= subject_detail.deleteStatus %></li>
+  <li>Delete Reason: <%= subject_detail.deleteReason %></li>
+  <a href="/subjects/<%= subject_detail.id %>/update">Update Subject</a> <br>
+  <a href="/subjects/<%= subject_detail.id %>/delete">Delete Subject</a>
+</ul>
