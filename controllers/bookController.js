@@ -41,7 +41,34 @@ exports.book_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.book_create_post = asyncHandler(async (req, res, next) => {
+    // Check ISBN if book is exist
+    const bookDetail = await BookModel.find({
+        ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
+        ISBN_tenDigits: req.body.bookISBN_tenDigits
+    }).exec();
 
+    const newBook = new BookModel({
+        title: req.body.bookTitle,
+        author: req.body.bookAuthor,
+        subject: req.body.bookSubject,
+        description: req.body.bookDescription,
+        publisher: req.body.publisher,
+        publish_date: req.body.publish_date,
+        page_numbers: req.body.page_numbers,
+        price: req.body.price,
+        quantity: req.body.quantity,
+        ISBN_tenDigits: req.body.bookISBN_tenDigits,
+        ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
+        coverPicturePath: req.body.coverPicturePath,
+        uniqueBarcode: req.body.bookUniqueBarcode,
+    })
+
+    if (bookDetail) {
+        res.status(500).render("book_create_form", { err: "Book already exist", title: "Book Create", book_detail: bookDetail });
+    } else {
+        await newBook.save();
+        res.redirect("/books");
+    }
 });
 
 exports.book_update_get = asyncHandler(async (req, res, next) => {
