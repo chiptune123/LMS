@@ -136,7 +136,7 @@ exports.book_update_post = asyncHandler(async (req, res, next) => {
 
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
   try{
-    const bookDetail = BookModel.findById(req.params.id);
+    const bookDetail = await BookModel.findById(req.params.id);
 
     if(bookDetail) {
       res.render("book_delete_form", {title: "Book Delete", book_detail: bookDetail});
@@ -148,4 +148,10 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
   }
 }); 
 
-exports.book_delete_post = asyncHandler(async (req, res, next) => {});
+exports.book_delete_post = asyncHandler(async (req, res, next) => {
+  try {
+    await BookModel.findByIdAndDelete(req.params.id);
+    
+    res.redirect("/books");
+  }
+});
