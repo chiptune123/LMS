@@ -127,40 +127,40 @@ exports.book_update_post = asyncHandler(async (req, res, next) => {
         },
       }
     );
-    
+
     res.redirect("/books");
   } catch (err) {
-    res.status(500).render("errorPage", {message: err, errorStatus: 500});
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
 
 exports.book_delete_get = asyncHandler(async (req, res, next) => {
-  try{
+  try {
     const bookDetail = await BookModel.findById(req.params.id);
 
-    if(bookDetail) {
-      res.render("book_delete_form", {title: "Book Delete", book_detail: bookDetail});
+    if (bookDetail) {
+      res.render("book_delete_form", { title: "Book Delete", book_detail: bookDetail });
     } else {
-      res.status(404).render("errorPage", {message: "Book not found", errorStatus: 500});
+      res.status(404).render("errorPage", { message: "Book not found", errorStatus: 500 });
     }
-  } catch(err) {
-    res.status(500).render("errorPage", {message: err, errorStatus: 500});
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
-}); 
+});
 
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
   try {
     const bookDetail = await BookModel.findById(req.params.id);
 
-    if(bookDetail) {
+    if (bookDetail) {
       await BookModel.findByIdAndDelete(req.params.id);
 
       res.redirect("/books");
     } else {
-      res.status(404).render("errorPage", {message: "Books not found!", errorStatus: 404});
+      res.status(404).render("errorPage", { message: "Books not found!", errorStatus: 404 });
     }
-    
-  } catch(err) {
-    res.status(500).render("errorPage", {message: "Books not found!", errorStatus: 404});
+
+  } catch (err) {
+    res.status(500).render("errorPage", { message: "Books not found!", errorStatus: 404 });
   }
 });
