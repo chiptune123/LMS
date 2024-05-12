@@ -150,8 +150,17 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
 
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
   try {
-    await BookModel.findByIdAndDelete(req.params.id);
+    const bookDetail = await BookModel.findById(req.params.id);
+
+    if(bookDetail) {
+      await BookModel.findByIdAndDelete(req.params.id);
+
+      res.redirect("/books");
+    } else {
+      res.status(404).render("errorPage", {message: "Books not found!", errorStatus: 404});
+    }
     
-    res.redirect("/books");
+  } catch(err) {
+    res.status(500).render("errorPage", {message: "Books not found!", errorStatus: 404});
   }
 });
