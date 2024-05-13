@@ -41,9 +41,13 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
 
 exports.book_create_get = asyncHandler(async (req, res, next) => {
   try {
-    res.render("book_create_form", { title: "Book Create" });
+    const [authorList, subjectList] = await Promise.all([
+      AuthorModel.find({},"name").sort({title: 1}).exec(),
+      SubjectModel.find({}, "name").sort({name: 1}).exec()
+    ]);
+    res.render("book_create_form", { title: "Book Create", author_list: authorList, subject_list: subjectList });
   } catch (err) {
-    res.status(500).render("errorPage", { message: err });
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
 
@@ -54,28 +58,34 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
       ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
       ISBN_tenDigits: req.body.bookISBN_tenDigits,
     }).exec();
+    const [authorList, subjectList] = await Promise.all([
+      AuthorModel.find({},"name").sort({title: 1}).exec(),
+      SubjectModel.find({}, "name").sort({name: 1}).exec()
+    ]);
 
     const newBook = new BookModel({
-      title: req.body.bookTitle,
-      author: req.body.bookAuthor,
-      subject: req.body.bookSubject,
-      description: req.body.bookDescription,
+      title: req.body.title,
+      author: req.body.authors,
+      subject: req.body.subjects,
+      description: req.body.description,
       publisher: req.body.publisher,
-      publish_date: req.body.publish_date,
-      page_numbers: req.body.page_numbers,
+      publish_date: req.body.publishDate,
+      page_numbers: req.body.pageNumber,
       price: req.body.price,
       quantity: req.body.quantity,
-      ISBN_tenDigits: req.body.bookISBN_tenDigits,
-      ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
+      ISBN_tenDigits: req.body.ISBN_tenDigits,
+      ISBN_thirteenDigits: req.body.ISBN_thirteenDigits,
       coverPicturePath: req.body.coverPicturePath,
-      uniqueBarcode: req.body.bookUniqueBarcode,
+      uniqueBarcode: req.body.uniqueBarcode,
     });
 
-    if (bookDetail) {
+    if (bookDetail == null) {
       res.status(500).render("book_create_form", {
         err: "Book already exist",
         title: "Book Create",
         book_detail: bookDetail,
+        author_list: authorList,
+        subject_list: subjectList
       });
     } else {
       await newBook.save();
