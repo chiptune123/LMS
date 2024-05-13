@@ -128,19 +128,19 @@ exports.book_update_post = asyncHandler(async (req, res, next) => {
       { _id: req.params.id },
       {
         $set: {
-          title: req.body.bookTitle,
-          author: req.body.bookAuthor,
-          subject: req.body.bookSubject,
-          description: req.body.bookDescription,
+          title: req.body.title,
+          author: req.body.authors,
+          subject: req.body.subjects,
+          description: req.body.description,
           publisher: req.body.publisher,
-          publish_date: req.body.publish_date,
-          page_numbers: req.body.page_numbers,
+          publish_date: req.body.publishDate,
+          page_numbers: req.body.pageNumber,
           price: req.body.price,
           quantity: req.body.quantity,
-          ISBN_tenDigits: req.body.bookISBN_tenDigits,
-          ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
+          ISBN_tenDigits: req.body.ISBN_tenDigits,
+          ISBN_thirteenDigits: req.body.ISBN_thirteenDigits,
           coverPicturePath: req.body.coverPicturePath,
-          uniqueBarcode: req.body.bookUniqueBarcode,
+          uniqueBarcode: req.body.uniqueBarcode,
         },
       }
     );
