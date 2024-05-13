@@ -98,12 +98,19 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
 
 exports.book_update_get = asyncHandler(async (req, res, next) => {
   try {
-    const bookDetail = BookModel.findById(req.params.id);
+   // const bookDetail = BookModel.findById(req.params.id);
+   const [bookDetail, subjectList, authorList, subjectDetail, AuthorDetail] = await Promise.all([
+      BookModel.findById(req.params.id).populate('author').populate('subject').exec(),
+      SubjectModel.find({}, "name").sort({name: 1}).exec(),
+      AuthorModel.find({}, "name").sort({name: 1}).exec(),
+   ])
 
     if (bookDetail) {
       res.render("book_update_form", {
         title: "Book Update",
         book_detail: bookDetail,
+        subject_list: subjectList,
+        author_list: authorList,
       });
     } else {
       res
