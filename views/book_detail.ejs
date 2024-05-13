@@ -1,0 +1,16 @@
+<h1><%= title %></h1>
+  <p>Title: <%= book_detail.title%></p>
+  <p>Author: <%= book_detail.author%></p>
+  <p>Subject: <%= book_detail.subject%></p>
+  <p>Description: <%= book_detail.description%></p>
+  <p>Publisher: <%= book_detail.publisher%></p>
+  <p>Publish Date: <%= book_detail.publish_date%></p>
+  <p>Page Numbers: <%= book_detail.page_numbers%></p>
+  <p>Price: <%= book_detail.price%></p>
+  <p>Quantity: <%= book_detail.quantity%></p>
+  <p>ISBN 10: <%= book_detail.ISBN_tenDigits%></p>
+  <p>ISBN 13: <%= book_detail.ISBN_thirteenDigits%></p>
+  <p>Cover Picture Path: <%= book_detail.coverPicturePath %></p>
+  <p>Unique Barcode: <%= book_detail.uniqueBarcode %></p>
+<a href="/books/<%= book.id %>/delete">Delete</a>
+<a href="/books/<%= book.id %>/update">Update</a>
