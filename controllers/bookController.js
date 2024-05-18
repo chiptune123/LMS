@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler");
 
 exports.book_list = asyncHandler(async (req, res, next) => {
   try {
-    const allBooks = await BookModel.find().sort({ title: 1 }).exec();
+    const allBooks = await BookModel.find().populate('author').populate('subject').sort({ title: 1 }).exec();
 
     if (allBooks) {
       res.render("book_list", { title: "Book List", book_list: allBooks });
