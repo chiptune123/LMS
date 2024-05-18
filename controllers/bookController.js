@@ -22,7 +22,7 @@ exports.book_list = asyncHandler(async (req, res, next) => {
 
 exports.book_detail = asyncHandler(async (req, res, next) => {
   try {
-    const bookDetail = await BookModel.findById(req.params.id).exec();
+    const bookDetail = await BookModel.findById(req.params.id).populate('author').populate('subject').exec();
 
     if (bookDetail) {
       res.render("book_detail", {
