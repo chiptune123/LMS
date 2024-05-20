@@ -14,3 +14,10 @@
   <p>Unique Barcode: <%= book_detail.uniqueBarcode %></p>
 <a href="/books/<%= book_detail.id %>/delete">Delete</a>
 <a href="/books/<%= book_detail.id %>/update">Update</a>
+<form action="/cart">
+  <label for="quantity">Quantity:</label>
+  <input type="number" name="quantity" id="quantity" value="1">
+  
+  <input type="hidden" name="BookId" id="BookId" value="<%= book_detail.id %>">
+  <button type="submit">Add to cart</button>
+</form>

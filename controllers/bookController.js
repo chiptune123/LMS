@@ -1,15 +1,23 @@
 const BookModel = require("../models/books");
 const AuthorModel = require("../models/authors");
 const SubjectModel = require("../models/subjects");
+const CartModel = require("../models/carts");
 
 const asyncHandler = require("express-async-handler");
+const { request } = require("../app");
 
 exports.book_list = asyncHandler(async (req, res, next) => {
   try {
     const allBooks = await BookModel.find().populate('author').populate('subject').sort({ title: 1 }).exec();
 
+    // Create an empty session if there are no items in cart
+    if (!req.session.cart) {
+      request.session.cart = [];
+      req.session.createAt = Date.now;
+    }
+
     if (allBooks) {
-      res.render("book_list", { title: "Book List", book_list: allBooks });
+      res.render("book_list", { title: "Book List", book_list: allBooks, cart: req.session.cart });
     } else {
       res
         .status(404)
@@ -42,8 +50,8 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
 exports.book_create_get = asyncHandler(async (req, res, next) => {
   try {
     const [authorList, subjectList] = await Promise.all([
-      AuthorModel.find({},"name").sort({title: 1}).exec(),
-      SubjectModel.find({}, "name").sort({name: 1}).exec()
+      AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
+      SubjectModel.find({}, "name").sort({ name: 1 }).exec()
     ]);
     res.render("book_create_form", { title: "Book Create", author_list: authorList, subject_list: subjectList });
   } catch (err) {
@@ -59,8 +67,8 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
       ISBN_tenDigits: req.body.bookISBN_tenDigits,
     }).exec();
     const [authorList, subjectList] = await Promise.all([
-      AuthorModel.find({},"name").sort({title: 1}).exec(),
-      SubjectModel.find({}, "name").sort({name: 1}).exec()
+      AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
+      SubjectModel.find({}, "name").sort({ name: 1 }).exec()
     ]);
 
     const newBook = new BookModel({
@@ -98,12 +106,12 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
 
 exports.book_update_get = asyncHandler(async (req, res, next) => {
   try {
-   // const bookDetail = BookModel.findById(req.params.id);
-   const [bookDetail, subjectList, authorList, subjectDetail, AuthorDetail] = await Promise.all([
+    // const bookDetail = BookModel.findById(req.params.id);
+    const [bookDetail, subjectList, authorList, subjectDetail, AuthorDetail] = await Promise.all([
       BookModel.findById(req.params.id).populate('author').populate('subject').exec(),
-      SubjectModel.find({}, "name").sort({name: 1}).exec(),
-      AuthorModel.find({}, "name").sort({name: 1}).exec(),
-   ])
+      SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
+      AuthorModel.find({}, "name").sort({ name: 1 }).exec(),
+    ])
 
     if (bookDetail) {
       res.render("book_update_form", {
@@ -181,3 +189,52 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: "Books not found!", errorStatus: 404 });
   }
 });
+
+exports.add_cart_post = asyncHandler(async (req, res, next) => {
+  try {
+    // Check if book is exist in database
+    const bookDetail = BookModel.findById(req.body.BookId);
+    const quantity = req.body.quantity;
+    let isBookInCart = false;
+
+    if (bookDetail) {
+      const quantity = req.params.quantity
+
+      for (let i = 0; i < req.session.cart.length; i++) {
+        if (req.session.cart[i].bookId == req.body.id) {
+          req.session.cart[i].quantity += quantity;
+          req.session.updateAt = Date.now;
+        } else {
+          const cart = {
+            bookId: req.body.id,
+            quantity: req.body.quantity,
+          }
+          //req.session.createAt = Date.now,
+          req.session.updateAt = Date.now;
+        }
+      }
+    } else {
+      res.status(404).render("errorPage", { message: "Book ID invalid", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
+
+exports.cart_detail_get = asyncHandler(async (req, res, next) => {
+  try {
+    const arrayBookId = [];
+
+    // Push all books in cart to create an array
+    for (let i = 0; i < req.session.cart.length; i++) {
+      arrayBookId.push(req.session.push(req.session.cart[i]));
+    }
+
+    const bookList = await BookModel.find({ '_id': { $in: arrayBookId } });
+
+    res.render("cart", { title: "Cart Detail", book_list: bookList, cart: req.session.cart });
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+
+})

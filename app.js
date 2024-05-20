@@ -56,6 +56,7 @@ app.use(
     keys: ["COOKIE_SECRET"],
     httpOnly: true
   })
+  req
 )
 
 app.get('/login', (req, res) => {

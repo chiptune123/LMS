@@ -9,6 +9,9 @@
     <p>Description: <%= value.description %></p>
     <p>Page Number: <%= value.page_numbers %></p>
     <p>ISBN 13: <%= value.ISBN_thirteenDigits %></p>
+    <form action="/books/<%= value.id %>/">
+
+    </form>
   </li>
 <% } %>
 </ul>
