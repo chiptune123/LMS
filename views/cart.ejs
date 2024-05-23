@@ -1,0 +1,22 @@
+<h1><%= title %></h1>
+<ul>
+<% for(book of book_list) { %>
+  <li>
+    <a href="/books/<%= book.id %>/">Id: <%= book.id %></a> <br>
+    <p>Title: <%= book.title %></p>
+    <p>Author: <%= book.author.name %></p>
+    <p>Subject: <%= book.subject.name %></p>
+    <p>Description: <%= book.description %></p>
+    <p>Page Number: <%= book.page_numbers %></p>
+    <p>ISBN 13: <%= book.ISBN_thirteenDigits %></p>
+    <p>Price: <%= book.price %></p>
+    <p>Quantity: <%= book.quantity %></p>
+    <form action="/books/<%= book.id %>/remove_from_cart">
+      <input type="hidden" name="BookId" id="BookId" value="<%= book.id %>">
+    </form>
+  </li>
+<% } %>
+</ul>
+<p>Order Total: <%= order_total %></p>
+<a href="/books/create">Create Book</a> <br>
+<a href="/books/">Book List</a>

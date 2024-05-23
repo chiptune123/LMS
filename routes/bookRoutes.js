@@ -12,7 +12,11 @@ router.get("/create", book_controller.book_create_get);
 
 router.post("/create", book_controller.book_create_post);
 
+router.get("/cart", book_controller.cart_detail_get);
+
 router.post("/add_to_cart", book_controller.add_cart_post);
+
+router.post("/:id/remove_from_cart", book_controller.remove_from_cart_post);
 
 router.get("/:id", book_controller.book_detail);
 

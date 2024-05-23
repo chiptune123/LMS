@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 
-const CartScema = new Schema(
+const CartSchema = new Schema(
     {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         books: [{
@@ -10,10 +10,10 @@ const CartScema = new Schema(
             quantity: {type: Number, default: 1}
         }],
         active: { type: Boolean, default: true },
-        modifiedOn: { type: date, default: Date.now }
+        modifiedOn: { type: Date, default: Date.now }
 
     },
     { timestamps: true }
 )
 
-module.exports = mongoose.model("Cart", CartScema);
+module.exports = mongoose.model("Cart", CartSchema);

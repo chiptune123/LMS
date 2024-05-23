@@ -1,18 +1,23 @@
-<h1><%= title %></h1>
-<ul>
-<% for(value of book_list) { %>
-  <li>
-    <a href="/books/<%= value.id %>/">Id: <%= value.id %></a> <br>
-    <p>Title: <%= value.title %></p>
-    <p>Author: <%= value.author.name %></p>
-    <p>Subject: <%= value.subject.name %></p>
-    <p>Description: <%= value.description %></p>
-    <p>Page Number: <%= value.page_numbers %></p>
-    <p>ISBN 13: <%= value.ISBN_thirteenDigits %></p>
-    <form action="/books/<%= value.id %>/">
-
-    </form>
-  </li>
-<% } %>
-</ul>
-<a href="/books/create">Create Book</a>
+  <h1><%= title %></h1>
+  <ul>
+  <% for(value of book_list) { %>
+    <li>
+      <a href="/books/<%= value.id %>/">Id: <%= value.id %></a> <br>
+      <p>Title: <%= value.title %></p>
+      <p>Author: <%= value.author.name %></p>
+      <p>Subject: <%= value.subject.name %></p>
+      <p>Description: <%= value.description %></p>
+      <p>Page Number: <%= value.page_numbers %></p>
+      <p>ISBN 13: <%= value.ISBN_thirteenDigits %></p>
+      <form action="/books/add_to_cart/" method="post">
+        <input type="hidden" name="BookId" id="BookId" value="<%= value.id %>">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="BookId" value="1">
+        <button type="submit">Add to cart</button>
+      </form>
+    </li>
+  <% } %>
+  </ul>
+  ,P
+  <a href="/books/create">Create Book</a> <br>
+  <a href="/cart/">Cart</a>
