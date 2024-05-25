@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-const { authJwt } = require("../middlewares/authJwt");
-const { verifySignUp } = require("../middlewares/verifySignUp");
+const authJwt = require("../middlewares/authJwt");
+const verifySignUp = require("../middlewares/verifySignUp");
 
 // Import User controller module
 const user_controller = require("../controllers/userController");
