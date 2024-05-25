@@ -1,0 +1,13 @@
+<h1><%= title %></h1>
+<ul>
+    <% for(let import_log of import_list) { %>
+        <li>
+            <a href="users/<%= import_log.managerId %>">Manager name: <%= import_log.managerId.name %></a>
+            <a href="books/<%= import_log.book.title %>">Book Title: <%= import_log.book.title %></a>
+            <p>Date taken: <%= import_log.createAt %></p>
+            <p>Modified at: <%= import_log.updateAt %></p>
+            <p>Import quantity: <%= import_log.quantity %></p>
+        </li>
+    <% } %>
+</ul>
+
