@@ -6,5 +6,10 @@
     <% for(let book of book_list) { %>
         <option value="<%= book.id %>"><%= book.title %></option>
     <% } %>
-  </select>
+  </select> <br>
+  <label for="quantity">Import Quantity:</label> 
+  <input type="number" name="quantity" id="quantity" value="1"> <br>
+  <label for="supplier">Supplier:</label>
+  <input type="text" name="supplier" id="supplier"> <br>
+  <button type="submit">Sumbit</button>
 </form>
