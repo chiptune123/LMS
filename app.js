@@ -71,7 +71,7 @@ app.use('/feedbacks', feedbackRouter);
 app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
-app.use('/import', importRouter);
+app.use('/imports', importRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
