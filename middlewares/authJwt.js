@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const config = require("../config/auth.config.js");
 
 // This function verify JWT token and set the request object with userID field.
-verifyToken = asyncHandler(async (req, res, next) => {
+exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
 
     if (!token) {
@@ -12,22 +12,24 @@ verifyToken = asyncHandler(async (req, res, next) => {
     }
 
     jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({
-                message: "Unauthorized!",
-            })
-        }
+        // if (err) {
+        //     return res.status(401).send({
+        //         message: "Unauthorized!",
+        //     })
+        // }
 
-        // set request object with userID properties for the verify middleware chain
-        req.userID = decoded.id;
+        // set request object with tokenUserId properties for the verify middleware chain
+        // decoded.id is the JWT payload properties that store userId in user_sign_in controller
+        req.session.tokenUserId = decoded.id;
+        console.log(decoded);
         next();
     })
 })
 
 
-isAdmin = asyncHandler(async (req, res, next) => {
+exports.isAdmin = asyncHandler(async (req, res, next) => {
     try {
-        const user = await User.findById(req.userID).exec();
+        const user = await User.findById(req.session.tokenUserId).exec();
 
         if (user.role === "Admin") {
             next();
@@ -54,9 +56,9 @@ isAdmin = asyncHandler(async (req, res, next) => {
     // })
 })
 
-isLibrarian = asyncHandler(async (req, res, next) => {
+exports.isLibrarian = asyncHandler(async (req, res, next) => {
     try {
-        const user = await User.findById(req.userID).exec();
+        const user = await User.findById(req.session.tokenUserId).exec();
 
         if (user.role === "Librarian") {
             next();
@@ -82,9 +84,9 @@ isLibrarian = asyncHandler(async (req, res, next) => {
     // })
 })
 
-isAdminOrLibrarian = asyncHandler(async (req, res, next) => {
+exports.isAdminOrLibrarian = asyncHandler(async (req, res, next) => {
     try {
-        const user = await User.findById(req.userID).exec();
+        const user = await User.findById(req.session.tokenUserId).exec();
 
         if (user.role === "Admin" | user.role === "Librarian") {
             next();
@@ -97,12 +99,3 @@ isAdminOrLibrarian = asyncHandler(async (req, res, next) => {
     }
 
 })
-
-const authJwt = {
-    verifyToken,
-    isAdmin,
-    isLibrarian,
-    isAdminOrLibrarian,
-};
-
-module.exports.authJwt = authJwt;
