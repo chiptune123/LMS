@@ -156,17 +156,18 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
     const user = await User.findOne({
       username: req.body.username,
     }).exec();
- 
+
     if (!user) {
-      return res.status(404).send({ message: "User not found." });
+      return res.status(404).render("errorPage", { message: "User not found." });
     }
 
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
     if (!passwordIsValid) {
-      return res.status(404).send({ message: "Invalid Password!" });
+      return res.status(404).render("errorPage", { message: "Invalid Password!" });
     }
 
+    // Set payload of the JWT with properties "id" that store userId
     const token = jwt.sign({ id: user.id }, config.secret, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
@@ -178,16 +179,12 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
 
     authorities.push("ROLE_" + role.toUpperCase());
 
+    // Save token to session
     req.session.token = token;
 
-    return res.status(200).send({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    });
+    return res.redirect("/books")
   } catch (error) {
-    return res.status(500).send({ message: error.message})
+    return res.status(500).render("errorPage", { message: error.message })
   }
 });
 /* (err  , user) => {
@@ -253,6 +250,6 @@ exports.librarianBoard = (req, res) => {
   res.status(200).send("Librarian content.");
 }
 
-exports.userLogin_post = asyncHandler(async (req, res, next) => {
-  res.render("login", {title: "Login Page"});
+exports.user_login_get = asyncHandler(async (req, res, next) => {
+  res.render("login", { title: "Login Page" });
 })
