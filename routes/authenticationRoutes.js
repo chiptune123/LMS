@@ -1,4 +1,4 @@
-const { verifySignUp } = require("../middlewares/verifySignUp.js");
+const verifySignUp = require("../middlewares/verifySignUp.js");
 const user_controller = require("../controllers/userController");
 const express = require("express");
 const router = express.Router();
@@ -11,7 +11,7 @@ router.use(function(req, res, next) {
   next();
 })
 
-router.get("/login", user_controller.userLogin_post);
+router.get("/login", user_controller.user_login_get);
 
 router.post("/login", user_controller.user_sign_in);
 
