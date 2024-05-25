@@ -7,7 +7,7 @@ const asyncHandler = require("express-async-handler");
 exports.import_create_get = asyncHandler(async (req, res, next) => {
   try {
     const bookList = await BookModel.find({}).exec();
-
+    console.log(bookList);
     res.render("import_create_form", {
       title: "Import create",
       book_list: bookList,
@@ -19,9 +19,10 @@ exports.import_create_get = asyncHandler(async (req, res, next) => {
 
 exports.import_create_post = asyncHandler(async (req, res, next) => {
   try {
+    // Query to check if user and book exist
     const [userDetail, bookDetail] = await Promise.all([
       UserModel.findById(req.body.managerId),
-      BookModel.findById(req.body.BookId),
+      BookModel.findById(req.body.BookId).sort({name: 1}),
     ]);
 
     if (user_detail.role == "Admin" && userDetail && bookDetail) {
