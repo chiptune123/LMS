@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieSession = require("cookie-session");
 var cors = require("cors");
 require('dotenv').config();
+var authJwt = require("./middlewares/authJwt")
 
 // Import Routers
 var indexRouter = require('./routes/index');
@@ -59,11 +60,15 @@ app.use(
   })
 );
 
+//Jwt configuration
+app.use(authJwt.verifyToken);
+
 app.get('/login', (req, res) => {
   res.json({message: "Welcome to the login page"});
 })
 
 // Routers configuration
+app.use('/', indexRouter);
 app.use('/auth', authenticationRoutes);
 app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
@@ -72,6 +77,7 @@ app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
 app.use('/imports', importRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
