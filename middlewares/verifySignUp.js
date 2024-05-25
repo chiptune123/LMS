@@ -1,7 +1,7 @@
 const User = require("../models/users");
 const asyncHandler = require('express-async-handler');
 
-checkDuplicateUsernameOrEmail = asyncHandler(async (req, res, next) => {
+exports.checkDuplicateUsernameOrEmail = asyncHandler(async (req, res, next) => {
     // User duplicate check
     try {
         const user = await User.findOne({ username: req.body.username }).exec();
@@ -52,8 +52,8 @@ checkDuplicateUsernameOrEmail = asyncHandler(async (req, res, next) => {
 
 });
 
-const verifySignUp = {
-    checkDuplicateUsernameOrEmail
-}
+// const verifySignUp = {
+//     checkDuplicateUsernameOrEmail
+// }
 
-module.exports.verifySignUp = verifySignUp;
+//module.exports.verifySignUp = verifySignUp;
