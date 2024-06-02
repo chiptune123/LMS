@@ -7,7 +7,6 @@ const asyncHandler = require("express-async-handler");
 exports.import_create_get = asyncHandler(async (req, res, next) => {
   try {
     const bookList = await BookModel.find({}).exec();
-    console.log(bookList);
     res.render("import_create_form", {
       title: "Import create",
       book_list: bookList,
@@ -22,10 +21,10 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
     // Query to check if user and book exist
     const [userDetail, bookDetail] = await Promise.all([
       UserModel.findById(req.body.managerId),
-      BookModel.findById(req.body.BookId).sort({name: 1}),
+      BookModel.findById(req.body.BookId).sort({ name: 1 }),
     ]);
 
-    if (user_detail.role == "Admin" && userDetail && bookDetail) {
+    if (userDetail.role == "Admin" && userDetail && bookDetail) {
       const newImportLog = new ImportLogModel({
         managerId: req.body.userId,
         bookId: req.body.bookId,
@@ -54,3 +53,18 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
+
+
+exports.import_list = asyncHandler(async (req, res, next) => {
+  try {
+    const importLogList = await ImportLogModel.find({}).populate("user").populate("book").sort({ createdAt: 1 }).exec();
+
+    if (importLogList) {
+      res.render("import_list", { title: "Import List", import_list: importLogList });
+    } else {
+      res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", {message: err, errorStatus: 500});
+  }
+})
