@@ -65,6 +65,22 @@ exports.import_list = asyncHandler(async (req, res, next) => {
       res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
     }
   } catch (err) {
+    
+  }
+})
+
+exports.import_delete_post = asyncHandler(async (req, res, next ) => {
+  try{
+    const importDetail = await ImportLogModel.findById(req.params.id).exec();
+
+    if(importDetail) {
+      ImportLogModel.findByIdAndDelete(req.params.id);
+
+      res.redirect("/imports");
+    } else {
+      res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
+    }
+  } catch (err) {
     res.status(500).render("errorPage", {message: err, errorStatus: 500});
   }
 })
