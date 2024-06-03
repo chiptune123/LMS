@@ -2,11 +2,18 @@
 <ul>
     <% for(let import_log of import_list) { %>
         <li>
-            <a href="users/<%= import_log.managerId %>">Manager name: <%= import_log.managerId.name %></a>
-            <a href="books/<%= import_log.book.title %>">Book Title: <%= import_log.book.title %></a>
-            <p>Date taken: <%= import_log.createAt %></p>
-            <p>Modified at: <%= import_log.updateAt %></p>
+            <p>Import Id: <%= import_log.id %> </p>
+            <a href="/users/<%= import_log.managerId.id %>">Manager name: <%= import_log.managerId.name %></a> <br>
+            <a href="/books/<%= import_log.bookId.title %>">Book Title: <%= import_log.bookId.title %></a> <br>
+            <p>Date taken: <%= import_log.createdAt %></p>
+            <p>Modified at: <%= import_log.updatedAt %></p>
             <p>Import quantity: <%= import_log.quantity %></p>
+            <form method="post" action="/imports/<%= import_log.bookId.id %>/delete">
+                <button type ="submit">Delete</button>
+            </form>
+            <form method="post" action="/imports/<%= import_log.bookId.id %>/update">
+                <button type="submit">Update</button>
+            </form>
         </li>
     <% } %>
 </ul>
