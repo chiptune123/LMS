@@ -21,7 +21,6 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
         // set request object with tokenUserId properties for the verify middleware chain
         // decoded.id is the JWT payload properties that store userId in user_sign_in controller
         req.session.tokenUserId = decoded.id;
-        console.log(decoded);
         next();
     })
 })
@@ -30,8 +29,6 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
 exports.isAdmin = asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.session.tokenUserId).exec();
-
-        console.log(req.session.tokenUserId);
 
         if (user) {
             if (user.role === "Admin") {

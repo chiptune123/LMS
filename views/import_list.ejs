@@ -8,10 +8,10 @@
             <p>Date taken: <%= import_log.createdAt %></p>
             <p>Modified at: <%= import_log.updatedAt %></p>
             <p>Import quantity: <%= import_log.quantity %></p>
-            <form method="post" action="/imports/<%= import_log.bookId.id %>/delete">
+            <form method="post" action="/imports/<%= import_log.id %>/delete">
                 <button type ="submit">Delete</button>
             </form>
-            <form method="post" action="/imports/<%= import_log.bookId.id %>/update">
+            <form method="post" action="/imports/<%= import_log.id %>/update">
                 <button type="submit">Update</button>
             </form>
         </li>
