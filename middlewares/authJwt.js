@@ -8,7 +8,7 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
 
     if (!token) {
-        return res.status(403).send({ message: "No token provide" });
+        return res.status(403).render("errorPage" ,{ message: "Please login to use this feature!", errorStatus: 403 });
     }
 
     jwt.verify(token, config.secret, (err, decoded) => {
@@ -31,13 +31,19 @@ exports.isAdmin = asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.session.tokenUserId).exec();
 
-        if (user.role === "Admin") {
-            next();
+        console.log(req.session.tokenUserId);
+
+        if (user) {
+            if (user.role === "Admin") {
+                next();
+            } else {
+                res.status(403).render("errorPage", { message: "Require Admin Role!", errorStatus: 403 });
+            }
         } else {
-            res.status(403).send({ message: "Require Admin Role!" });
+            res.status(403).render("errorPage", { message: "Please login to use this feature!", errorStatus: 403});
         }
     } catch (err) {
-        res.status(500).send({ message: err });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
         return;
     }
 
