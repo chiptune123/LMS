@@ -64,7 +64,6 @@ exports.import_list = asyncHandler(async (req, res, next) => {
   try {
     const importLogList = await ImportLogModel.find({}).populate("managerId").populate("bookId").sort({ createdAt: 1 }).exec();
 
-    console.log(importLogList);
     if (importLogList) {
       res.render("import_list", { title: "Import List", import_list: importLogList });
     } else {
@@ -89,15 +88,14 @@ exports.import_delete_get = asyncHandler(async (req, res, next) => {
 
 exports.import_delete_post = asyncHandler(async (req, res, next ) => {
   try{
-    const importDetail = await ImportLogModel.findById(req.params.id).exec();
-
-    if(importDetail) {
-      ImportLogModel.findByIdAndDelete(req.params.id);
-
+      const importDetail = await ImportLogModel.findByIdAndDelete(req.params.id).exec();
+      
+      if(importDetail == null) {
+        res.status(404).render("errorPage", {message: "Import not found!", errorStatus: 404});
+      }
+      
       res.redirect("/imports");
-    } else {
-      res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
-    }
+
   } catch (err) {
     res.status(500).render("errorPage", {message: err, errorStatus: 500});
   }
