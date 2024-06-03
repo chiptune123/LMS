@@ -61,7 +61,7 @@ app.use(
 );
 
 //Jwt configuration
-app.use(authJwt.verifyToken);
+//app.use(authJwt.verifyToken);
 
 app.get('/login', (req, res) => {
   res.json({message: "Welcome to the login page"});
@@ -76,7 +76,7 @@ app.use('/feedbacks', feedbackRouter);
 app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
-app.use('/imports', importRouter);
+app.use('/imports', authJwt.verifyToken, importRouter);
 
 
 // catch 404 and forward to error handler
