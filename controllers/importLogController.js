@@ -20,15 +20,15 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
   try {
     // Query to check if user and book exist
     const [userDetail, bookDetail] = await Promise.all([
-      UserModel.findById(req.body.managerId),
-      BookModel.findById(req.body.BookId).sort({ name: 1 }),
+      UserModel.findById(req.session.tokenUserId),
+      BookModel.findById(req.body.bookId).sort({ name: 1 }),
     ]);
 
-    if (userDetail.role == "Admin" && userDetail && bookDetail) {
+    if (userDetail && bookDetail) {
       const newImportLog = new ImportLogModel({
-        managerId: req.body.userId,
+        managerId: req.session.tokenUserId,
         bookId: req.body.bookId,
-        createdAt: Date.now,
+        createdAt: Date.now(),
         supplier: req.body.supplier,
         quantity: req.body.quantity,
       });
@@ -43,6 +43,11 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
           },
         }
       );
+
+      await newImportLog.save();
+
+      res.redirect("/imports");
+
     } else {
       res.status(404).render("errorPage", {
         message: "Book or User not found",
@@ -57,15 +62,28 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
 
 exports.import_list = asyncHandler(async (req, res, next) => {
   try {
-    const importLogList = await ImportLogModel.find({}).populate("user").populate("book").sort({ createdAt: 1 }).exec();
+    const importLogList = await ImportLogModel.find({}).populate("managerId").populate("bookId").sort({ createdAt: 1 }).exec();
 
+    console.log(importLogList);
     if (importLogList) {
       res.render("import_list", { title: "Import List", import_list: importLogList });
     } else {
       res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
     }
   } catch (err) {
-    
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
+
+exports.import_delete_get = asyncHandler(async (req, res, next) => {
+  try{
+    const importDetail = await ImportLogModel.findById(req.params.id);
+
+    if(importDetail) {
+      res.render("import_delete_form", {title: "Import Delete", import_detail: importDetail});
+    }
+  } catch (err){
+    res.render("errorPage", {message: "Import Logs not found", errorStatus: 404});
   }
 })
 
