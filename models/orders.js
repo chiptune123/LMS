@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema(
   {
-    memberID: { typeof: Schema.Types.ObjectId, ref: "User", required: true },
+    memberId: { typeof: Schema.Types.ObjectId, ref: "User", required: true },
     orderStatus: {
       typeof: String,
       required: true,
@@ -16,11 +16,11 @@ const OrderSchema = new Schema(
       ],
       default: "Processing",
     },
-    orderDate: { typeof: Date, required: true, default: Date.now },
+    //orderDate: { typeof: Date, required: true, default: Date.now },
     orderPreparer: {
       typeof: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      //required: true,
     },
   },
   {

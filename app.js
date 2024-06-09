@@ -18,6 +18,7 @@ var authorRouter = require('./routes/authorRoutes');
 var subjectRouter = require('./routes/subjectRoutes');
 var bookRouter = require('./routes/bookRoutes');
 var importRouter = require('./routes/importRoutes');
+var cartRouter = require("./routes/cartRoutes");
 
 var app = express();
 const mongoose = require('mongoose');
@@ -77,6 +78,7 @@ app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
 app.use('/imports', authJwt.verifyToken, importRouter);
+app.use('/carts', cartRouter);
 
 
 // catch 404 and forward to error handler
