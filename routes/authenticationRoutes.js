@@ -13,6 +13,8 @@ router.use(function(req, res, next) {
 
 router.get("/login", user_controller.user_login_get);
 
+router.get("/signup", user_controller.user_create_get);
+
 router.post("/login", user_controller.user_sign_in);
 
 router.post("/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);

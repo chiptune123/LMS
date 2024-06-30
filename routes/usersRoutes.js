@@ -13,7 +13,7 @@ router.use(function (req, res, next) {
 
 router.get("/", user_controller.user_list);
 
-router.get("/create", user_controller.user_create_get);
+//outer.get("/create", user_controller.user_create_get);
 
 router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail, user_controller.user_create_post);
 
