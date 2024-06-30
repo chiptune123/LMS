@@ -80,7 +80,7 @@ exports.user_create_post = [
       });
     } else {
       await NewUser.save();
-      res.redirect("/login");
+      res.redirect("/");
     }
   }),
 ];
