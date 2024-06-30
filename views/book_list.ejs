@@ -9,7 +9,7 @@
       <p>Description: <%= value.description %></p>
       <p>Page Number: <%= value.page_numbers %></p>
       <p>ISBN 13: <%= value.ISBN_thirteenDigits %></p>
-      <form action="/books/add_to_cart/" method="post">
+      <form action="/cart/add_to_cart/" method="post">
         <input type="hidden" name="BookId" id="BookId" value="<%= value.id %>">
         <label for="quantity">Quantity:</label>
         <input type="number" name="quantity" id="BookId" value="1">

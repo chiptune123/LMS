@@ -79,7 +79,7 @@ app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
 app.use('/imports', authJwt.verifyToken, importRouter);
-app.use('/carts', cartRouter);
+app.use('/cart', cartRouter);
 app.use('/orders', orderRouter);
 
 

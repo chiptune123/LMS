@@ -12,11 +12,16 @@
     <p>Price: <%= book.price %></p>
     <p>Quantity: <%= book.quantity %></p>
     <form action="/books/<%= book.id %>/remove_from_cart">
-      <input type="hidden" name="BookId" id="BookId" value="<%= book.id %>">
+      <button type="submit">Delete</button>
     </form>
   </li>
 <% } %>
 </ul>
-<p>Order Total: <%= order_total %></p>
+<p>Order Total: <%= order_total %></p> <br>
+
+<form action="/orders/checkout/" method="post">
+  <button type="submit">Checkout</button>
+</form>
+
 <a href="/books/create">Create Book</a> <br>
-<a href="/books/">Book List</a>
+<a href="/books/">Book List</a> <br>

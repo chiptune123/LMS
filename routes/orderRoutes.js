@@ -6,8 +6,10 @@ const order_controller = require("../controllers/orderController");
 
 router.get("/", order_controller.order_list);
 
+router.post("/checkout", authJwt.verifyToken, order_controller.order_create_post);
+
 router.get("/:id", order_controller.order_detail);
 
-router.post("/:id/checkout", order_controller.order_create_post);
+
 
 module.exports = router;

@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const OrderItemSchema = new Schema({
     orderId: { type: Schema.Types.ObjectId, ref: "Order", required: true },
     bookId: { type: Schema.Types.ObjectId, ref: "Book", required: true },
-    returnDeadline: { type: Date },
+    quantity: {type: Number, required: true},
+    returnDeadline: { type: Date, default: 0 },
     penaltyAmount: {type: Number, Default: 0},
     penaltyStatus: {type: Boolean, default: 0},
     penaltyAmount: {type: Number, default: 0},

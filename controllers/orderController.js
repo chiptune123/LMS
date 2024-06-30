@@ -26,10 +26,23 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
 
 exports.order_list = asyncHandler(async (req, res, next) => {
   try{
-    const orderList = await OrderModel.find({memberId: req.session.tokenUserId}).sort({createAt: 1});
+    const UserOrderList = await OrderModel.find({memberId: req.session.tokenUserId}).sort({createAt: 1}).exec();
+    //const orders = await OrderModel.find({}).exec();
+
+    //console.log(UserOrderList);
+
+    const allOrderItemsList = [];
+
+    for(let i = 0; i < UserOrderList.length; i++) {
+      const eachOrderItemsList = await OrderItemModel.find({orderId: UserOrderList[i].id});
+      //console.log(UserOrderList[i].id);
+      allOrderItemsList.push(eachOrderItemsList);
+    }
+
+    //console.log(allOrderItemsList);
 
     if(orderList) {
-      res.render("order_list", {title: "Order List", order_list: orderList});
+      res.render("order_list", {title: "Order List"});
     }
 
   } catch (err) {
@@ -37,19 +50,22 @@ exports.order_list = asyncHandler(async (req, res, next) => {
   }
 })
 
+// ***Fix not allow to create an empty order error
 exports.order_create_post = asyncHandler(async (req, res, next) => {
   try{
     const newOrder = new OrderModel ({
-      memberId: req.body.memberId,
+      memberId: req.session.tokenUserId,
     })
-
+    
     await newOrder.save();
 
+    console.log(req.session.cart);
     // Save each item to a seperate OrderItems table
     for(let i = 0; i < req.session.cart.length; i++) {
       const newOrderItem = new OrderItemModel ({
         orderId: newOrder.id,
-        bookId: req.session.cart.bookId[i],
+        bookId: req.session.cart[i].BookId,
+        quantity: req.session.cart[i].Quantity
       })
 
       await newOrderItem.save();
