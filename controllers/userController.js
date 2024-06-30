@@ -158,13 +158,13 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
     }).exec();
 
     if (!user) {
-      return res.status(404).render("errorPage", { message: "User not found." });
+      return res.status(404).render("login", { errors: [{msg: "Incorrect username"}]});
     }
 
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
     if (!passwordIsValid) {
-      return res.status(404).render("errorPage", { message: "Invalid Password!" });
+      return res.status(404).render("login", { errors: [{msg: "Incorrect password"}] });
     }
 
     // Set payload of the JWT with properties "id" that store userId
@@ -184,7 +184,7 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
 
     return res.redirect("/books")
   } catch (error) {
-    return res.status(500).render("errorPage", { message: error.message })
+    return res.status(500).render("errorPage", {errorStaus:500, message: error.message })
   }
 });
 /* (err  , user) => {
