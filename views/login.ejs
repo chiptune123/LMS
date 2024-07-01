@@ -22,9 +22,18 @@
   -->
 
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!--<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet"> -->
+  <title>Bootstrap Example</title>
+  
   <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+  
 </head>
+
+<!-- Navigation Bar -->
+<%- include('navigationBar.ejs') %>
 
 <section class="vh-100">
   <div class="container-fluid h-custom">
@@ -110,3 +119,5 @@
     <!-- Right -->
   </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
