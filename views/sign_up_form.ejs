@@ -122,12 +122,12 @@
 </html>
 
 
-<form method="post" action="">
+<!-- <form method="post" action="">
     <label for="username">First Name:</label>
     <input id="username" type="text" name="username" placeholder="Enter your username" 
-    <% if (typeof user !== "undefined") { %>
-        value="<%= user.username %>"
-    <% } %>
+    <% //if (typeof user !== "undefined") { %>
+        value="<%= //user.username %>"
+    <%// } %>
     >
     <br>
     <label for="password">Password:</label>
@@ -135,25 +135,28 @@
     <br>
     <label for="name">Name:</label>
     <input id="name" type="text" name="name" placeholder="Enter your name" 
-    <% if (typeof user !== "undefined") { %>
-        value="<%= user.name %>"
-    <% } %>
+    <%// if (typeof user !== "undefined") { %>
+        value="<%=// user.name %>"
+    <% //} %>
     >
     <br>
     <label for="email">Email:</label>
     <input id="email" type="text" name="email" placeholder="Enter your email"
-    <% if (typeof user !== "undefined") { %>
-        value="<%= user.email %>"
-    <% } %>
+    <%// if (typeof user !== "undefined") { %>
+        value="<%=// user.email %>"
+    <% //} %>
     >
     <br>
     <button type="submit">Submit</button>
 </form>
 
-<% if(typeof errors !== "undefined") { %>
+<%// if(typeof errors !== "undefined") { %>
     <ul>
-        <% for(value of errors) { %>
-                <li><%= value.msg %></li>
-        <% } %>
+        <% //for(value of errors) { %>
+                <li><%= //value.msg %></li>
+        <% //} %>
     </ul>
-<% } %>
+<%// } %>
+
+
+-->
