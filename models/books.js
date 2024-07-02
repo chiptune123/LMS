@@ -17,6 +17,7 @@ const BookSchema = new Schema({
     ISBN_thirteenDigits: {type: String, required: true},
     coverPicturePath: {type: String, maxLength: 500},
     uniqueBarcode: {type: String, required: true, maxLength: 200},
+    rating: {type: Number, default: 0}
     // comments: [
     //     {
     //         memberID: {type: Schema.Types.ObjectId, ref: "User", required: true},
@@ -31,4 +32,11 @@ const BookSchema = new Schema({
     // ]
 })
 
+BookSchema.virtual('ratingIntegralPart').get(function() {
+    return Math.floor(this.rating);
+})
+
+BookSchema.virtual('ratingFractionalPart').get(function() {
+    return rating % 1;
+})
 module.exports = mongoose.model("Book", BookSchema);
