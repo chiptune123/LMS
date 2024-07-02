@@ -100,6 +100,7 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
       ISBN_thirteenDigits: req.body.ISBN_thirteenDigits,
       coverPicturePath: req.body.coverPicturePath,
       uniqueBarcode: req.body.uniqueBarcode,
+      rating: req.body.rating,
     });
 
     if (bookDetail == null) {
