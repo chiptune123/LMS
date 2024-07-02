@@ -37,6 +37,6 @@ BookSchema.virtual('ratingIntegralPart').get(function() {
 })
 
 BookSchema.virtual('ratingFractionalPart').get(function() {
-    return rating % 1;
+    return this.rating % 1;
 })
 module.exports = mongoose.model("Book", BookSchema);
