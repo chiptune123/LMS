@@ -1,3 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://getbootstrap.com/docs/5.2/assets/css/docs.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+  <title>Shopping Cart</title>
+</head>
+<%- include('navigationBar.ejs') %>
+<body>
+  <!-- cart + summary -->
+  <section class="bg-light my-5">
+    <div class="container">
+      <div class="row">
+        <!-- cart -->
+        <div class="col-lg-9">
+          <div class="card border shadow-0">
+            <div class="m-4">
+              <h4 class="card-title mb-4">Your shopping cart</h4>
+              <% for(let book of book_list) { %>
+                    <div class="row gy-3 mb-4">
+                  <div class="col-lg-5">
+                    <div class="me-lg-5">
+                      <div class="d-flex">
+                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp" class="border rounded me-3" style="width: 96px; height: 96px;" />
+                        <div class="">
+                          <a href="#" class="nav-link"><%= book.title %></a>
+                          <p class="text-muted">Author: <%= book.author.name %></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+                    <div class="">
+                      <select style="width: 100px;" class="form-select me-4">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                      </select>
+                    </div>
+                    <div class="">
+                      <text class="h6">$<%= book.bookTotalPrice %></text> <br />
+                      <small class="text-muted text-nowrap"> $<%= book.price %> / per item </small>
+                    </div>
+                  </div>
+                    </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <!-- cart -->
+        <!-- summary -->
+        <div class="col-lg-3">
+          <div class="card shadow-0 border">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total items:</p>
+                <p class="mb-2"><%= order_total_quantity %></p>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total Price:</p>
+                <p class="mb-2 fw-bold">$<%= order_total_price %></p>
+              </div>
+  
+              <div class="mt-3">
+                <a href="#" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
+                <a href="/books" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- summary -->
+      </div>
+    </div>
+  </section>
+</body>
+</html>
+
+
+
 <h1><%= title %></h1>
 <ul>
 <% for(book of book_list) { %>
@@ -17,6 +113,6 @@
   </li>
 <% } %>
 </ul>
-<p>Order Total: <%= order_total %></p>
+<p>Order Total: <%= order_total_price %></p>
 <a href="/books/create">Create Book</a> <br>
 <a href="/books/">Book List</a>
