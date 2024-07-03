@@ -21,10 +21,10 @@ exports.author_list = asyncHandler(async (req, res, next) => {
 
 exports.author_detail = asyncHandler(async (req, res, next) => {
     try {
-        const authorDetail = await AuthorModel.findById(req.params.id).exec();
+        const [authorDetail, bookByAuthor] = await Promise.all([AuthorModel.findById(req.params.id).exec(), BookModel.find({author: req.params.id})]);
 
-        if (authorDetail) {
-            res.render("author_detail", { title: "Author Detail", author_detail: authorDetail });
+        if (authorDetail && bookByAuthor) {
+            res.render("book_list", { title: "Author Detail", author_detail: authorDetail, book_list: bookByAuthor });
         } else {
             res.status(404).render("errorPage", { message: "Author detail not found!", errorStatus: 404 });
         }
