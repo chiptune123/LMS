@@ -41,24 +41,24 @@
                   <!-- Print star when rating = 0-->
                   <% if(book.rating == 0) { %>
                       <% for(let i = 0; i < 5; i++) { %>
-                          <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
+                          <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
                       <% } %>
                   <% } else { %>
                     <!-- Print Integral part-->
                       <% for(let i = 0; i < book.ratingIntegralPart; i++) { %>
-                          <li class="list-inline-item m-0"><i class="fa fa-star text-success"></i></li>
+                          <li class="list-inline-item m-0"><i class="fa fa-star text-warning"></i></li>
                       <% } %>
                     <!-- Print Fractional part -->
                       <% if(book.ratingFractionalPart < 0.5) { %>
-                           <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
+                           <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
                       <% } %>
                       <% if(book.ratingFractionalPart > 0.5) { %>
-                           <li class="list-inline-item m-0"><i class="fa fa-star-half text-success"></i></li>
+                           <li class="list-inline-item m-0"><i class="fa fa-star-half text-warning"></i></li>
                       <% } %>
                       <!-- Print the rest of star -->
                        <% if (book.ratingIntegralPart < 4) { %>
                           <% for( let i = 0; i < 4 - book.ratingIntegralPart; i++ ) { %>
-                            <li class="list-inline-item m-0"><i class="fa fa-star-o text-success"></i></li>
+                            <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
                           <% } %>
                        <% } %>
                   <% } %>
