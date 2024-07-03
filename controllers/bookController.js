@@ -22,7 +22,7 @@ exports.book_list = asyncHandler(async (req, res, next) => {
 
     if (allBooks) {
       res.render("book_list", {
-        title: "Book List",
+        title: "Book Collection",
         book_list: allBooks,
         cart: req.session.cart,
       });
