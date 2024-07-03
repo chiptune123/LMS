@@ -244,7 +244,7 @@ exports.add_cart_post = asyncHandler(async (req, res, next) => {
           }
         }
       }
-      res.redirect("/books/cart");
+      res.redirect("/carts");
     } else {
       res
         .status(404)
@@ -258,7 +258,8 @@ exports.add_cart_post = asyncHandler(async (req, res, next) => {
 exports.cart_detail_get = asyncHandler(async (req, res, next) => {
   try {
     const arrayBookId = [];
-    let orderTotal = 0;
+    let orderTotalPrice = 0;
+    let orderTotalQuantity = 0;
 
     // Push all books in cart to create an array
     for (let i = 0; i < req.session.cart.length; i++) {
@@ -281,13 +282,15 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
     }
 
     for(let i = 0; i < bookList.length; i++) {
-      orderTotal = orderTotal + (bookList[i].quantity * bookList[i].price);
+      bookList[i].bookTotalPrice = bookList[i].price * bookList[i].quantity;
+      orderTotalPrice = orderTotalPrice + (bookList[i].quantity * bookList[i].price);
+      orderTotalQuantity = orderTotalQuantity + bookList[i].quantity;
     }
-
     res.render("cart", {
       title: "Cart Detail",
       book_list: bookList,
-      order_total: orderTotal,
+      order_total_price: orderTotalPrice,
+      order_total_quantity: orderTotalQuantity
       //cart: req.session.cart,
     });
   } catch (err) {
