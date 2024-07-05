@@ -74,7 +74,7 @@ app.use('/', indexRouter);
 app.use('/auth', authenticationRoutes);
 app.use('/users', usersRouter);
 app.use('/announcements', announcementRouter);
-app.use('/feedbacks', feedbackRouter);
+app.use('/contact', feedbackRouter);
 app.use('/authors', authorRouter);
 app.use('/subjects', subjectRouter);
 app.use('/books', bookRouter);
