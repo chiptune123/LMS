@@ -6,8 +6,4 @@ router.get('/', function(req, res, next) {
   res.redirect("/books");
 });
 
-router.get('/contact', function(req, res, next) {
-  res.render("contact", {title: "Contact us"});
-});
-
 module.exports = router;
