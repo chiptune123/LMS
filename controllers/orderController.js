@@ -25,19 +25,30 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
 exports.order_create_post = asyncHandler(async (req, res, next) => {
   try{
     const newOrder = new OrderModel ({
-      memberId: req.body.memberId,
+      memberId: req.session.tokenUserId,
     })
-
+    // Save order
     await newOrder.save();
 
-    for(let i = 0; i < req.session.cart.length; i++) {
-      const newOrderItem = new OrderItemModel ({
+    // Save each items according to order
+    for(let i = 0; i < req.body.bookLength; i++) {
+      const newOrderItem = new OrderItemModel({
         orderId: newOrder.id,
-        bookId: req.session.cart.bookId[i],
+        bookId: req.body.book`${i}_id`,
+        quantity: req.body.book`${i}_quantity`,
       })
 
-      await newOrderItem.save();
+      newOrderItem.save();
     }
+    
+    // for(let i = 0; i < req.session.cart.length; i++) {
+    //   const newOrderItem = new OrderItemModel ({
+    //     orderId: newOrder.id,
+    //     bookId: req.session.cart.bookId[i],
+    //   })
+
+    //   await newOrderItem.save();
+    // }
 
     res.render("thankyou_page", {title: "Thank you for your order!"});
   } catch (err){
