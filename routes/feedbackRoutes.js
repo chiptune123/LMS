@@ -9,11 +9,11 @@ const feedback_controller = require("../controllers/feedbackController");
 
 router.get("/", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_list);
 
-router.get("/:id", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_detail);
-
 router.get("/create", feedback_controller.feedback_create_get);
 
 router.post("/create", feedback_controller.feedback_create_post);
+
+router.get("/:id", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_detail);
 
 router.get("/:id/update", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_update_get);
 
