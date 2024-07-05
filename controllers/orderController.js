@@ -56,7 +56,6 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
     const newOrder = new OrderModel ({
       memberId: req.session.tokenUserId,
     })
-<<<<<<< HEAD
     // Save order
     await newOrder.save();
 
@@ -66,18 +65,6 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
         orderId: newOrder.id,
         bookId: req.body.book`${i}_id`,
         quantity: req.body.book`${i}_quantity`,
-=======
-    
-    await newOrder.save();
-
-    console.log(req.session.cart);
-    // Save each item to a seperate OrderItems table
-    for(let i = 0; i < req.session.cart.length; i++) {
-      const newOrderItem = new OrderItemModel ({
-        orderId: newOrder.id,
-        bookId: req.session.cart[i].BookId,
-        quantity: req.session.cart[i].Quantity
->>>>>>> order_controller
       })
 
       newOrderItem.save();
