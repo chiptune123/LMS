@@ -20,6 +20,7 @@ const OrderSchema = new Schema(
     orderPreparer: {
       typeof: Schema.Types.ObjectId,
       ref: "User",
+      default: null,
       //required: true,
     },
   },
