@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema(
   {
-    memberId: { typeof: Schema.Types.ObjectId, ref: "User", required: true },
+    memberId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     orderStatus: {
-      typeof: String,
+      type: String,
       required: true,
       enum: [
         "Processing",
@@ -18,7 +18,7 @@ const OrderSchema = new Schema(
     },
     //orderDate: { typeof: Date, required: true, default: Date.now },
     orderPreparer: {
-      typeof: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       default: null,
       //required: true,

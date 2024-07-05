@@ -226,12 +226,12 @@ exports.add_cart_post = asyncHandler(async (req, res, next) => {
     let isBookInCart = false;
 
     if (bookDetail) {
-      const quantity = req.body.quantity;
+      //const quantity = req.body.quantity;
 
       if (req.session.cart.length == 0) {
         let cart = {
           BookId: req.body.BookId,
-          quantity: bookQuantity,
+          Quantity: bookQuantity,
         }
         req.session.cart.push(cart);
         //req.session.createAt = Date.now,
@@ -239,7 +239,7 @@ exports.add_cart_post = asyncHandler(async (req, res, next) => {
       } else {
         for (let i = 0; i < req.session.cart.length; i++) {
           if (req.session.cart[i].BookId == req.body.BookId) {
-            req.session.cart[i].quantity = Number(req.session.cart[i].quantity) + bookQuantity;
+            req.session.cart[i].Quantity = Number(req.session.cart[i].Quantity) + bookQuantity;
             req.session.updateAt = Date.now;
           }
         }
@@ -261,6 +261,8 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
     let orderTotalPrice = 0;
     let orderTotalQuantity = 0;
 
+    console.log(req.session.cart);
+
     // Push all books in cart to create an array
     for (let i = 0; i < req.session.cart.length; i++) {
       arrayBookId.push(req.session.cart[i].BookId);
@@ -276,7 +278,7 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
     for (let i = 0; i < bookList.length; i++) {
       for (let j = 0; j < req.session.cart.length; j++) {
         if (bookList[i].id == req.session.cart[j].BookId) {
-          bookList[i].quantity = req.session.cart[j].quantity;
+          bookList[i].quantity = req.session.cart[j].Quantity;
         }
       }
     }
