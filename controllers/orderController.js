@@ -5,6 +5,7 @@ const { options } = require("../routes/authenticationRoutes");
 
 exports.order_detail = asyncHandler(async (req, res, next) => {
   try {
+    //*** Implement Check if the order belong to user, if not then return 403 denided. Admin | librarian | authentic user then allow
     const orderDetail = await OrderModel.findById(req.params.id);
     const orderItemsList = await OrderItemModel.find({ orderId: req.params.id }).populate("bookId").sort({ createdAt: 1 });
 
@@ -18,6 +19,24 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
       res
         .status(404)
         .render("errorPage", { message: "Order not found", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
+exports.order_list_by_user = asyncHandler(async (req, res, next) => {
+  try {
+    // *** Implement checking case if user is login
+    const orderList = await OrderModel.find({ memberId: req.session.tokenUserId }).sort({ createdAt: 1 });
+
+    if (orderList) {
+      res.render("order_list", {
+        title: "Order list",
+        order_list: orderList,
+      });
+    } else {
+      res.status(404).render("errorPage", {message: "Order not found", errorStatus: 404});
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
