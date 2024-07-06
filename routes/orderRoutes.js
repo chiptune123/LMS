@@ -4,7 +4,8 @@ var authJwt = require("../middlewares/authJwt");
 
 const order_controller = require("../controllers/orderController");
 
-router.get("/", order_controller.order_list);
+// Order list by user
+router.get("/", [authJwt.verifyToken], order_controller.order_list_by_user);
 
 router.post("/checkout", authJwt.verifyToken, order_controller.order_create_post);
 
