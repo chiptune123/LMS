@@ -59,6 +59,9 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
       await newOrderItem.save();
     }
 
+    // Remove cart session after checkout
+    req.session.cart = null;
+
     res.render("thankyou_page", { title: "Thank you for your order!" });
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
