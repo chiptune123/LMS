@@ -261,8 +261,6 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
     let orderTotalPrice = 0;
     let orderTotalQuantity = 0;
 
-    console.log(req.session.cart);
-
     // Push all books in cart to create an array
     for (let i = 0; i < req.session.cart.length; i++) {
       arrayBookId.push(req.session.cart[i].BookId);
