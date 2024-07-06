@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li>Order id: <%= order_detail.id %></li>
+        <li>Order status: <%= order_detail.orderStatus %></li>
+        <li>Created at: <%= order_detail.createdAt %></li>
+        <% for(let item of order_items_list) { %>
+            <ul>
+                <li>Book title: <a href="/books/<%= item.bookId.id %>"><%= item.bookId.title %></a></li>
+                <li>Quantity: <%= item.quantity %></li>
+                <li>Return deadline: <%= item.returnDeadline %></li>
+                <li>Penalty Ammount: <%= item.penaltyAmount %> </li>
+                <li>Penalty Status: <%= item.penaltyStatus %></li>
+                <li>Lend status: <%= item.lendStatus %></li>
+            </ul>
+        <% } %>
+        
+    </ul>
+</body>
+</html>
