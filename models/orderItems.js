@@ -8,7 +8,6 @@ const OrderItemSchema = new Schema({
     returnDeadline: { type: Date },
     penaltyAmount: {type: Number, Default: 0},
     penaltyStatus: {type: Boolean, default: 0},
-    penaltyAmount: {type: Number, default: 0},
     lendStatus: {type: Boolean, default: 0},
     quantity: {type: Number, default: 1},
 })
