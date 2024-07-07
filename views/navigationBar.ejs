@@ -43,6 +43,9 @@
             <img src="https://picsum.photos/50" class="rounded-circle" height="30">
             </a>
             <ul class="dropdown-menu">
+              <% if(typeof userRole !== "undefined") { %>
+                  <li><a class="dropdown-item">Role: <%= userRole %></a></li>
+              <% } %>
               <li><a class="dropdown-item" href="/carts">Cart</a></li>
               <li><a class="dropdown-item" href="/orders">Orders</a></li>
               <li><hr class="dropdown-divider" /></li>
