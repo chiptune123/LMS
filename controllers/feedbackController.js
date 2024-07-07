@@ -9,7 +9,7 @@ exports.feedback_list = asyncHandler(async (req, res, next) => {
   )
     .sort({ creationDate: 1 })
     .exec();
-  res.render("feedback_list", {
+  res.render("contact", {
     title: "Feedback list",
     feedback_list: feedbackList,
   });
