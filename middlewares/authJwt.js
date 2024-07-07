@@ -3,6 +3,9 @@ const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 const config = require("../config/auth.config.js");
 
+// Import Users model
+const userModel = require("../models/users.js");
+
 // This function verify JWT token and set the request object with userID field.
 exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
@@ -21,8 +24,15 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
         // set request object with tokenUserId properties for the verify middleware chain
         // decoded.id is the JWT payload properties that store userId in user_sign_in controller
         req.session.tokenUserId = decoded.id;
-        next();
-    })
+        
+    });
+
+    // Query user with tokenUserId from the token and set res.locals variable accessible in templates
+    const userDetail = await userModel.findById(req.session.tokenUserId).exec();
+    res.locals.userRole = userDetail.role;
+    console.log(res.locals.userRole);
+
+    next();
 })
 
 
