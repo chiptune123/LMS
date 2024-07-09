@@ -8,11 +8,11 @@ const asyncHandler = require("express-async-handler");
 
 exports.book_list = asyncHandler(async (req, res, next) => {
   try {
-    const allBooks = await BookModel.find()
-      .populate("author")
-      .populate("subject")
-      .sort({ title: 1 })
-      .exec();
+    const [authorList, allBooks, subjectList] = await Promise.all(
+      [AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
+      BookModel.find().populate("author").populate("subject").sort({ title: 1 }).exec(),
+      SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
+    ]);
 
     // Create an empty session if there are no items in cart
     if (!req.session.cart) {
@@ -21,11 +21,23 @@ exports.book_list = asyncHandler(async (req, res, next) => {
     }
 
     if (allBooks) {
+      if (req.baseUrl == "/admin") {
+        res.render("book_data_table", {
+          title: "Book Collection",
+          book_list: allBooks,
+          author_list: authorList,
+          subject_list: subjectList,
+          cart: req.session.cart,
+        });
+        return;
+      }
       res.render("book_list", {
         title: "Book Collection",
         book_list: allBooks,
+        author_list: authorList,
         cart: req.session.cart,
       });
+      return;
     } else {
       res
         .status(404)
@@ -281,7 +293,7 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
       }
     }
 
-    for(let i = 0; i < bookList.length; i++) {
+    for (let i = 0; i < bookList.length; i++) {
       bookList[i].bookTotalPrice = bookList[i].price * bookList[i].quantity;
       orderTotalPrice = orderTotalPrice + (bookList[i].quantity * bookList[i].price);
       orderTotalQuantity = orderTotalQuantity + bookList[i].quantity;
