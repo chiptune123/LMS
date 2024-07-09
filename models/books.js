@@ -17,7 +17,16 @@ const BookSchema = new Schema({
     ISBN_thirteenDigits: {type: String, required: true},
     coverPicturePath: {type: String, maxLength: 500},
     uniqueBarcode: {type: String, required: true, maxLength: 200},
-    rating: {type: Number, default: 0}
+    rating: {type: Number, default: 0},
+    status: {
+        type: String,
+        required: true,
+        enum: [
+          "Available",
+          "Unavailable",
+        ],
+        default: "Available",
+      },
     // comments: [
     //     {
     //         memberID: {type: Schema.Types.ObjectId, ref: "User", required: true},
