@@ -3,16 +3,26 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
 exports.feedback_list = asyncHandler(async (req, res, next) => {
-  const feedbackList = await FeedbackModel.find(
-    {},
-    "creationDate name email feedbackStatus"
-  )
-    .sort({ creationDate: 1 })
-    .exec();
-  res.render("contact", {
-    title: "Feedback list",
-    feedback_list: feedbackList,
-  });
+  try {
+    const feedbackList = await FeedbackModel.find({})
+      .sort({ creationDate: 1 })
+      .exec();
+
+    if (feedbackList) {
+      if (req.baseUrl == "/admin") {
+        res.render("feedbackManagement", { title: "Feedback Collection", feedback_list: feedbackList });
+        return;
+      }
+      res.render("contact", {
+        title: "Feedback list",
+        feedback_list: feedbackList,
+      });
+    } else {
+      res.status(404).render("errorPage", { message: "Author list not found!", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
 });
 
 exports.feedback_detail = asyncHandler(async (req, res, next) => {
@@ -40,13 +50,13 @@ exports.feedback_create_post = asyncHandler(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     phoneNumber: req.body.phoneNumber,
-    feedbackType: req.body.feedback,
+    feedbackType: req.body.feedbackType,
     feedbackMessage: req.body.feedbackMessage,
     attachment: req.body.attachment,
   });
 
   await NewFeedback.save();
-  res.redirect("/feedbacks");
+  res.redirect("/");
 });
 
 exports.feedback_update_get = asyncHandler(async (req, res, next) => {
