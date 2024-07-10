@@ -10,7 +10,16 @@ exports.author_list = asyncHandler(async (req, res, next) => {
             .exec();
 
         if (allAuthors) {
+            if (req.baseUrl == "/admin") {
+                res.render("author_data_table", {
+                  title: "Author Collection",
+                  author_list: allAuthors,
+                });
+                return;
+            }
+
             res.render("author_list", { title: "Author Collection", author_list: allAuthors });
+            return;
         } else {
             res.status(404).render("errorPage", { message: "No Author Found!", errorStatus: 404 });
         }
