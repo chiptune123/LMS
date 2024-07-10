@@ -7,7 +7,7 @@ const verifySignUp = require("../middlewares/verifySignUp");
 // Import feedback Controller 
 const feedback_controller = require("../controllers/feedbackController");
 
-router.get("/", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_list);
+//router.get("/", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_list);
 
 router.get("/create", feedback_controller.feedback_create_get);
 
