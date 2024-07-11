@@ -38,7 +38,7 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
       .sort({ username: 1 })
       .exec();
 
-    if (allMember) {
+    if (allStaff) {
       if (req.baseUrl == "/admin") {
         res.render("userManagement", { title: "Staff Collection", user_list: allStaff });
         return;
