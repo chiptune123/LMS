@@ -13,6 +13,45 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   res.render("user_list", { title: "User List", user_list: allUsers });
 });
 
+exports.user_list_by_member = asyncHandler(async (req, res, next) => {
+  try {
+    const allMember = await User.find({ role: "User" })
+      .sort({ username: 1 })
+      .exec();
+
+    if (allMember) {
+      if (req.baseUrl == "/admin") {
+        res.render("userManagement", { title: "Member Collection", user_list: allMember });
+        return;
+      }
+      //res.render("user_list", { title: "User List", user_list: allUsers });
+    }
+
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
+exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
+  try {
+    const allStaff = await User.find({ role: "Librarian" })
+      .sort({ username: 1 })
+      .exec();
+
+    if (allMember) {
+      if (req.baseUrl == "/admin") {
+        res.render("userManagement", { title: "Staff Collection", user_list: allStaff });
+        return;
+      }
+      //res.render("user_list", { title: "User List", user_list: allUsers });
+    }
+
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
+
 exports.user_detail = asyncHandler(async (req, res, next) => {
   const userDetail = await User.findOne({ username: req.params.id }).exec();
   res.render("user_detail", { user_information: userDetail });
@@ -158,13 +197,13 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
     }).exec();
 
     if (!user) {
-      return res.status(404).render("login", { errors: [{msg: "Incorrect username"}]});
+      return res.status(404).render("login", { errors: [{ msg: "Incorrect username" }] });
     }
 
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
     if (!passwordIsValid) {
-      return res.status(404).render("login", { errors: [{msg: "Incorrect password"}] });
+      return res.status(404).render("login", { errors: [{ msg: "Incorrect password" }] });
     }
 
     // Set payload of the JWT with properties "id" that store userId
@@ -184,7 +223,7 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
 
     return res.redirect("/books")
   } catch (error) {
-    return res.status(500).render("errorPage", {errorStaus:500, message: error.message })
+    return res.status(500).render("errorPage", { errorStaus: 500, message: error.message })
   }
 });
 /* (err  , user) => {
