@@ -11,7 +11,7 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get("/", user_controller.user_list);
+//router.get("/", user_controller.user_list);
 
 //outer.get("/create", user_controller.user_create_get);
 
