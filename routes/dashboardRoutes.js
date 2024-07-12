@@ -8,6 +8,7 @@ const author_controller = require("../controllers/authorController");
 const feedback_controller = require("../controllers/feedbackController");
 const user_controller = require("../controllers/userController");
 const announcement_controller = require("../controllers/announcementController");
+const import_log_controller = require("../controllers/importLogController");
 
 router.get('/dashboard', asyncHandler(async (req, res, next) => {
     res.render("dashboard", { title: "Dashhboard Page" });
@@ -24,6 +25,8 @@ router.get('/dashboard/user_management/member', user_controller.user_list_by_mem
 router.get('/dashboard/user_management/staff', user_controller.user_list_by_staff);
 
 router.get('/dashboard/announcement_management', announcement_controller.announcement_list);
+
+router.get('/dashboard/import_log_management', [authJwt.verifyToken], import_log_controller.import_list);
 
 module.exports = router;
 
