@@ -25,6 +25,7 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
   }
 });
 
+// Return order list based on userId
 exports.order_list_by_user = asyncHandler(async (req, res, next) => {
   try {
     // *** Implement checking case if user is login
@@ -45,9 +46,13 @@ exports.order_list_by_user = asyncHandler(async (req, res, next) => {
 
 exports.order_list = asyncHandler(async (req, res, next) => {
   try {
-    const orderList = await OrderModel.find({}).sort({ createAt: 1 }).exec();
+    const orderList = await OrderModel.find({}).populate("memberId").populate("orderPreparer").sort({ createAt: 1 }).exec();
 
     if (orderList) {
+      if(req.baseUrl == "/admin") {
+        res.render("order_management", {title: "Order Collection", order_list: orderList});
+        return;
+      }
       res.render("order_list", { order_list: orderList });
     } else {
       res.status(404).render("errorPage", { message: "Order list not found!", errorStatus: 404 });
