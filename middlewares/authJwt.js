@@ -30,7 +30,7 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     // Query user with tokenUserId from the token and set res.locals variable accessible in templates
     const userDetail = await userModel.findById(req.session.tokenUserId).exec();
     res.locals.userRole = userDetail.role;
-    console.log(res.locals.userRole);
+    res.locals.tokenUserId = req.session.tokenUserId;
 
     next();
 })
