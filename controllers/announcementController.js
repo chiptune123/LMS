@@ -4,14 +4,31 @@ const { body, validatorResult } = require("express-validator");
 const User = require("../models/users");
 
 exports.announcement_list = asyncHandler(async (req, res, next) => {
-  const announcementList = await Announcement.find({})
-    .populate('writerID')
-    .sort({ creationDate: 1 })
-    .exec();
-  res.render("announcement_list", {
-    title: "Announcement List",
-    announcement_list: announcementList,
-  });
+  try {
+    const announcementList = await Announcement.find({})
+      .populate('writerID')
+      .sort({ creationDate: 1 })
+      .exec();
+
+    if (announcementList) {
+      if (req.baseUrl == "/admin") {
+        res.render("announcement_management", { title: "Announcement", announcement_list: announcementList });
+        return;
+      }
+
+      res.render("announcement_list", {
+        title: "Announcement List",
+        announcement_list: announcementList,
+      });
+    } else {
+      res.status(404).render("errorPage", { message: "Announcement not found!", errorStatus: 404 });
+    }
+
+
+    return;
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
 });
 
 exports.announcement_create_get = asyncHandler(async (req, res, next) => {
@@ -43,7 +60,7 @@ exports.announcement_detail = asyncHandler(async (req, res, next) => {
 exports.announcement_delete_get = asyncHandler(async (req, res, next) => {
   const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
   res.render("announcement_delete_form", {
-    title: "Announcement Delete", 
+    title: "Announcement Delete",
     announcement_detail: announcementDetail,
   });
 });
@@ -62,7 +79,7 @@ exports.announcement_update_get = asyncHandler(async (req, res, next) => {
 
 exports.announcement_update_post = asyncHandler(async (req, res, next) => {
   //Find the user with request parameter
-  const user = await User.findOne({username: req.params.username});
+  const user = await User.findOne({ username: req.params.username });
 
   const newAnnouncement = new Announcement({
     _id: req.params.id,
