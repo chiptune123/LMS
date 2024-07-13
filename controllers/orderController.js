@@ -9,12 +9,14 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
     const orderDetail = await OrderModel.findById(req.params.id);
     const orderItemsList = await OrderItemModel.find({ orderId: req.params.id }).populate("bookId").sort({ createdAt: 1 });
 
-    if (orderDetail) {
-      res.render("order_detail", {
-        title: "Order Detail",
-        order_detail: orderDetail,
-        order_items_list: orderItemsList
-      });
+    if (orderDetail && orderItemsList) {
+      if (req.baseUrl == "/admin") {
+        res.render("order_detail_management", {
+          title: "Order Detail",
+          order_detail: orderDetail,
+          order_items_list: orderItemsList
+        });
+      } else {}
     } else {
       res
         .status(404)
@@ -37,7 +39,7 @@ exports.order_list_by_user = asyncHandler(async (req, res, next) => {
         order_list: orderList,
       });
     } else {
-      res.status(404).render("errorPage", {message: "Order not found", errorStatus: 404});
+      res.status(404).render("errorPage", { message: "Order not found", errorStatus: 404 });
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
@@ -49,8 +51,8 @@ exports.order_list = asyncHandler(async (req, res, next) => {
     const orderList = await OrderModel.find({}).populate("memberId").populate("orderPreparer").sort({ createAt: 1 }).exec();
 
     if (orderList) {
-      if(req.baseUrl == "/admin") {
-        res.render("order_management", {title: "Order Collection", order_list: orderList});
+      if (req.baseUrl == "/admin") {
+        res.render("order_management", { title: "Order Collection", order_list: orderList });
         return;
       }
       res.render("order_list", { order_list: orderList });
