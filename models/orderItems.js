@@ -7,7 +7,7 @@ const OrderItemSchema = new Schema({
     bookId: { type: Schema.Types.ObjectId, ref: "Book", required: true },
     returnDeadline: { type: Date },
     penaltyAmount: {type: Number, Default: 0},
-    penaltyStatus: {type: Boolean, default: 0},
+    //penaltyStatus: {type: Boolean, default: 0},
     lendStatus: {
         type: String,
         enum: ["Borrowed", "Returned", "Overdue"],
