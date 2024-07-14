@@ -31,5 +31,9 @@ router.get('/dashboard/import_log_management', [authJwt.verifyToken], import_log
 
 router.get('/dashboard/order_management', order_controller.order_list);
 
+router.get('/dashboard/order_management/order_detail/:orderId', order_controller.order_detail);
+
+router.get('/dashboard/order_management/order_return/:uniqueBarcode', order_controller.order_return_get);
+
 module.exports = router;
 
