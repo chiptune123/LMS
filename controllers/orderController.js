@@ -3,20 +3,29 @@ const OrderModel = require("../models/orders");
 const OrderItemModel = require("../models/orderItems");
 const { options } = require("../routes/authenticationRoutes");
 
-exports.order_detail = asyncHandler(async (req, res, next) => {
+exports.order_detail_return = asyncHandler(async (req, res, next) => {
   try {
     //*** Implement Check if the order belong to user, if not then return 403 denided. Admin | librarian | authentic user then allow
-    const orderDetail = await OrderModel.findById(req.params.id);
-    const orderItemsList = await OrderItemModel.find({ orderId: req.params.id }).populate("bookId").sort({ createdAt: 1 });
+    //const orderDetail = await OrderModel.findById(req.params.id);
+    //const orderItemsList = await OrderItemModel.find({ orderId: req.params.id }).populate("bookId").sort({ createdAt: 1 });
+
+    // Find the lastest order item with ISBN
+    const orderItemDetail = await OrderItemModel.find({uniqueBarcode: req.params.uniqueBarcode}).sort({_id: -1}).limit(1).exec();
+    // Get the order ID from latest order item
+    const IdOfOrder = orderItemDetail.orderId;
+
+    // Find all orderItem and order detail
+    const orderItemList = await OrderItemModel.find({orderId: IdOfOrder}).populate("bookId").exec();
+    const orderDetail = await OrderModel.findById()
 
     if (orderDetail && orderItemsList) {
       if (req.baseUrl == "/admin") {
         res.render("order_detail_management", {
           title: "Order Detail",
           order_detail: orderDetail,
-          order_items_list: orderItemsList
+          order_item_list: orderItemList
         });
-      } else {}
+      }
     } else {
       res
         .status(404)
@@ -27,6 +36,29 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
   }
 });
 
+exports.order_detail = asyncHandler(async (req, res, next) => {
+  try {
+    //*** Implement Check if the order belong to user, if not then return 403 denided. Admin | librarian | authentic user then allow
+    const orderDetail = await OrderModel.findById(req.params.orderId);
+    const orderItemList = await OrderItemModel.find({ orderId: req.params.orderId }).populate("bookId").sort({ createdAt: 1 });
+
+    if (orderDetail && orderItemsList) {
+      if (req.baseUrl == "/admin") {
+        res.render("order_detail_management", {
+          title: "Order Detail",
+          order_detail: orderDetail,
+          order_item_list: orderItemList
+        });
+      }
+    } else {
+      res
+        .status(404)
+        .render("errorPage", { message: "Order not found", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
 // Return order list based on userId
 exports.order_list_by_user = asyncHandler(async (req, res, next) => {
   try {
@@ -59,6 +91,14 @@ exports.order_list = asyncHandler(async (req, res, next) => {
     } else {
       res.status(404).render("errorPage", { message: "Order list not found!", errorStatus: 404 });
     }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
+exports.order_return_get = asyncHandler(async (req, res, next) => {
+  try {
+    res.render("order_return", {title: "Order Return"});
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
