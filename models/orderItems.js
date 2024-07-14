@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const OrderItemSchema = new Schema({
     orderId: { type: Schema.Types.ObjectId, ref: "Order", required: true },
     bookId: { type: Schema.Types.ObjectId, ref: "Book", required: true },
+    uniqueBarcode: {type: String, required: true, maxLength: 200},
     returnDeadline: { type: Date },
     penaltyAmount: {type: Number, Default: 0},
     //penaltyStatus: {type: Boolean, default: 0},
