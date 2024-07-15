@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const AnnouncementSchema = new Schema(
     {
         announcementContent: { type: String, required: true },
-        writerID: { type: Schema.Types.ObjectId, ref: "User" }
+        writerId: { type: Schema.Types.ObjectId, ref: "User" }
     },
     { timestamps: true });
 
