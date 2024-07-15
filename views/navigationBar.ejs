@@ -44,7 +44,12 @@
             </a>
             <ul class="dropdown-menu">
               <% if(typeof userRole !== "undefined") { %>
-                  <li><a class="dropdown-item">Role: <%= userRole %></a></li>
+                  <li><a class="dropdown-item">Role: <%= userRole %></a></li>        
+                  <% if (userRole == "Admin") { %>
+                    <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                  <% } %>
+              <% } else { %>
+                  <li><a class="dropdown-item" href="/auth/login">Login</a></li>
               <% } %>
               <li><a class="dropdown-item" href="/carts">Cart</a></li>
               <li><a class="dropdown-item" href="/orders">Orders</a></li>
