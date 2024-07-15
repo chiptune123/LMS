@@ -6,25 +6,19 @@ const config = require("../config/auth.config.js");
 // Import Users model
 const userModel = require("../models/users.js");
 
-// This function verify JWT token and set the request object with userID field.
+// This function verify JWT token and decode the payload to get userId
 exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
 
     if (!token) {
-        return res.status(403).render("errorPage" ,{ message: "Please login to use this feature!", errorStatus: 403 });
+        return next();
     }
 
     jwt.verify(token, config.secret, (err, decoded) => {
-        // if (err) {
-        //     return res.status(401).send({
-        //         message: "Unauthorized!",
-        //     })
-        // }
-
         // set request object with tokenUserId properties for the verify middleware chain
         // decoded.id is the JWT payload properties that store userId in user_sign_in controller
         req.session.tokenUserId = decoded.id;
-        
+
     });
 
     // Query user with tokenUserId from the token and set res.locals variable accessible in templates
@@ -47,7 +41,7 @@ exports.isAdmin = asyncHandler(async (req, res, next) => {
                 res.status(403).render("errorPage", { message: "Require Admin Role!", errorStatus: 403 });
             }
         } else {
-            res.status(403).render("errorPage", { message: "Please login to use this feature!", errorStatus: 403});
+            res.status(403).render("errorPage", { message: "Please login to use this feature!", errorStatus: 403 });
         }
     } catch (err) {
         res.status(500).render("errorPage", { message: err, errorStatus: 500 });
