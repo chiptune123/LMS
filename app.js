@@ -65,7 +65,7 @@ app.use(
 );
 
 //Jwt configuration
-//app.use(authJwt.verifyToken);
+app.use(authJwt.verifyToken);
 
 app.get('/login', (req, res) => {
   res.json({message: "Welcome to the login page"});
