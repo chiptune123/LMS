@@ -11,7 +11,7 @@ const OrderSchema = new Schema(
       enum: [
         "Processing",
         "Ready for Pick Up",
-        "Partially Completed",
+        //"Partially Completed",
         "Completed",
       ],
       default: "Processing",
