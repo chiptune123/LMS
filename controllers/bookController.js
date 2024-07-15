@@ -10,7 +10,7 @@ exports.book_list = asyncHandler(async (req, res, next) => {
   try {
     const [authorList, allBooks, subjectList] = await Promise.all(
       [AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
-      BookModel.find().populate("author").populate("subject").sort({ title: 1 }).exec(),
+      BookModel.find().populate("author").sort({ title: 1 }).exec(),
       SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
     ]);
 
