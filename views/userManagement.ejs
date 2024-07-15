@@ -583,13 +583,10 @@
                                                                         <div class="modal-header">
                                                                             <h1 class="modal-title fs-5"
                                                                                 id="updateModalLabel">Update User</h1>
-                                                                            <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"
-                                                                                aria-label="Close"></button>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                         </div>
                                                                         <!-- Update book form -->
-                                                                        <form action="/users/<%= val.id %>/update"
-                                                                            method="post">
+                                                                        <form action="/users/<%= val.id %>/update" method="post">
                                                                             <div class="modal-body text-start">
                                                                                 <div class="card-body">
                                                                                     <div class="row">
@@ -659,17 +656,15 @@
                                                                                             <label>Verification
                                                                                                 Status:</label> <br>
                                                                                             <input <%
-                                                                                                if(val.verificationStatus==true)
-                                                                                                { %> checked <% } %>
+                                                                                                if(val.verificationStatus==true) { %> checked <% } %>
+                                                                                                
                                                                                                 type="radio"
                                                                                                 id="verificationStatus1"
                                                                                                 name="verificationStatus"
                                                                                                 value="True">
                                                                                                 <label
                                                                                                     for="verificationStatus1">Yes</label>
-                                                                                                <input <%
-                                                                                                    if(val.verificationStatus==false)
-                                                                                                    { %> checked <% } %>
+                                                                                                <input <% if(val.verificationStatus==false) { %> checked <% } %>
                                                                                                     type="radio"
                                                                                                     id="verificationStatus2"
                                                                                                     name="verificationStatus"
@@ -690,18 +685,14 @@
                                                                                         <div class="form-group">
                                                                                             <label>Delete
                                                                                                 Status:</label> <br>
-                                                                                            <input <%
-                                                                                                if(val.deleteStatus==true)
-                                                                                                { %> checked <% } %>
+                                                                                            <input <% if(val.deleteStatus==true) { %> checked <% } %>
                                                                                                 type="radio"
                                                                                                 id="deleteStatus1"
                                                                                                 name="deleteStatus"
                                                                                                 value="True">
                                                                                                 <label
                                                                                                     for="verificationStatus1">Yes</label>
-                                                                                                <input <%
-                                                                                                    if(val.verificationStatus==false)
-                                                                                                    { %> checked <% } %>
+                                                                                                <input <% if(val.verificationStatus==false) { %> checked <% } %>
                                                                                                     type="radio"
                                                                                                     id="deleteStatus2"
                                                                                                     name="deleteStatus"
