@@ -9,7 +9,7 @@ const RenewalRequestSchema = new Schema(
         librarianId: { typeof: Schema.Types.ObjectId, ref: "User", default: "" },
         reason: { typeof: String, required: true, maxLength: 500 },
         requestExtendDate: { typeof: Date, required: true, default: Date.now },
-        requestStatus: { typeof: String, required: true, enum: ["Processing", "Denided", "Accept"], default: "Processing" }
+        requestStatus: { typeof: String, required: true, enum: ["Denided", "Accept"], default: "Processing" }
     },
     { timestamps: true });
 
