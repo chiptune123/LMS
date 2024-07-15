@@ -8,7 +8,7 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
     // Return empty array if no document is founded: []
     const announcementList = await Announcement.find({})
       .populate('writerId')
-      .sort({ creationDate: 1 })
+      .sort({ createdAt: 1 })
       .exec();
 
     if (announcementList) {
@@ -22,8 +22,8 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
         announcement_list: announcementList,
       });
       return;
-    } 
-    
+    }
+
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     return;
@@ -36,9 +36,9 @@ exports.announcement_create_post = asyncHandler(async (req, res, next) => {
 
   if (userDetail) {
     const NewAnnouncement = new Announcement({
-      creationDate: currentDate,
+      createdAt: currentDate,
       announcementContent: req.body.announcementContent,
-      writerID: userDetail.id,
+      writerId: req.session.tokenUserId,
     });
 
     await NewAnnouncement.save();
@@ -47,10 +47,16 @@ exports.announcement_create_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.announcement_detail = asyncHandler(async (req, res, next) => {
-  const announcementDetail = await Announcement.findById(req.params.announcementId).populate("writerID").exec();
+  const announcementDetail = await Announcement.findById(req.params.announcementId).populate("writerId").exec();
+  const announcementList = await Announcement.find({})
+    .populate('writerId')
+    .sort({ createdAt: 1 })
+    .exec();
+
   res.render("announcement_detail", {
     title: "Announcement Detail",
     announcement_detail: announcementDetail,
+    announcement_list: announcementList,
   });
 });
 
