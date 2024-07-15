@@ -5,14 +5,15 @@ const User = require("../models/users");
 
 exports.announcement_list = asyncHandler(async (req, res, next) => {
   try {
+    // Return empty array if no document is founded: []
     const announcementList = await Announcement.find({})
-      .populate('writerID')
+      .populate('writerId')
       .sort({ creationDate: 1 })
       .exec();
 
     if (announcementList) {
       if (req.baseUrl == "/admin") {
-        res.render("announcement_management", { title: "Announcement", announcement_list: announcementList });
+        res.render("announcement_management", { title: "Announcement Collection", announcement_list: announcementList });
         return;
       }
 
@@ -20,74 +21,53 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
         title: "Announcement List",
         announcement_list: announcementList,
       });
-    } else {
-      res.status(404).render("errorPage", { message: "Announcement not found!", errorStatus: 404 });
-    }
-
-
-    return;
+      return;
+    } 
+    
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+    return;
   }
-});
-
-exports.announcement_create_get = asyncHandler(async (req, res, next) => {
-  res.render("announcement_create_form", { title: "Create Announcement" });
 });
 
 exports.announcement_create_post = asyncHandler(async (req, res, next) => {
   const currentDate = new Date();
-  const userDetail = await User.findOne({ username: req.params.id }).exec();
-  const NewAnnouncement = new Announcement({
-    creationDate: currentDate,
-    announcementContent: req.body.announcementContent,
-    writerID: userDetail._id,
-  });
-  //testing
-  console.log(NewAnnouncement);
-  await NewAnnouncement.save();
-  res.redirect("/announcements");
+  const userDetail = await User.findById(req.session.tokenUserId);
+
+  if (userDetail) {
+    const NewAnnouncement = new Announcement({
+      creationDate: currentDate,
+      announcementContent: req.body.announcementContent,
+      writerID: userDetail.id,
+    });
+
+    await NewAnnouncement.save();
+    res.redirect("/admin/dashboard/announcement_management");
+  }
 });
 
 exports.announcement_detail = asyncHandler(async (req, res, next) => {
-  const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
+  const announcementDetail = await Announcement.findById(req.params.announcementId).populate("writerID").exec();
   res.render("announcement_detail", {
     title: "Announcement Detail",
     announcement_detail: announcementDetail,
   });
 });
 
-exports.announcement_delete_get = asyncHandler(async (req, res, next) => {
-  const announcementDetail = await Announcement.findById(req.params.id).populate("writerID").exec();
-  res.render("announcement_delete_form", {
-    title: "Announcement Delete",
-    announcement_detail: announcementDetail,
-  });
-});
-
 exports.announcement_delete_post = asyncHandler(async (req, res, next) => {
-  await Announcement.findByIdAndDelete(req.params.id);
+  await Announcement.findByIdAndDelete(req.params.announcementId);
   res.redirect("/announcements");
 });
 
-exports.announcement_update_get = asyncHandler(async (req, res, next) => {
-  const currentAnnouncement = await Announcement.findById(req.params.id);
-  console.log(currentAnnouncement);
-  console.log(currentAnnouncement.announcementContent);
-  res.render("announcement_update_form", { title: "Announcement Update", current_announcement: currentAnnouncement });
-});
-
 exports.announcement_update_post = asyncHandler(async (req, res, next) => {
-  //Find the user with request parameter
-  const user = await User.findOne({ username: req.params.username });
 
   const newAnnouncement = new Announcement({
-    _id: req.params.id,
-    creationDate: Date(),
-    announcementContent: req.body.announcementContent,
-    writerID: user._id
+    _id: req.params.announcementId,
+    updatedAt: new Date(),
+    announcementContent: req.body.announcementContentUpdate,
+    writerId: req.body.writerId,
   })
-  console.log(newAnnouncement);
-  const updateAnnouncement = await Announcement.findByIdAndUpdate(req.params.id, newAnnouncement);
-  res.redirect(`/announcements`);
+
+  await Announcement.findByIdAndUpdate(req.params.announcementId, newAnnouncement);
+  res.redirect(`/admin/dashboard/announcement_management`);
 });
