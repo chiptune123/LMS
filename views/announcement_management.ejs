@@ -28,6 +28,7 @@
             },
         });
     </script>
+    <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
@@ -417,24 +418,24 @@
                                                                 <!-- Button trigger detailModal -->
                                                                 <button type="button" class="btn btn-primary"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#detailModal">
+                                                                    data-bs-target="#detailModal<%= index %>">
                                                                     Detail
                                                                 </button>
                                                                 <!-- Button trigger updateModal -->
                                                                 <button type="button" class="btn btn-warning"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#updateModal">
+                                                                    data-bs-target="#updateModal<%= index %>">
                                                                     Update
                                                                 </button>
                                                                 <!-- Button trigger deleteModal -->
                                                                 <button type="button" class="btn btn-danger my-1"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#deleteModal">
+                                                                    data-bs-target="#deleteModal<%= index %>">
                                                                     Delete
                                                                 </button>
 
                                                                 <!-- Detail Modal -->
-                                                                <div class="modal fade" id="detailModal" tabindex="-1"
+                                                                <div class="modal fade" id="detailModal<%= index %>" tabindex="-1"
                                                                     aria-labelledby="detailModalLabel"
                                                                     aria-hidden="true">
                                                                     <div class="modal-dialog">
@@ -487,7 +488,7 @@
                                                                 </div>
 
                                                                 <!-- Update Modal -->
-                                                                <div class="modal fade" id="updateModal" tabindex="-1"
+                                                                <div class="modal fade" id="updateModal<%= index %>" tabindex="-1"
                                                                     aria-labelledby="updateModalLabel"
                                                                     aria-hidden="true">
                                                                     <div class="modal-dialog">
@@ -594,7 +595,7 @@
                                                                 </div>
 
                                                                 <!-- Delete modal -->
-                                                                <div class="modal fade" id="deleteModal" tabindex="-1"
+                                                                <div class="modal fade" id="deleteModal<%= index %>" tabindex="-1"
                                                                     aria-labelledby="deleteModalLabel"
                                                                     aria-hidden="true">
                                                                     <div class="modal-dialog">
