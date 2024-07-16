@@ -10,4 +10,4 @@ const AuthorSchema = new Schema({
     deleteReason: { type: String, maxLength: 500, default: "" },
 })
 
-module.exports = mongoose.model("Author",AuthorSchema);
+module.exports = mongoose.model("Author", AuthorSchema);
