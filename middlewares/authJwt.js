@@ -15,10 +15,16 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     }
 
     jwt.verify(token, config.secret, (err, decoded) => {
+        // If token expired, Empty session and pass to next middlewares
+        if (err) {
+            if (err.name == "TokenExpiredError") {
+                req.session = null;
+                return next();
+            }
+        }
         // set request object with tokenUserId properties for the verify middleware chain
         // decoded.id is the JWT payload properties that store userId in user_sign_in controller
         req.session.tokenUserId = decoded.id;
-
     });
 
     // Query user with tokenUserId from the token and set res.locals variable accessible in templates
