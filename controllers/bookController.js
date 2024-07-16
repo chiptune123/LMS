@@ -1,6 +1,6 @@
 const BookModel = require("../models/books");
 const AuthorModel = require("../models/authors");
-const SubjectModel = require("../models/subjects");
+//const SubjectModel = require("../models/subjects");
 const CartModel = require("../models/carts");
 
 const asyncHandler = require("express-async-handler");
@@ -11,8 +11,8 @@ exports.book_list = asyncHandler(async (req, res, next) => {
     const [authorList, allBooks, subjectList] = await Promise.all(
       [AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
       BookModel.find().populate("author").sort({ title: 1 }).exec(),
-      SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
-    ]);
+        //SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
+      ]);
 
     // Create an empty session if there are no items in cart
     if (!req.session.cart) {
@@ -22,11 +22,11 @@ exports.book_list = asyncHandler(async (req, res, next) => {
 
     if (allBooks) {
       if (req.baseUrl == "/admin") {
-        res.render("book_data_table", {
+        res.render("book_management", {
           title: "Book Collection",
           book_list: allBooks,
           author_list: authorList,
-          subject_list: subjectList,
+          //subject_list: subjectList,
           cart: req.session.cart,
         });
         return;
@@ -52,7 +52,7 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
   try {
     const bookDetail = await BookModel.findById(req.params.id)
       .populate("author")
-      .populate("subject")
+      // .populate("subject")
       .exec();
 
     if (bookDetail) {
@@ -70,58 +70,38 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.book_create_get = asyncHandler(async (req, res, next) => {
-  try {
-    const [authorList, subjectList] = await Promise.all([
-      AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
-      SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
-    ]);
-    res.render("book_create_form", {
-      title: "Book Create",
-      author_list: authorList,
-      subject_list: subjectList,
-    });
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
-});
-
 exports.book_create_post = asyncHandler(async (req, res, next) => {
-  // Check ISBN if book is exist
   try {
+    // Check barcode if book is existed
     const bookDetail = await BookModel.find({
-      ISBN_thirteenDigits: req.body.bookISBN_thirteenDigits,
-      ISBN_tenDigits: req.body.bookISBN_tenDigits,
+      uniqueBarcode: req.body.bookUniqueBarcode,
     }).exec();
-    const [authorList, subjectList] = await Promise.all([
-      AuthorModel.find({}, "name").sort({ title: 1 }).exec(),
-      SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
-    ]);
+    const authorList = await AuthorModel.find({}, "name").sort({ title: 1 }).exec();
 
     const newBook = new BookModel({
-      title: req.body.title,
-      author: req.body.authors,
-      subject: req.body.subjects,
-      description: req.body.description,
-      publisher: req.body.publisher,
-      publish_date: req.body.publishDate,
-      page_numbers: req.body.pageNumber,
-      price: req.body.price,
-      quantity: req.body.quantity,
-      ISBN_tenDigits: req.body.ISBN_tenDigits,
-      ISBN_thirteenDigits: req.body.ISBN_thirteenDigits,
-      coverPicturePath: req.body.coverPicturePath,
-      uniqueBarcode: req.body.uniqueBarcode,
-      rating: req.body.rating,
+      title: req.body.bookTitle,
+      author: req.body.authorId,
+      description: req.body.bookDescription,
+      publisher: req.body.bookPublisher,
+      publish_date: req.body.bookPublishDate,
+      page_numbers: req.body.bookPageNumber,
+      quantity: req.body.bookQuantity,
+      ISBN_tenDigits: req.body.bookISBNTenDigits,
+      ISBN_thirteenDigits: req.body.bookISBNThirteenDigits,
+      coverPicturePath: req.body.bookCoverPicturePath,
+      uniqueBarcode: req.body.bookUniqueBarcode,
+      status: req.body.bookStatus
     });
 
-    if (bookDetail == null) {
-      res.status(500).render("book_create_form", {
-        err: "Book already exist",
-        title: "Book Create",
+    if (bookDetail.length > 0) {
+      const errors = [];
+      errors.push("A book with same barcode already existed")
+
+      res.status(409).render("book_management", {
+        errors_object: errors,
+        title: "Book Collection",
         book_detail: bookDetail,
         author_list: authorList,
-        subject_list: subjectList,
       });
     } else {
       await newBook.save();
@@ -132,79 +112,37 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.book_update_get = asyncHandler(async (req, res, next) => {
-  try {
-    // const bookDetail = BookModel.findById(req.params.id);
-    const [bookDetail, subjectList, authorList, subjectDetail, AuthorDetail] =
-      await Promise.all([
-        BookModel.findById(req.params.id)
-          .populate("author")
-          .populate("subject")
-          .exec(),
-        SubjectModel.find({}, "name").sort({ name: 1 }).exec(),
-        AuthorModel.find({}, "name").sort({ name: 1 }).exec(),
-      ]);
-
-    if (bookDetail) {
-      res.render("book_update_form", {
-        title: "Book Update",
-        book_detail: bookDetail,
-        subject_list: subjectList,
-        author_list: authorList,
-      });
-    } else {
-      res
-        .status(404)
-        .render("errorPage", { message: "Book Not Found", errorStatus: 404 });
-    }
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
-});
-
 exports.book_update_post = asyncHandler(async (req, res, next) => {
   try {
+    // Check barcode if book is existed
+    const bookDetail = await BookModel.find({
+      uniqueBarcode: req.body.bookUniqueBarcode,
+    }).exec();
+
+    if(bookDetail.length > 0) {
+      
+    }
+
     await BookModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
-          title: req.body.title,
-          author: req.body.authors,
-          subject: req.body.subjects,
-          description: req.body.description,
-          publisher: req.body.publisher,
-          publish_date: req.body.publishDate,
-          page_numbers: req.body.pageNumber,
-          price: req.body.price,
-          quantity: req.body.quantity,
-          ISBN_tenDigits: req.body.ISBN_tenDigits,
-          ISBN_thirteenDigits: req.body.ISBN_thirteenDigits,
-          coverPicturePath: req.body.coverPicturePath,
-          uniqueBarcode: req.body.uniqueBarcode,
+          title: req.body.bookTitle,
+          author: req.body.authorId,
+          description: req.body.bookDescription,
+          publisher: req.body.bookPublisher,
+          publish_date: req.body.bookPublishDate,
+          page_numbers: req.body.bookPageNumber,
+          quantity: req.body.bookQuantity,
+          ISBN_tenDigits: req.body.ISBNTenDigits,
+          ISBN_thirteenDigits: req.body.ISBNThirteenDigits,
+          coverPicturePath: req.body.bookCoverPicturePath,
+          uniqueBarcode: req.body.bookUniqueBarcode,
         },
       }
     );
 
-    res.redirect("/books");
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
-});
-
-exports.book_delete_get = asyncHandler(async (req, res, next) => {
-  try {
-    const bookDetail = await BookModel.findById(req.params.id);
-
-    if (bookDetail) {
-      res.render("book_delete_form", {
-        title: "Book Delete",
-        book_detail: bookDetail,
-      });
-    } else {
-      res
-        .status(404)
-        .render("errorPage", { message: "Book not found", errorStatus: 500 });
-    }
+    res.redirect("/admin/dashboard/book_management");
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
