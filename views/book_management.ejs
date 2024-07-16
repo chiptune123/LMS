@@ -551,22 +551,22 @@
                               <td class="text-center">
                                 <!-- Button trigger detailModal -->
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                  data-bs-target="#detailModal">
+                                  data-bs-target="#detailModal<%= index %>">
                                   Detail
                                 </button>
                                 <!-- Button trigger updateModal -->
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                  data-bs-target="#updateModal">
+                                  data-bs-target="#updateModal<%= index %>">
                                   Update
                                 </button>
                                 <!-- Button trigger deleteModal -->
                                 <button type="button" class="btn btn-danger my-1" data-bs-toggle="modal"
-                                  data-bs-target="#deleteModal">
+                                  data-bs-target="#deleteModal<%= index %>">
                                   Delete
                                 </button>
 
                                 <!-- Detail Modal -->
-                                <div class="modal fade" id="detailModal" tabindex="-1"
+                                <div class="modal fade" id="detailModal<%= index %>" tabindex="-1"
                                   aria-labelledby="detailModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
@@ -628,6 +628,10 @@
                                         <p>
                                           <%= val.rating %>
                                         </p>
+                                        <h4 class="fw-bold text-info">Book Status:</h4>
+                                        <p>
+                                          <%= val.status %>
+                                        </p>
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -639,7 +643,7 @@
                                 </div>
 
                                 <!-- Update Modal -->
-                                <div class="modal fade" id="updateModal" tabindex="-1"
+                                <div class="modal fade" id="updateModal<%= index %>" tabindex="-1"
                                   aria-labelledby="updateModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
@@ -654,74 +658,76 @@
                                           <div class="card-body">
                                             <div class="row">
                                               <div class="form-group">
-                                                <label for="disableinput">Book id: </label>
-                                                <input type="text" class="form-control" id="bookId"
-                                                  value="<%= val.id %>" disabled="">
+                                                <label for="bookId">Book id: </label>
+                                                <input type="text" class="form-control" id="bookId" name="bookId"
+                                                  value="<%= val.id %>" readonly>
                                               </div>
                                               <div class="form-group">
-                                                <label for="title">Title:</label>
-                                                <input class="form-control" type="text" id="title" name="title"
+                                                <label for="bookTitle">Title:</label>
+                                                <input class="form-control" type="text" id="bookTitle" name="bookTitle"
                                                   value="<%= val.title %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="author">Author:</label>
-                                                <select multiple="" class="form-control" name="author" id="author">
+                                                <label for="authorId">Author:</label>
+                                                <select multiple="" class="form-control" name="authorId" id="authorId">
                                                   <% for(author of author_list) { %>
-                                                    <option class="bg-primary-subtle text-primary-emphasis"
+                                                    <option class="text-primary-emphasis <% if(val.author.id == author.id) { %> bg-primary-subtle <% } %>"
                                                       value="<%= author.id %>">
-                                                      <%= author.name %> (current)
+                                                      <%= author.name %> <% if(val.author.id == author.id) { %> (current) <% } %>
                                                     </option>
                                                     <% } %>
                                                 </select>
                                               </div>
                                               <div class="form-group">
-                                                <label for="publishDate">Publish Date:</label>
-                                                <input class="form-control" type="date" name="publishDate"
-                                                  id="publishDate" value="<%= val.publish_date %>">
+                                                <label for="bookPublishDate">Publish Date:</label>
+                                                <input class="form-control" type="date" name="bookPublishDate"
+                                                  id="bookPublishDate" value="<%= val.publish_date.toISOString().split("T")[0] %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="pageNumber">Page Number:</label>
-                                                <input class="form-control" type="number" name="pageNumber"
-                                                  id="pageNumber" value="<%= val.page_numbers%>">
+                                                <label for="bookPublisher">Publisher:</label>
+                                                <input class="form-control" type="text" name="bookPublisher" id="bookPublisher" value="<%= val.publisher %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="price">Price:</label>
-                                                <input class="form-control" type="number" name="price" id="price"
-                                                  value="<%= val.price %>">
-
+                                                <label for="bookPageNumber">Page Number:</label>
+                                                <input class="form-control" type="number" name="bookPageNumber"
+                                                  id="bookPageNumber" value="<%= val.page_numbers%>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="quantity">Quantity: </label>
-                                                <input class="form-control" type="number" name="quantity" id="quantity"
+                                                <label for="bookQuantity">Quantity: </label>
+                                                <input class="form-control" type="number" name="bookQuantity" id="bookQuantity"
                                                   value="<%= val.quantity %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="ISBN_tenDigits">ISBN 10:</label>
-                                                <input class="form-control" type="text" name="ISBN_tenDigits"
-                                                  id="ISBN_tenDigits" value="<%= val.ISBN_tenDigits %>">
+                                                <label for="ISBNTenDigits">ISBN 10:</label>
+                                                <input class="form-control" type="text" name="ISBNTenDigits"
+                                                  id="ISBNTenDigits" value="<%= val.ISBN_tenDigits %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="ISBN_thirteenDigits">ISBN 13:</label>
-                                                <input class="form-control" type="text" name="ISBN_thirteenDigits"
-                                                  id="ISBN_thirteenDigits" value="<%= val.ISBN_thirteenDigits %>">
+                                                <label for="ISBNThirteenDigits">ISBN 13:</label>
+                                                <input class="form-control" type="text" name="ISBNThirteenDigits"
+                                                  id="ISBNThirteenDigits" value="<%= val.ISBN_thirteenDigits %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="coverPicturePath">Cover Picture Path:</label>
-                                                <input class="form-control" type="text" name="coverPicturePath"
-                                                  id="coverPicturePath" value="<%= val.coverPicturePath %>">
+                                                <label for="bookCoverPicturePath">Cover Picture Path:</label>
+                                                <input class="form-control" type="text" name="bookCoverPicturePath"
+                                                  id="bookCoverPicturePath" value="<%= val.coverPicturePath %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="uniqueBarcode">Unique Barcode:</label>
-                                                <input class="form-control" type="text" name="uniqueBarcode"
-                                                  id="uniqueBarcode" value="<%= val.uniqueBarcode %>">
+                                                <label for="bookUniqueBarcode">Unique Barcode:</label>
+                                                <input class="form-control" type="text" name="bookUniqueBarcode"
+                                                  id="bookUniqueBarcode" value="<%= val.uniqueBarcode %>">
                                               </div>
                                               <div class="form-group">
-                                                <label for="description">Description:</label>
-                                                <textarea class="form-control" id="description" name="description"
+                                                <label for="bookDescription">Description:</label>
+                                                <textarea class="form-control" id="bookDescription" name="bookDescription"
                                                   rows="10" cols="70"><%= val.description %></textarea>
                                               </div>
                                               <div class="form-group">
-
+                                                <label>Book Status:</label> <br>
+                                                <input type="radio" name="bookStatus" id="bookStatus1" value="Available" <% if (val.status == "Available") { %> checked <% } %>>
+                                                <label for="bookStatus1">Available <% if(val.status == "Available") { %> (current) <% } %></label>
+                                                <input type="radio" name="bookStatus" id="bookStatus2" value="Unavailable" <% if (val.status == "Unavailable") { %> checked <% } %>>
+                                                <label for="bookStatus2">Unavailable <% if (val.status == "Unavailable") { %> (current) <% } %></label>
                                               </div>
                                             </div>
                                           </div>
@@ -737,7 +743,7 @@
                                 </div>
 
                                 <!-- Delete modal -->
-                                <div class="modal fade" id="deleteModal" tabindex="-1"
+                                <div class="modal fade" id="deleteModal<%= index %>" tabindex="-1"
                                   aria-labelledby="deleteModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">
                                     <div class="modal-content">
