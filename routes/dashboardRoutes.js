@@ -17,7 +17,7 @@ router.get('/dashboard', asyncHandler(async (req, res, next) => {
 
 router.get('/dashboard/book_data_table', book_controller.book_list);
 
-router.get('/dashboard/author_data_table', author_controller.author_list);
+router.get('/dashboard/author_management', author_controller.author_list);
 
 router.get('/dashboard/feedback_data_table', feedback_controller.feedback_list);
 
