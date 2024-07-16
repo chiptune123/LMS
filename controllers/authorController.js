@@ -11,13 +11,12 @@ exports.author_list = asyncHandler(async (req, res, next) => {
 
         if (allAuthors) {
             if (req.baseUrl == "/admin") {
-                res.render("author_data_table", {
-                  title: "Author Collection",
-                  author_list: allAuthors,
+                res.render("author_management", {
+                    title: "Author Collection",
+                    author_list: allAuthors,
                 });
                 return;
             }
-
             res.render("author_list", { title: "Author Collection", author_list: allAuthors });
             return;
         } else {
@@ -30,10 +29,10 @@ exports.author_list = asyncHandler(async (req, res, next) => {
 
 exports.author_detail = asyncHandler(async (req, res, next) => {
     try {
-        const [authorDetail, bookByAuthor] = await Promise.all([AuthorModel.findById(req.params.id).exec(), BookModel.find({author: req.params.id})]);
+        const [authorDetail, bookByAuthor] = await Promise.all([AuthorModel.findById(req.params.authorId).exec(), BookModel.find({ author: req.params.authorId })]);
 
         if (authorDetail && bookByAuthor) {
-            res.render("book_list", { title: "Author Detail", author_detail: authorDetail, book_list: bookByAuthor });
+            res.render("author_detail", { title: "Author Detail", author_detail: authorDetail, book_list: bookByAuthor });
         } else {
             res.status(404).render("errorPage", { message: "Author detail not found!", errorStatus: 404 });
         }
@@ -42,13 +41,6 @@ exports.author_detail = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.author_create_get = asyncHandler(async (req, res, next) => {
-    try {
-        res.render("author_create_form", { title: "Author Create" });
-    } catch (err) {
-        res.status(500).render("errorPage", { message: err, status: 500 });
-    }
-});
 
 exports.author_create_post = asyncHandler(async (req, res, next) => {
     try {
@@ -60,22 +52,8 @@ exports.author_create_post = asyncHandler(async (req, res, next) => {
         })
 
         await newAuthor.save();
-        res.redirect("/authors");
+        res.redirect("/admin/dashboard/author_management");
 
-    } catch (err) {
-        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-    }
-});
-
-exports.author_update_get = asyncHandler(async (req, res, next) => {
-    try {
-        const authorDetail = await AuthorModel.findOne({ _id: req.params.id }).exec();
-
-        if (authorDetail) {
-            res.render("author_update_form", { title: "Author Update", author_detail: authorDetail });
-        } else {
-            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
-        }
     } catch (err) {
         res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
@@ -83,7 +61,7 @@ exports.author_update_get = asyncHandler(async (req, res, next) => {
 
 exports.author_update_post = asyncHandler(async (req, res, next) => {
     try {
-        await AuthorModel.findOneAndUpdate({ _id: req.params.id }, {
+        await AuthorModel.findOneAndUpdate({ _id: req.params.authorId }, {
             $set: {
                 name: req.body.authorName,
                 bio: req.body.biography,
@@ -92,26 +70,7 @@ exports.author_update_post = asyncHandler(async (req, res, next) => {
                 profilePicturePath: req.body.profilePicturePath,
             }
         });
-
-        res.redirect("/authors");
-    } catch (err) {
-        res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-    }
-});
-
-exports.author_delete_get = asyncHandler(async (req, res, next) => {
-    try {
-        //const authorDetail = await AuthorModel.findOne({ _id: req.params.id });
-        const [authorDetail, allBookByAuthor] = await Promise.all([
-          AuthorModel.findById(req.params.id).exec(),
-          BookModel.find({author: req.params.id}).exec()
-        ]);
-
-        if (authorDetail) {
-            res.render("author_delete_form", { title: "Author Delete", author_detail: authorDetail, all_book_by_author: allBookByAuthor });
-        } else {
-            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
-        }
+        res.redirect("/admin/dashboard/author_management");
     } catch (err) {
         res.status(500).render("errorPage", { message: err, errorStatus: 500 });
     }
@@ -119,21 +78,20 @@ exports.author_delete_get = asyncHandler(async (req, res, next) => {
 
 exports.author_delete_post = asyncHandler(async (req, res, next) => {
     try {
-        const [authorDetail, allBookByAuthor] = await Promise.all([
-            AuthorModel.findById(req.params.id).exec(),
-            BookModel.find({ author: req.params.id }, "title author description")
+        const [authorList, authorDetail, allBookByAuthor] = await Promise.all([
+            AuthorModel.find({}).sort({ name: 1 }).exec(),
+            AuthorModel.findById(req.params.authorId).exec(),
+            BookModel.find({ author: req.params.authorId }, "title author description").exec()
         ]);
 
-        if (authorDetail === null) {
-            res.status(404).render("errorPage", { message: "Author not found!", errorStatus: 404 });
-        }
+        // If the author has associate book, render the page again and send an error object to template
+        if (authorDetail && (allBookByAuthor.length > 0)) {
+            let errors = [];
+            errors.push("Author Has Associated Books Error.");
 
-        // If the author has any associate book -> render the delete form again with error and all book which associate.
-        if (allBookByAuthor.length > 0) {
-            res.status(500).render("author_delete_form", {
-                author_detail: authorDetail,
-                all_book_by_author: allBookByAuthor,
-            });
+            res.render("author_management", { title: "Author Collection", author_list: authorList, author_detail: authorDetail, book_list: allBookByAuthor, errors_object: errors })
+        } else {
+            res.render("author_management", { title: "Author Collection", author_list: authorList });
         }
 
         await AuthorModel.findByIdAndDelete(req.params.id);
