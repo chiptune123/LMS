@@ -1,9 +1,95 @@
-<h1><%= title %></h1>
-<p>Author name: <%= author_detail.name %></p>
-<p>Biography: <%= author_detail.bio %></p>
-<p>Profile picture path: <%= author_detail.profilePicturePath %></p>
-<p>Delete status: <%= author_detail.deleteStatus %></p>
-<p>Delete reason: <%= author_detail.deleteReason %></p>
-
-<a href="/authors/<%= author_detail.id %>/delete">Delete</a>
-<a href="/authors/<%= author_detail.id %>/update">Update</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://getbootstrap.com/docs/5.2/assets/css/docs.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+  <title>Book Collection</title>
+  <%- include('navigationBar.ejs') %>
+</head>
+<body>
+  <div class="container py-5">
+    <header class="text-center mb-5">
+      <h1 class="display-4 font-weight-bold"><%= title %></h1>
+      <p class="font-italic text-muted mb-0">
+        "A word after a word after a word is power." – Margaret Atwood</p>
+    </header>
+<section class="py-5">
+    <div class="container overflow-hidden bsb-author-1">
+      <div class="row justify-content-center gy-4 gy-md-0">
+        <div class="col-12 col-md-3 col-xl-2 d-flex align-items-center justify-content-center">
+          <img class="img-fluid rounded-circle author-avatar" loading="lazy" src="https://picsum.photos/200" alt="<%= author_detail.name %>">
+        </div>
+        <!-- Biography -->
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5 d-flex align-items-center justify-content-center">
+          <div class="text-center text-md-start author-content">
+            <h2 class="fs-2 mb-3"><%= author_detail.name %></h2>
+            <p class="mb-3"><%= author_detail.bio %></p>
+            <p class="mb-0">
+              <a href="#!" class="link-dark text-decoration-none">
+                View More Items
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                </svg>
+              </a>
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+    <!-- First Row [Prosucts]-->
+    <div class="row pb-5 mb-4">
+    <% for(let book of book_list) { %>
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <!-- Card-->
+          <div class="card rounded shadow-sm border-0">
+            <div class="card-body p-4">
+              <a href="/books/<%= book.id %>"><img src="https://bootstrapious.com/i/snippets/sn-cards/shoes-1_gthops.jpg" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
+              <h5> <a href="/books/<%= book.id %>" class="text-dark"><%= book.title %> - <%= book.author.name %></a></h5>
+              <p class="small text-muted font-italic">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <ul class="list-inline small">
+                <!-- Print star when rating = 0-->
+                <% if(book.rating == 0) { %>
+                    <% for(let i = 0; i < 5; i++) { %>
+                        <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
+                    <% } %>
+                <% } else { %>
+                  <!-- Print Integral part-->
+                    <% for(let i = 0; i < book.ratingIntegralPart; i++) { %>
+                        <li class="list-inline-item m-0"><i class="fa fa-star text-warning"></i></li>
+                    <% } %>
+                  <!-- Print Fractional part -->
+                    <% if(book.ratingFractionalPart < 0.5) { %>
+                         <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
+                    <% } %>
+                    <% if(book.ratingFractionalPart > 0.5) { %>
+                         <li class="list-inline-item m-0"><i class="fa fa-star-half text-warning"></i></li>
+                    <% } %>
+                    <!-- Print the rest of star -->
+                     <% if (book.ratingIntegralPart < 4) { %>
+                        <% for( let i = 0; i < 4 - book.ratingIntegralPart; i++ ) { %>
+                          <li class="list-inline-item m-0"><i class="fa fa-star-o text-warning"></i></li>
+                        <% } %>
+                     <% } %>
+                <% } %>
+              </ul>
+            </div> 
+          </div>
+        </div>
+      
+    <% } %>
+  </div>
+</body>
+</html>
