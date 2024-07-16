@@ -25,16 +25,13 @@
       <p class="font-italic text-muted mb-0">
         "A word after a word after a word is power." – Margaret Atwood</p>
     </header>
-    <!-- First Row [Prosucts]-->
-    <h2 class="font-weight-bold mb-2">From the Shop</h2>
-    <p class="font-italic text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
     <div class="row pb-5 mb-4">
     <% for(let author of author_list) { %>
         <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
           <!-- Card-->
           <div class="card rounded shadow-sm border-0">
             <div class="card-body p-4">
-              <a href="/authors/<%= author.id %>"><img src="https://bootstrapious.com/i/snippets/sn-cards/shoes-1_gthops.jpg" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
+              <a href="/authors/<%= author.id %>"><img src="https://i.imgur.com/KReTdbf.jpeg" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
               <h5> <a href="/authors/<%= author.id %>" class="text-dark"><%= author.name %></a></h5>
               <p class="small text-muted font-italic"><%= author.bio %></p>
             </div> 
@@ -45,19 +42,3 @@
   </div>
 </body>
 </html>
-
-
-
-<h1><%= title %></h1>
-<ul>
-<% for(value of author_list) { %>
-  <li>
-    <a href="/authors/<%= value.id %>/">id: <%= value.id %></a> <br>
-    Author name: <%= value.name %> <br>
-    Biography: <%= value.bio %> <br>
-    Profile picture path: <%= value.profilePicturePath %> <br>
-    Delete status: <%= value.deleteStatus %> <br>
-    Delete reason: <%= value.deleteReason %> <br> <br>
-  </li>
-<% } %>
-</ul>
