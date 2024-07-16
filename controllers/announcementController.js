@@ -62,7 +62,7 @@ exports.announcement_detail = asyncHandler(async (req, res, next) => {
 
 exports.announcement_delete_post = asyncHandler(async (req, res, next) => {
   await Announcement.findByIdAndDelete(req.params.announcementId);
-  res.redirect("/announcements");
+  res.redirect("/admin/dashboard/announcement_management");
 });
 
 exports.announcement_update_post = asyncHandler(async (req, res, next) => {
