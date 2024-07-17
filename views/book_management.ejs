@@ -361,7 +361,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <% if (typeof errors_object !=="undefined" && typeof author_detail !=="undefined" ) { %>
+                <% if (typeof errors_object !== "undefined") { %>
                   <!-- Book has same barcode error -->
                   <div class="card">
                     <div class="card-header">
@@ -377,34 +377,6 @@
                       </ul>
                     </div>
                   </div>
-                  <% if (book_detail.length> 0) { %>
-                    <div class="card">
-                      <div class="card-header">
-                        <h4 class="card-title text-warning">Book Conflict <%= author_detail.name %>
-                        </h4>
-                      </div>
-                      <div class="card-body">
-                        <ul class="list-group list-group-bordered">
-                          <li class="list-group-item text-danger">
-                            Title: <%= book.title %>
-                          </li>
-                          <li class="list-group-item text-danger">
-                            Author Name: <%= book.author.name %>
-                          </li>
-                          <li class="list-group-item text-danger">
-                            Unique Barcode: <%= book.uniqueBarcode %>
-                          </li>
-                          <li class="list-group-item text-danger">
-                            ISBN 10: <%= book.ISBN_tenDigits %>
-                          </li>
-                          <li class="list-group-item text-danger">
-                            Title: <%= book.ISBN_thirteenDigits %>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <!-- End errors -->
-                    <% } %>
                 <% } %>
               </div>
               <div class="col-md-12">
@@ -787,7 +759,7 @@
                                         <p>
                                           <%= val.quantity%>
                                         </p>
-                                        <h4 class="fw-bold text-info">>ISBN 10: </h4>
+                                        <h4 class="fw-bold text-info">ISBN 10: </h4>
                                         <p>
                                           <%= val.ISBN_tenDigits%>
                                         </p>
@@ -806,6 +778,10 @@
                                         <h4 class="fw-bold text-info">Rating:</h4>
                                         <p>
                                           <%= val.rating %>
+                                        </p>
+                                        <h4 class="fw-bold text-info">Book Status:</h4>
+                                        <p>
+                                          <%= val.status %>
                                         </p>
                                       </div>
                                       <div class="modal-footer">
