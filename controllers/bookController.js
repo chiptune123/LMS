@@ -7,6 +7,7 @@ const asyncHandler = require("express-async-handler");
 //const { request } = require("../app");
 
 const SAME_UNIQUE_BARCODE_ERROR = "A book with same barcode already existed";
+const BOOK_MANAGEMENT_PAGE = "/admin/dashboard/book_management";
 
 exports.book_list = asyncHandler(async (req, res, next) => {
   try {
@@ -196,9 +197,9 @@ exports.book_delete_post = asyncHandler(async (req, res, next) => {
     const bookDetail = await BookModel.findById(req.params.bookId);
 
     if (bookDetail) {
-      await BookModel.findByIdAndDelete(req.params.id);
+      await BookModel.findByIdAndDelete(req.params.bookId);
 
-      res.redirect("/books");
+      res.redirect(BOOK_MANAGEMENT_PAGE);
     } else {
       res
         .status(404)
