@@ -7,25 +7,14 @@ const book_controller = require("../controllers/bookController");
 
 router.get("/", book_controller.book_list);
 
-// Specific the routes endpoint should be first because endpoint with parameter will take wrong information.
-router.get("/create", book_controller.book_create_get);
-
 router.post("/create", book_controller.book_create_post);
 
-router.get("/:id", book_controller.book_detail);
+// Specific routes endpoint should be first because endpoint with parameter will take wrong information.
 
-// router.get("/create", book_controller.author_create_get);
+router.get("/:bookId", book_controller.book_detail);
 
-// router.post("/create", book_controller.author_create_post);
+router.post("/:bookId/update", book_controller.book_update_post);
 
-
-
-router.get("/:id/update", book_controller.book_update_get);
-
-router.post("/:id/update", book_controller.book_update_post);
-
-router.get("/:id/delete", book_controller.book_delete_get);
-
-router.post("/:id/delete", book_controller.book_delete_post);
+router.post("/:bookId/delete", book_controller.book_delete_post);
 
 module.exports = router;
