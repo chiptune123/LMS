@@ -6,6 +6,8 @@ const CartModel = require("../models/carts");
 const asyncHandler = require("express-async-handler");
 //const { request } = require("../app");
 
+const SAME_UNIQUE_BARCODE_ERROR = "A book with same barcode already existed";
+
 exports.book_list = asyncHandler(async (req, res, next) => {
   try {
     const [authorList, allBooks, subjectList] = await Promise.all(
@@ -50,7 +52,7 @@ exports.book_list = asyncHandler(async (req, res, next) => {
 
 exports.book_detail = asyncHandler(async (req, res, next) => {
   try {
-    const bookDetail = await BookModel.findById(req.params.id)
+    const bookDetail = await BookModel.findById(req.params.bookId)
       .populate("author")
       // .populate("subject")
       .exec();
@@ -73,10 +75,11 @@ exports.book_detail = asyncHandler(async (req, res, next) => {
 exports.book_create_post = asyncHandler(async (req, res, next) => {
   try {
     // Check barcode if book is existed
-    const bookDetail = await BookModel.find({
+    const duplicateBookList = await BookModel.find({
       uniqueBarcode: req.body.bookUniqueBarcode,
-    }).exec();
-    const authorList = await AuthorModel.find({}, "name").sort({ title: 1 }).exec();
+    }).populate("author").exec();
+    const authorList = await AuthorModel.find({}, "name").sort({ name: 1 }).exec();
+    const bookList = await BookModel.find({}).populate("author").sort({ title: 1 }).exec();
 
     const newBook = new BookModel({
       title: req.body.bookTitle,
@@ -93,19 +96,21 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
       status: req.body.bookStatus
     });
 
-    if (bookDetail.length > 0) {
+    if (duplicateBookList.length > 0) {
       const errors = [];
-      errors.push("A book with same barcode already existed")
+      errors.push(SAME_UNIQUE_BARCODE_ERROR);
+      console.log(errors);
 
       res.status(409).render("book_management", {
         errors_object: errors,
         title: "Book Collection",
-        book_detail: bookDetail,
+        duplicate_book_list: duplicateBookList,
         author_list: authorList,
+        book_list: bookList,
       });
     } else {
       await newBook.save();
-      res.redirect("/books");
+      res.redirect("/admin/dashboard/book_management");
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
@@ -114,35 +119,73 @@ exports.book_create_post = asyncHandler(async (req, res, next) => {
 
 exports.book_update_post = asyncHandler(async (req, res, next) => {
   try {
-    // Check barcode if book is existed
-    const bookDetail = await BookModel.find({
-      uniqueBarcode: req.body.bookUniqueBarcode,
-    }).exec();
 
-    if(bookDetail.length > 0) {
-      
+    oldBook = await BookModel.findById({ _id: req.params.bookId })
+    const newUniqueBarcode = req.body.bookUniqueBarcode;
+
+    // If new unique barcode equal oldBook barcode
+    if (newUniqueBarcode == oldBook.uniqueBarcode) {
+      await BookModel.findByIdAndUpdate(
+        { _id: req.params.bookId },
+        {
+          $set: {
+            title: req.body.bookTitle,
+            author: req.body.authorId,
+            description: req.body.bookDescription,
+            publisher: req.body.bookPublisher,
+            publish_date: req.body.bookPublishDate,
+            page_numbers: req.body.bookPageNumber,
+            quantity: req.body.bookQuantity,
+            ISBN_tenDigits: req.body.ISBNTenDigits,
+            ISBN_thirteenDigits: req.body.ISBNThirteenDigits,
+            coverPicturePath: req.body.bookCoverPicturePath,
+            uniqueBarcode: req.body.bookUniqueBarcode,
+          },
+        }
+      );
+      res.redirect("/admin/dashboard/book_management");
+      return next();
     }
 
-    await BookModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      {
-        $set: {
-          title: req.body.bookTitle,
-          author: req.body.authorId,
-          description: req.body.bookDescription,
-          publisher: req.body.bookPublisher,
-          publish_date: req.body.bookPublishDate,
-          page_numbers: req.body.bookPageNumber,
-          quantity: req.body.bookQuantity,
-          ISBN_tenDigits: req.body.ISBNTenDigits,
-          ISBN_thirteenDigits: req.body.ISBNThirteenDigits,
-          coverPicturePath: req.body.bookCoverPicturePath,
-          uniqueBarcode: req.body.bookUniqueBarcode,
-        },
-      }
-    );
+    const duplicateBookList = await BookModel.find({uniqueBarcode: newUniqueBarcode}).exec();
+    // If newUniqueBarcode duplicate with other book
+    if (duplicateBookList.length > 0) {
+      const errors = [];
+      errors.push(SAME_UNIQUE_BARCODE_ERROR);
+      const [bookList, authorList] = await Promise.all([
+        BookModel.find({}).populate("author").sort({ title: 1 }).exec(),
+        AuthorModel.find({}).sort({ name: 1 })
+      ])
 
-    res.redirect("/admin/dashboard/book_management");
+      res.render("book_management", {
+        title: "Book Collection",
+        errors_object: errors,
+        book_list: bookList,
+        author_list: authorList,
+      })
+    } else {
+      // newUniqueBarcode is unique and has no duplicate book
+      await BookModel.findByIdAndUpdate(
+        { _id: req.params.bookId },
+        {
+          $set: {
+            title: req.body.bookTitle,
+            author: req.body.authorId,
+            description: req.body.bookDescription,
+            publisher: req.body.bookPublisher,
+            publish_date: req.body.bookPublishDate,
+            page_numbers: req.body.bookPageNumber,
+            quantity: req.body.bookQuantity,
+            ISBN_tenDigits: req.body.ISBNTenDigits,
+            ISBN_thirteenDigits: req.body.ISBNThirteenDigits,
+            coverPicturePath: req.body.bookCoverPicturePath,
+            uniqueBarcode: req.body.bookUniqueBarcode,
+          },
+        }
+      );
+      res.redirect("/admin/dashboard/book_management");
+      return next();
+    }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
@@ -150,7 +193,7 @@ exports.book_update_post = asyncHandler(async (req, res, next) => {
 
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
   try {
-    const bookDetail = await BookModel.findById(req.params.id);
+    const bookDetail = await BookModel.findById(req.params.bookId);
 
     if (bookDetail) {
       await BookModel.findByIdAndDelete(req.params.id);
