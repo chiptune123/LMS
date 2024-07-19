@@ -9,6 +9,12 @@ const userModel = require("../models/users.js");
 // This function verify JWT token and decode the payload to get userId
 exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
+    res.locals.loginStatus = false;
+    
+    // Implement empty cart if req.session.cart is undefined
+    if(typeof req.session.cart == "undefined") {
+        req.session.cart =[]
+    }
 
     if (!token) {
         return next();
@@ -17,7 +23,9 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     jwt.verify(token, config.secret, (err, decoded) => {
         // If token expired, Empty session and pass to next middlewares
         if (err) {
+            // If token is expired, remove token from the session. If users want to create new token, they have to login again
             if (err.name == "TokenExpiredError") {
+                // Empty session
                 req.session = null;
                 return next();
             }
@@ -28,9 +36,13 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     });
 
     // Query user with tokenUserId from the token and set res.locals variable accessible in templates
+    
     const userDetail = await userModel.findById(req.session.tokenUserId).exec();
     res.locals.userRole = userDetail.role;
     res.locals.tokenUserId = req.session.tokenUserId;
+    // Login status to print logout button in user icon
+    res.locals.loginStatus = true;  
+    console.log(res.locals.loginStatus );
 
     next();
 })
