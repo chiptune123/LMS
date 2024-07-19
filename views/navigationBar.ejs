@@ -1,81 +1,71 @@
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/books">Book</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/authors">Author</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/announcements">Announcement</a>
-            </li>        
-            <li class="nav-item">
-              <a class="nav-link" href="/contact/create">Contact</a>
-            </li>
-            <li class="nav-item"> 
-              <a class="nav-link" href="/carts"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
-            </li>
-            <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-            <img src="https://picsum.photos/50" class="rounded-circle" height="30">
-            </a>
-            <ul class="dropdown-menu">
-              <% if(typeof userRole !== "undefined") { %>
-                  <li><a class="dropdown-item">Role: <%= userRole %></a></li>        
-                  <% if (userRole == "Admin") { %>
-                    <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
-                  <% } %>
-              <% } else { %>
-                  <li><a class="dropdown-item" href="/auth/login">Login</a></li>
-              <% } %>
-              <li><a class="dropdown-item" href="/carts">Cart</a></li>
-              <li><a class="dropdown-item" href="/orders">Orders</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </li>
-            </ul>
-          </li>
+<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/books">Book</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/authors">Author</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/announcements">Announcement</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact/create">Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/carts"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <% if (loginStatus == true) { %>
+                <img src="https://picsum.photos/50" class="rounded-circle" height="30">
+            <% } else { %>
+                <i class="fa-solid fa-circle-user fa-xl"></i>
+            <% } %>
+          </a>
+          <ul class="dropdown-menu">
+            <% if(typeof userRole !=="undefined" ) { %>
+              <li><a class="dropdown-item">Role: <%= userRole %></a></li>
+              <% if (userRole == "Admin") { %>
+                <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                <% } %>
+                  <% } else { %>
+                    <li><a class="dropdown-item" href="/auth/login">Login</a></li>
+                    <% } %>
+                      <li><a class="dropdown-item" href="/carts">Cart</a></li>
+                      <li><a class="dropdown-item" href="/orders">Orders</a></li>
+                      <% if(loginStatus == true) { %>
+                        <li>
+                          <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/auth/signout">Sign Out</a>
+                        </li>
+                      <% } %>
           </ul>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
-          
-        </div>
-      </div>
-    </nav>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        <button class="btn btn-outline-success" type="submit">
+          Search
+        </button>
+      </form>
 
-    <!-- End Example Code -->
-  </body>
+    </div>
+  </div>
+</nav>
+
+<!-- End Example Code -->
+</body>
 </html>
