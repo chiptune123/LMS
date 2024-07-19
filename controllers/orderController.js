@@ -10,12 +10,12 @@ exports.order_detail_return = asyncHandler(async (req, res, next) => {
     //const orderItemsList = await OrderItemModel.find({ orderId: req.params.id }).populate("bookId").sort({ createdAt: 1 });
 
     // Find the lastest order item with ISBN
-    const orderItemDetail = await OrderItemModel.find({uniqueBarcode: req.params.uniqueBarcode}).sort({_id: -1}).limit(1).exec();
+    const orderItemDetail = await OrderItemModel.find({ uniqueBarcode: req.params.uniqueBarcode }).sort({ _id: -1 }).limit(1).exec();
     // Get the order ID from latest order item
     const IdOfOrder = orderItemDetail.orderId;
 
     // Find all orderItem and order detail
-    const orderItemList = await OrderItemModel.find({orderId: IdOfOrder}).populate("bookId").exec();
+    const orderItemList = await OrderItemModel.find({ orderId: IdOfOrder }).populate("bookId").exec();
     const orderDetail = await OrderModel.findById()
 
     if (orderDetail && orderItemsList) {
@@ -98,7 +98,7 @@ exports.order_list = asyncHandler(async (req, res, next) => {
 
 exports.order_return_get = asyncHandler(async (req, res, next) => {
   try {
-    res.render("order_return", {title: "Order Return"});
+    res.render("order_return", { title: "Order Return" });
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
@@ -107,28 +107,32 @@ exports.order_return_get = asyncHandler(async (req, res, next) => {
 // *** Fix not allow to create an empty order error
 exports.order_create_post = asyncHandler(async (req, res, next) => {
   try {
-    //*** Fix require login before create order/
-    const newOrder = await new OrderModel({
-      memberId: req.session.tokenUserId
-    })
-
-    await newOrder.save();
-
-    // Create order items with order id
-    for (let i = 0; i < req.body.bookLength; i++) {
-      const newOrderItem = new OrderItemModel({
-        orderId: newOrder.id,
-        bookId: req.body.book[i],
-        quantity: req.body.book_quantity[i],
+    // If user not login then render login page
+    if (res.locals.loginStatus == true) {
+      const newOrder = await new OrderModel({
+        memberId: req.session.tokenUserId
       })
 
-      await newOrderItem.save();
+      await newOrder.save();
+
+      // Create order items with order id
+      for (let i = 0; i < req.body.bookLength; i++) {
+        const newOrderItem = new OrderItemModel({
+          orderId: newOrder.id,
+          bookId: req.body.book[i],
+          quantity: req.body.book_quantity[i],
+        })
+
+        await newOrderItem.save();
+      }
+
+      // Remove cart session after checkout
+      req.session.cart = null;
+
+      res.render("thankyou_page", { title: "Thank you for your order!" });
+    } else {
+      res.redirect("/auth/login");
     }
-
-    // Remove cart session after checkout
-    req.session.cart = null;
-
-    res.render("thankyou_page", { title: "Thank you for your order!" });
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
