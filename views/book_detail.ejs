@@ -103,17 +103,14 @@
                 <%= book_detail.ISBN_thirteenDigits %>
               </dd>
             </div>
-
             <hr />
-
             <div class="row mb-4">
-              <!-- col.// -->
               <div class="col-9">
                 <form action="/carts/add_to_cart" method="post">
                   <label for="quantity">Quantity:</label>
                   <input type="number" class="" id="quantity" name="quantity" placeholder="Enter amount" value="1"
                     style="width: 40px;">
-                  <input type="hidden" name="BookId" id="BookId" value="<%= book_detail.id %>">
+                  <input type="hidden" name="bookId" id="bookId" value="<%= book_detail.id %>">
                   <button type="submit" class="btn btn-warning">Add to cart</button>
                 </form>
               </div>
