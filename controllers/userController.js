@@ -7,14 +7,15 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const CartModel = require("../models/carts");
 
-const BOOK_LIST_PAGE = "/books";
+const BOOK_LIST_URL = "/books";
+const USER_MANAGEMENT_PAGE = "user_management";
 
-exports.user_list = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find({}, "username name email")
-    .sort({ username: 1 })
-    .exec();
-  res.render("user_list", { title: "User List", user_list: allUsers });
-});
+// exports.user_list = asyncHandler(async (req, res, next) => {
+//   const allUsers = await User.find({}, "username name email")
+//     .sort({ username: 1 })
+//     .exec();
+//   res.render("user_list", { title: "User List", user_list: allUsers });
+// });
 
 exports.user_list_by_member = asyncHandler(async (req, res, next) => {
   try {
@@ -24,7 +25,7 @@ exports.user_list_by_member = asyncHandler(async (req, res, next) => {
 
     if (allMember) {
       if (req.baseUrl == "/admin") {
-        res.render("userManagement", { title: "Member Collection", user_list: allMember });
+        res.render(USER_MANAGEMENT_PAGE, { title: "Member Collection", user_list: allMember });
         return;
       }
       //res.render("user_list", { title: "User List", user_list: allUsers });
@@ -43,10 +44,9 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
 
     if (allStaff) {
       if (req.baseUrl == "/admin") {
-        res.render("userManagement", { title: "Staff Collection", user_list: allStaff });
+        res.render(USER_MANAGEMENT_PAGE, { title: "Staff Collection", user_list: allStaff });
         return;
       }
-      //res.render("user_list", { title: "User List", user_list: allUsers });
     }
 
   } catch (err) {
@@ -54,24 +54,10 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
   }
 });
 
-
-exports.user_detail = asyncHandler(async (req, res, next) => {
+// 
+exports.user_profile = asyncHandler(async (req, res, next) => {
   const userDetail = await User.findOne({ username: req.params.id }).exec();
   res.render("user_detail", { user_information: userDetail });
-});
-
-// User manipulate on GET HTTP method
-exports.user_create_get = asyncHandler((req, res, next) => {
-  res.render("sign_up_form", { title: "Create User" });
-});
-
-exports.user_update_get = asyncHandler(async (req, res, next) => {
-  const userDetail = await User.findOne({ username: req.params.id }).exec();
-  res.render("user_update_form", { title: "User Update", user: userDetail });
-});
-
-exports.user_delete_get = asyncHandler((req, res, next) => {
-  res.send("NOT IMPLEMENTED: User delete get");
 });
 
 // User manipulate on POST HTTP method
@@ -231,27 +217,11 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
 exports.user_sign_out = asyncHandler(async (req, res, next) => {
   try {
     req.session = null;
-    return res.redirect(BOOK_LIST_PAGE);
+    return res.redirect(BOOK_LIST_URL);
   } catch (err) {
     this.next(err);
   }
 });
-
-// exports.allAccess = (req, res) => {
-//   res.status(200).send("Public content.");
-// }
-
-// exports.userBoard = (req, res) => {
-//   res.status(200).send("User content.");
-// }
-
-// exports.adminBoard = (req, res) => {
-//   res.status(200).send("Admin content.");
-// }
-
-// exports.librarianBoard = (req, res) => {
-//   res.status(200).send("Librarian content.");
-// }
 
 exports.user_login_get = asyncHandler(async (req, res, next) => {
   res.render("login", { title: "Login Page" });
