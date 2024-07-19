@@ -3,26 +3,15 @@ var router = express.Router();
 const authJwt = require("../middlewares/authJwt");
 const verifySignUp = require("../middlewares/verifySignUp");
 
-
-// Import feedback Controller 
+// feedback Controller 
 const feedback_controller = require("../controllers/feedbackController");
-
-//router.get("/", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_list);
 
 router.get("/create", feedback_controller.feedback_create_get);
 
 router.post("/create", feedback_controller.feedback_create_post);
 
-router.get("/:id", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_detail);
+router.post("/:feedbackId/update", feedback_controller.feedback_update_post);
 
-router.get("/:id/update", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_update_get);
-
-router.post("/:id/update", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_update_post);
-
-router.get("/:id/delete", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_delete_get);
-
-router.post("/:id/delete", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_delete_post);
-
-router.post("/:id/updateFeedbackStatus", [authJwt.verifyToken, authJwt.isAdminOrLibrarian], feedback_controller.feedback_update_status);
+router.post("/:feedbackId/delete", feedback_controller.feedback_delete_post);
 
 module.exports = router;
