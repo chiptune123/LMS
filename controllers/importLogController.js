@@ -3,6 +3,14 @@ const UserModel = require("../models/users");
 const ImportLogModel = require("../models/importLog");
 
 const asyncHandler = require("express-async-handler");
+const importLog = require("../models/importLog");
+
+async function random_barcode_generator() {
+  const min = 100000000000;
+  const max = 300000000000;
+
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 exports.import_list = asyncHandler(async (req, res, next) => {
   try {
@@ -10,7 +18,7 @@ exports.import_list = asyncHandler(async (req, res, next) => {
       ImportLogModel.find({}).populate("managerId").populate("bookId").sort({ createdAt: 1 }).exec(),
       BookModel.find({}).sort({ title: 1 }).exec()
     ]);
-    
+
     if (importLogList && bookList) {
       if (req.baseUrl == "/admin") {
         res.render("import_log_management", { title: "Import List", import_list: importLogList, book_list: bookList });
@@ -24,22 +32,23 @@ exports.import_list = asyncHandler(async (req, res, next) => {
   }
 })
 
-exports.import_create_get = asyncHandler(async (req, res, next) => {
-  try {
-    // Query bookList for import
-    const bookList = await BookModel.find({}).exec();
-    res.render("import_create_form", {
-      title: "Import create",
-      book_list: bookList,
-    });
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
-});
+// exports.import_create_get = asyncHandler(async (req, res, next) => {
+//   try {
+//     // Query bookList for import
+//     const bookList = await BookModel.find({}).exec();
+//     res.render("import_create_form", {
+//       title: "Import create",
+//       book_list: bookList,
+//     });
+//   } catch (err) {
+//     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+//   }
+// });
 
 exports.import_create_post = asyncHandler(async (req, res, next) => {
   try {
     // Query to check if user and book exist
+    const userId = req.session.tokenUserId
     const [userDetail, bookDetail] = await Promise.all([
       UserModel.findById(req.session.tokenUserId),
       BookModel.findById(req.body.bookId).sort({ name: 1 }),
@@ -54,8 +63,9 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
         quantity: req.body.quantity,
       });
 
-      let newQuantity = req.body.quantity + bookDetail.quantity;
+      let newQuantity = Number(req.body.quantity) + bookDetail.quantity;
 
+      // Update new quantity after import
       await BookModel.findByIdAndUpdate(
         { _id: req.body.bookId },
         {
@@ -67,7 +77,7 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
 
       await newImportLog.save();
 
-      res.redirect("/imports");
+      res.redirect("/admin/dashboard/import_log_management");
 
     } else {
       res.status(404).render("errorPage", {
@@ -79,18 +89,6 @@ exports.import_create_post = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
-
-exports.import_delete_get = asyncHandler(async (req, res, next) => {
-  try {
-    const importDetail = await ImportLogModel.findById(req.params.id);
-
-    if (importDetail) {
-      res.render("import_delete_form", { title: "Import Delete", import_detail: importDetail });
-    }
-  } catch (err) {
-    res.render("errorPage", { message: "Import Logs not found", errorStatus: 404 });
-  }
-})
 
 exports.import_delete_post = asyncHandler(async (req, res, next) => {
   try {
@@ -106,3 +104,84 @@ exports.import_delete_post = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 })
+
+exports.import_update_post = asyncHandler(async (req, res, next) => {
+  try {
+    const [importLogDetail, bookDetail] = await Promise.all([
+      ImportLogModel.findById(req.params.importLogId).populate("bookId").exec(),
+      BookModel.findById(req.body.bookId).exec(),
+    ]);
+    
+    if (importLogDetail && bookDetail) {
+
+      // If two book update is the same then update the quantity and others follow req.bod
+      if (importLogDetail.bookId.id == bookDetail.id) {
+        let oldImportLogQuantity = importLogDetail.quantity;
+        let newImportLogQuantity = Number(req.body.bookQuantity);
+        let currentBookQuantity = bookDetail.quantity;
+
+        let quantityChange = (oldImportLogQuantity - newImportLogQuantity);
+
+        await BookModel.findByIdAndUpdate({ id: req.body.bookId }, {
+          $set: {
+            quantity: (currentBookQuantity + quantityChange),
+          }
+        })
+
+        // Update import log data
+        await ImportLogModel.findByIdAndUpdate({ id: req.params.importLogId }, {
+          $set: {
+            managerId: req.session.tokenUserId,
+            bookId: req.body.bookId,
+            supplier: req.body.bookSupplier,
+            quantity: newImportLogQuantity,
+            updatedat: new Date(),
+          }
+        })
+
+        res.redirect("/admin/dashboard/import_log_management");
+      } else {
+        
+        // 2 books is not the same
+        let oldImportLogQuantity = importLogDetail.quantity;
+        let oldBookCurrentQuantity = importLogDetail.bookId.quantity;
+        let oldBookId = importLogDetail.bookId.id;
+        let newBookId = req.body.bookId;
+        let newImportLogQuantity = req.body.bookQuantity;
+
+        console.log(typeof importLogDetail.bookId);
+        // Revert import quantity for the old book
+        await BookModel.findByIdAndUpdate({ _id: oldBookId }, {
+          $set: {
+            quantity: (oldBookCurrentQuantity - oldImportLogQuantity),
+          }
+        })
+
+        // Add new quantity to new book
+        await BookModel.findByIdAndUpdate({ _id: newBookId }, {
+          $inc: {
+            quantity: newImportLogQuantity
+          }
+        })
+        
+
+        // Update import log data
+        await ImportLogModel.findByIdAndUpdate({ _id: req.params.importLogId }, {
+          $set: {
+            managerId: req.session.tokenUserId,
+            bookId: req.body.bookId,
+            supplier: req.body.bookSupplier,
+            quantity: newImportLogQuantity,
+            updatedat: new Date(),
+          }
+        })
+
+        res.redirect("/admin/dashboard/import_log_management");
+      }
+    } else {
+      res.render("errorPage", {message: "Import and Book not found!", })
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
