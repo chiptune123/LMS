@@ -5,20 +5,12 @@ const ImportLogModel = require("../models/importLog");
 const asyncHandler = require("express-async-handler");
 const importLog = require("../models/importLog");
 
-async function random_barcode_generator() {
-  const min = 100000000000;
-  const max = 300000000000;
-
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 exports.import_list = asyncHandler(async (req, res, next) => {
   try {
     const [importLogList, bookList] = await Promise.all([
       ImportLogModel.find({}).populate("managerId").populate("bookId").sort({ createdAt: 1 }).exec(),
       BookModel.find({}).sort({ title: 1 }).exec()
     ]);
-
     if (importLogList && bookList) {
       if (req.baseUrl == "/admin") {
         res.render("import_log_management", { title: "Import List", import_list: importLogList, book_list: bookList });
@@ -31,19 +23,6 @@ exports.import_list = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 })
-
-// exports.import_create_get = asyncHandler(async (req, res, next) => {
-//   try {
-//     // Query bookList for import
-//     const bookList = await BookModel.find({}).exec();
-//     res.render("import_create_form", {
-//       title: "Import create",
-//       book_list: bookList,
-//     });
-//   } catch (err) {
-//     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-//   }
-// });
 
 exports.import_create_post = asyncHandler(async (req, res, next) => {
   try {
@@ -145,13 +124,13 @@ exports.import_update_post = asyncHandler(async (req, res, next) => {
         // 2 books is not the same
         let oldImportLogQuantity = importLogDetail.quantity;
         let oldBookCurrentQuantity = importLogDetail.bookId.quantity;
-        let oldBookId = importLogDetail.bookId.id;
+        let oldBookId = importLogDetail.bookId;
         let newBookId = req.body.bookId;
         let newImportLogQuantity = req.body.bookQuantity;
 
         console.log(typeof importLogDetail.bookId);
         // Revert import quantity for the old book
-        await BookModel.findByIdAndUpdate({ _id: oldBookId }, {
+        await BookModel.findByIdAndUpdate({ id: oldBookId }, {
           $set: {
             quantity: (oldBookCurrentQuantity - oldImportLogQuantity),
           }
@@ -166,7 +145,7 @@ exports.import_update_post = asyncHandler(async (req, res, next) => {
         
 
         // Update import log data
-        await ImportLogModel.findByIdAndUpdate({ _id: req.params.importLogId }, {
+        await ImportLogModel.findByIdAndUpdate({ id: req.params.importLogId }, {
           $set: {
             managerId: req.session.tokenUserId,
             bookId: req.body.bookId,
