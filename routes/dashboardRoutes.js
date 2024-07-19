@@ -19,7 +19,7 @@ router.get('/dashboard/book_management', book_controller.book_list);
 
 router.get('/dashboard/author_management', author_controller.author_list);
 
-router.get('/dashboard/feedback_data_table', feedback_controller.feedback_list);
+router.get('/dashboard/feedback_management', feedback_controller.feedback_list);
 
 router.get('/dashboard/user_management/member', user_controller.user_list_by_member);
 
@@ -27,7 +27,7 @@ router.get('/dashboard/user_management/staff', user_controller.user_list_by_staf
 
 router.get('/dashboard/announcement_management', announcement_controller.announcement_list);
 
-router.get('/dashboard/import_log_management', [authJwt.verifyToken], import_log_controller.import_list);
+router.get('/dashboard/import_log_management', import_log_controller.import_list);
 
 router.get('/dashboard/order_management', order_controller.order_list);
 
