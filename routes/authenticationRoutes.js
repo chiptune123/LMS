@@ -19,6 +19,6 @@ router.post("/login", user_controller.user_sign_in);
 
 router.post("/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user_controller.user_create_post);
 
-router.post("/logout", user_controller.user_sign_out);
+router.get("/signout", user_controller.user_sign_out);
 
 module.exports = router;
