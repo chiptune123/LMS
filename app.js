@@ -60,7 +60,8 @@ app.use(
   cookieSession({
     name: "Chiptune-session",
     keys: ["COOKIE_SECRET"],
-    httpOnly: true
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   })
 );
 
