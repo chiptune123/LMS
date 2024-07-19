@@ -7,12 +7,10 @@ const importLog = require('../models/importLog');
 
 router.get("/", [authJwt.isAdmin], importLog_controller.import_list);
 
-router.get("/create", [authJwt.isAdmin], importLog_controller.import_create_get);
+router.post("/create", importLog_controller.import_create_post);
 
-router.post("/create", [authJwt.isAdmin], importLog_controller.import_create_post);
+router.post("/:ImportLogId/delete", authJwt.isAdmin, importLog_controller.import_delete_post);
 
-//router.get("/:id/delete", authJwt.isAdmin, importLog_controller.import_delete_get);
-
-router.post("/:id/delete", authJwt.isAdmin, importLog_controller.import_delete_post);
+router.post("/:importLogId/update", importLog_controller.import_update_post);
 
 module.exports = router;
