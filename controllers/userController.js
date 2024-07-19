@@ -3,8 +3,11 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const config = require("../config/auth.config");
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const CartModel = require("../models/carts");
+
+const BOOK_LIST_PAGE = "/books";
 
 exports.user_list = asyncHandler(async (req, res, next) => {
   const allUsers = await User.find({}, "username name email")
@@ -206,88 +209,49 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
       return res.status(404).render("login", { errors: [{ msg: "Incorrect password" }] });
     }
 
-    // Set payload of the JWT with properties "id" that store userId
+    // Set payload of the JWT with property "id" that store userId that just login recently
     const token = jwt.sign({ id: user.id }, config.secret, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: 86400,
     }); // 24 hours
 
-    let authorities = [];
-    const role = user.role;
-
-    authorities.push("ROLE_" + role.toUpperCase());
-
     // Save token to session
     req.session.token = token;
 
+    // After login successful, replace session.cart with user cart data in database
+    const userCart = await CartModel.find({userId: user.id});
+    req.session.cart = userCart;
     return res.redirect("/books")
   } catch (error) {
     return res.status(500).render("errorPage", { errorStaus: 500, message: error.message })
   }
 });
-/* (err  , user) => {
-            if (err) {
-                res.status(500).send({ message: err });
-                return;
-            }
-
-            if (!user) {
-                return res.status(404).send({ message: "User not found." });
-            }
-
-            var passwordIsValid = bcrypt.compareSync(
-                req.body.password,
-                user.password
-            )
-
-            if (!passwordIsValid) {
-                return res.status(401).send({ message: "Invalid Password!" });
-            }
-
-            const token = jwt.sign({ id: user.id }, config.secret,
-                {
-                    algorithm: 'HS526',
-                    allowInsecureKeySizes: true,
-                    expiresIn: 86400
-                }) // 24 hours
-
-            let authorities = [];
-            const roles = await user.role;
-
-            req.session.token = token;
-
-            res.status(200).send({
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }); */
 
 exports.user_sign_out = asyncHandler(async (req, res, next) => {
   try {
     req.session = null;
-    return res.status(200).send({ message: "You've been signed out!" });
+    return res.redirect(BOOK_LIST_PAGE);
   } catch (err) {
     this.next(err);
   }
 });
 
-exports.allAccess = (req, res) => {
-  res.status(200).send("Public content.");
-}
+// exports.allAccess = (req, res) => {
+//   res.status(200).send("Public content.");
+// }
 
-exports.userBoard = (req, res) => {
-  res.status(200).send("User content.");
-}
+// exports.userBoard = (req, res) => {
+//   res.status(200).send("User content.");
+// }
 
-exports.adminBoard = (req, res) => {
-  res.status(200).send("Admin content.");
-}
+// exports.adminBoard = (req, res) => {
+//   res.status(200).send("Admin content.");
+// }
 
-exports.librarianBoard = (req, res) => {
-  res.status(200).send("Librarian content.");
-}
+// exports.librarianBoard = (req, res) => {
+//   res.status(200).send("Librarian content.");
+// }
 
 exports.user_login_get = asyncHandler(async (req, res, next) => {
   res.render("login", { title: "Login Page" });
