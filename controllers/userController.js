@@ -8,6 +8,8 @@ const bcrypt = require("bcryptjs");
 const CartModel = require("../models/carts");
 
 const BOOK_LIST_URL = "/books";
+const LOGIN_PAGE_URL = "/auth/login";
+const USER_MANAGEMENT_MEMBER_URL = "/admin/dashboard/user_management/member";
 const USER_MANAGEMENT_PAGE = "user_management";
 
 // exports.user_list = asyncHandler(async (req, res, next) => {
@@ -60,6 +62,10 @@ exports.user_profile = asyncHandler(async (req, res, next) => {
   res.render("user_detail", { user_information: userDetail });
 });
 
+exports.user_create_get = asyncHandler((req, res, next) => {
+  res.render("sign_up_form", { title: "Signup Page" });
+});
+
 // User manipulate on POST HTTP method
 exports.user_create_post = [
   // Validate and sanitizer field
@@ -90,27 +96,43 @@ exports.user_create_post = [
     // Extract result object from express-validator
     const errors = validationResult(req);
 
-    //Create User object with validation data
-    const NewUser = new User({
+    const [userDetail, emailDetail] = await Promise.all([User.find({ username: req.body.username }), User.find({ email: req.body.email })]);
+    // If username duplicate, add error to errors object
+    if (userDetail) {
+      errors.errors.push({
+        msg: "The username is already taken"
+      })
+    }
+    if (emailDetail) {
+      errors.errors.push({
+        msg: "The email is already taken"
+      })
+    }
+    if (!errors.isEmpty()) {
+      const inputData = {
+        username: req.body.username,
+        email: req.body.email,
+        name: req.body.name,
+      }
+      res.render("sign_up_form", {
+        title: "Create User",
+        user: inputData,
+        errors: errors.array(),
+      });
+    }
+
+    const newUser = new User({
       username: req.body.username,
       password: bcrypt.hashSync(req.body.password, 8),
       name: req.body.name,
       email: req.body.email,
-      // Other field has default value for user to optional setup
-    });
+    })
 
-    if (!errors.isEmpty()) {
-      // If there are errors, render the form again with validation data and errors object
-      res.render("sign_up_form", {
-        title: "Create User",
-        user: NewUser,
-        errors: errors.array(),
-      });
-    } else {
-      await NewUser.save();
-      res.redirect("/");
-    }
-  }),
+    await newUser.save();
+
+    res.redirect(LOGIN_PAGE_URL);
+  })
+
 ];
 
 exports.user_update_post = [
@@ -154,8 +176,8 @@ exports.user_update_post = [
         errors: errors.array(),
       });
     } else {
-      const updateUser = await User.findOneAndUpdate(
-        { username: req.params.id },
+      await User.findByIdAndUpdate(
+        { _id: req.params.id },
         {
           $set: {
             name: req.body.name,
@@ -170,13 +192,26 @@ exports.user_update_post = [
           },
         }
       );
-      res.redirect("/login");
+
+      res.redirect(USER_MANAGEMENT_MEMBER_URL);
     }
   }),
 ];
 
-exports.user_delete_post = asyncHandler((req, res, next) => {
-  res.send("NOT IMPLEMENTED: User delete post ");
+exports.user_delete_post = asyncHandler(async (req, res, next) => {
+  try {
+    const userDetail = await User.findById(req.params.id);
+    if (userDetail) {
+      await User.findByIdAndDelete(req.params.id);
+
+      res.redirect(USER_MANAGEMENT_MEMBER_URL);
+    } else {
+      res.status(404).render("errorPage", { message: "User not found!", errorStatus: 404 });
+    }
+
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 404 });
+  }
 });
 
 exports.user_sign_in = asyncHandler(async (req, res, next) => {
@@ -206,7 +241,7 @@ exports.user_sign_in = asyncHandler(async (req, res, next) => {
     req.session.token = token;
 
     // After login successful, replace session.cart with user cart data in database
-    const userCart = await CartModel.find({userId: user.id});
+    const userCart = await CartModel.find({ userId: user.id });
     req.session.cart = userCart;
     return res.redirect("/books")
   } catch (error) {
