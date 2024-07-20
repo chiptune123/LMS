@@ -1,9 +1,0 @@
-<h1><% title %></h1>
-<a href="/users/create">User create</a>
-<ul>
-    <% for(let value of user_list) { %>
-        <li>
-            <a href="<%= value.getUserUrl %>"><%= value.getUserUrl %></a>, Username: <%= value.username %>, Name: <%= value.name %>, Email: <%= value.email %>
-        </li>
-    <% } %>
-</ul>
