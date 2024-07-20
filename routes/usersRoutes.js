@@ -11,28 +11,12 @@ router.use(function (req, res, next) {
   next();
 });
 
-//router.get("/", user_controller.user_list);
-
-//outer.get("/create", user_controller.user_create_get);
-
 router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail, user_controller.user_create_post);
 
-router.get("/:id", user_controller.user_detail);
-
-router.get("/:id/delete", user_controller.user_delete_get);
+router.get("/:id", user_controller.user_profile);
 
 router.post("/:id/delete", user_controller.user_delete_post);
 
-router.get("/:id/update", user_controller.user_update_get);
-
 router.post("/:id/update", user_controller.user_update_post);
-
-// router.get("/api/test/all", user_controller.allAccess);
-
-// router.get("/api/test/user", [authJwt.verifyToken], user_controller.userBoard);
-
-// router.get("/api/test/librarian", [authJwt.verifyToken, authJwt.isLibrarian], user_controller.librarianBoard);
-
-// router.get("/api/test/admin", [authJwt.verifyToken, authJwt.isAdmin], user_controller.adminBoard);
 
 module.exports = router;
