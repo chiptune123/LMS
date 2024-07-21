@@ -23,6 +23,7 @@ const OrderSchema = new Schema(
       default: null,
       //required: true,
     },
+    deleteStatus: { type: Boolean, default: false },
   },
   {
     timestamps: true,
