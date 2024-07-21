@@ -3,6 +3,10 @@ const OrderModel = require("../models/orders");
 const OrderItemModel = require("../models/orderItems");
 const { options } = require("../routes/authenticationRoutes");
 
+const ORDER_MANAGEMENT_PAGE = "order_management";
+const ORDER_MANAGEMENT_PAGE_URL = "admin/dashboard/order_management";
+const ORDER_DETAIL_USER_PAGE = "order_detail";
+
 exports.order_detail_return = asyncHandler(async (req, res, next) => {
   try {
     //*** Implement Check if the order belong to user, if not then return 403 denided. Admin | librarian | authentic user then allow
@@ -42,9 +46,15 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
     const orderDetail = await OrderModel.findById(req.params.orderId);
     const orderItemList = await OrderItemModel.find({ orderId: req.params.orderId }).populate("bookId").sort({ createdAt: 1 });
 
-    if (orderDetail && orderItemsList) {
+    if (orderDetail && orderItemList) {
       if (req.baseUrl == "/admin") {
         res.render("order_detail_management", {
+          title: "Order Detail",
+          order_detail: orderDetail,
+          order_item_list: orderItemList
+        });
+      } else {
+        res.render(ORDER_DETAIL_USER_PAGE, {
           title: "Order Detail",
           order_detail: orderDetail,
           order_item_list: orderItemList
@@ -54,6 +64,24 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
       res
         .status(404)
         .render("errorPage", { message: "Order not found", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+
+  try {
+    const orderDetail = await OrderModel.find({ id: req.params.orderId });
+
+    if (orderDetail) {
+      const orderItemList = await OrderItemModel.find({ orderId: req.params.orderId });
+
+      res.render("ORDER_MANAGEMENT_PAGE", {
+        title: "Order Items",
+        order_item_list: orderItemList,
+        order_detail: orderDetail,
+      })
+    } else {
+      res.status(404).render("errorPage", { message: "Order Not Found", errorStatus: 404 });
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
@@ -115,12 +143,21 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
 
       await newOrder.save();
 
+      let currentDate = new Date();
+
+      // Add 1 month after the lend date for return deadline
+      currentDate.setMonth(currentDate.getMonth() + 1);
+
+      // Set the time at beginning of a day
+      currentDate.setHours(0, 0, 0, 0);
+
       // Create order items with order id
       for (let i = 0; i < req.body.bookLength; i++) {
         const newOrderItem = new OrderItemModel({
           orderId: newOrder.id,
           bookId: req.body.book[i],
           quantity: req.body.book_quantity[i],
+          returnDeadline: currentDate,
         })
 
         await newOrderItem.save();
@@ -130,10 +167,19 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
       req.session.cart = null;
 
       res.render("thankyou_page", { title: "Thank you for your order!" });
+      return next();
     } else {
       res.redirect("/auth/login");
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
+})
+
+exports.order_delete_post = asyncHandler(async (req, res, next) => {
+  res.send("Not Implement");
+});
+
+exports.order_item_update_post = asyncHandler(async (req, res, next) => {
+  res.send("Not Implement")
 })
