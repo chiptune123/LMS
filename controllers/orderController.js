@@ -177,7 +177,22 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
 })
 
 exports.order_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("Not Implement");
+  try {
+    const orderDetail = OrderModel.findById(req.params.orderId);
+
+    // Changed deleteStatus to true when delete
+    if (orderDetail) {
+      await OrderModel.findByIdAndUpdate(req.params.orderId, {
+        $set: {
+          deleteStatus: true,
+        }
+      })
+
+      res.redirect(ORDER_MANAGEMENT_PAGE_URL);
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
 });
 
 exports.order_item_update_post = asyncHandler(async (req, res, next) => {
