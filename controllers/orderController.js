@@ -68,24 +68,6 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
-
-  try {
-    const orderDetail = await OrderModel.find({ id: req.params.orderId });
-
-    if (orderDetail) {
-      const orderItemList = await OrderItemModel.find({ orderId: req.params.orderId });
-
-      res.render("ORDER_MANAGEMENT_PAGE", {
-        title: "Order Items",
-        order_item_list: orderItemList,
-        order_detail: orderDetail,
-      })
-    } else {
-      res.status(404).render("errorPage", { message: "Order Not Found", errorStatus: 404 });
-    }
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
 });
 // Return order list based on userId
 exports.order_list_by_user = asyncHandler(async (req, res, next) => {
@@ -151,7 +133,6 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
       // Set the time at beginning of a day
       currentDate.setHours(0, 0, 0, 0);
 
-      // Create order items with order id
       for (let i = 0; i < req.body.bookLength; i++) {
         const newOrderItem = new OrderItemModel({
           orderId: newOrder.id,
@@ -196,5 +177,57 @@ exports.order_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.order_item_update_post = asyncHandler(async (req, res, next) => {
-  res.send("Not Implement")
+  try {
+    const [orderDetail] = await Promise.all([
+      OrderModel.findById(req.params.orderId).exec()
+    ]);
+
+    const formData = req.body;
+    const orderId = req.body.orderId;
+    const orderItemList = [];
+
+    // Format formData to array
+    for (let i = 0; i < Object.keys(formData).length; i++) {
+      const statusKey = `lendStatus${i}`;
+      const orderItemIdKey = `orderItemId${i}`
+      if (formData.hasOwnProperty(statusKey) && formData.hasOwnProperty(orderItemIdKey)) {
+        orderItemList.push({
+          index: i,
+          lendStatus: formData[statusKey],
+          orderItemId: formData[orderItemIdKey],
+        });
+      }
+    }
+
+    // Save lend status for each book
+    for (let orderItem of orderItemList) {
+      await OrderItemModel.findByIdAndUpdate({ _id: orderItem.orderItemId }, {
+        $set: {
+          lendStatus: orderItem.lendStatus,
+        }
+      })
+    }
+
+    await OrderModel.findByIdAndUpdate({ _id: orderId }, {
+      $set: {
+        orderStatus: req.body.orderStatus,
+      }
+    })
+
+
+    res.redirect('back');
+
+    // if (orderItemDetail && orderDetail) {
+    //   for (let orderItem of orderItems) {
+    //     // Save each book information to database
+    //     await OrderItemModel.findByIdAndUpdate({ id: orderItem.id }, {
+    //       $set: {
+    //         lendStatus: req.body.
+    //       }
+    //     })
+    //   }
+    // }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
 })
