@@ -13,4 +13,6 @@ router.get("/:orderId", order_controller.order_detail);
 
 router.post("/:orderId/delete", order_controller.order_delete_post);
 
+router.post("/:orderId/update", order_controller.order_item_update_post);
+
 module.exports = router;
