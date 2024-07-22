@@ -27,10 +27,16 @@
       },
     });
   </script>
+  <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
+  
+  <link rel="stylesheet" href="/stylesheets/demo.css" />
+
   <!-- CSS Files -->
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
   <link rel="stylesheet" href="/stylesheets/plugins.min.css" />
   <link rel="stylesheet" href="/stylesheets/kaiadmin.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link rel="stylesheet" href="/stylesheets/demo.css" />
 </head>
@@ -333,305 +339,121 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <div class="d-flex align-items-center">
-                      <h4 class="card-title">
-                        <%= title %>
-                      </h4>
-                    </div>
-                  </div>
-                  <div class="table-responsive">
-                    <table id="basic-datatables" class="display table table-striped table-hover">
-                      <!-- Table top -->
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Book Name</th>
-                          <th>Return Deadline</th>
-                          <th>Lend Status</th>
-                          <th>Penalty Amount</th>
-                          <th>Quantity</th>
-                          <th class="text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- Table data -->
-                        <% for( let [index, val] of user_list.entries()) { %>
-                          <tr>
-                            <td>
-                              <%= index + 1 %>
-                            </td>
-                            <td>
-                              <%= val.bookId.title %>
-                            </td>
-                            <td>
-                              <%= val.returnDeadline %>
-                            </td>
-                            <td>
-                              <%= val.lendStatus %>
-                            </td>
-                            <td>
-                              <%= val.penaltyAmount %>
-                            </td>
-                            <td>
-                              <%= val.quantity %>
-                            </td>
-                            <!-- Action field modal -->
-                            <td class="text-center">
-                              <!-- Button trigger detailModal -->
-                              <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#detailModal">
-                                Detail
-                              </button>
-                              <!-- Button trigger updateModal -->
-                              <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#updateModal">
-                                Update
-                              </button>
-                              <!-- Button trigger deleteModal -->
-                              <button type="button" class="btn btn-danger my-1" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal">
-                                Delete
-                              </button>
-                              <!-- Detail Modal -->
-                              <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h1 class="modal-title fs-5" id="detailModalLabel">User Detail</h1>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body text-start">
-                                      <h4 class="fw-bold text-info">Order ID: </h4>
-                                      <p>
-                                        <%= val.orderId.id %>
-                                      </p>
-                                      <h4 class="fw-bold text-info">Order Item ID:
-                                      </h4>
-                                      <p>
-                                        <%= val.id%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">
-                                        Book ID:
-                                      </h4>
-                                      <p>
-                                        <%= val.bookId.id%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">Book Name: </h4>
-                                      <p>
-                                        <%= val.bookId.title%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">
-                                        Return Deadline:
-                                      </h4>
-                                      <p>
-                                        <%= val.returnDeadline%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">
-                                        Lend Status:
-                                      </h4>
-                                      <p>
-                                        <%= val.lendStatus%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">
-                                        Penalty Amount:
-                                      </h4>
-                                      <p>
-                                        <%= val.penaltyAmount%>
-                                      </p>
-                                      <h4 class="fw-bold text-info">
-                                        Quantity:
-                                      </h4>
-                                      <p>
-                                        <%= val.quantity %>
-                                      </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                      <button type="button" class="btn btn-primary">Save
-                                        changes</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <!-- Update Modal -->
-                              <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h1 class="modal-title fs-5" id="updateModalLabel">Update Order Item</h1>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                    </div>
-                                    <!-- Update book form -->
-                                    <form action="/orders/order_item/<%= val.id %>/update" method="post">
-                                      <div class="modal-body text-start">
-                                        <div class="card-body">
-                                          <div class="row">
-                                            <div class="form-group">
-                                              <label for="orderId">
-                                                Order ID:
-                                              </label>
-                                              <input type="text" class="form-control" id="orderId" name="orderId" value="<%= val.orderId.id %>"
-                                                disabled>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="orderItemId">
-                                                  Order Item ID:
-                                                </label>
-                                                <input type="text" class="form-control" id="orderItemId" name="orderItemId" value="<%= val.id %>"
-                                                  disabled>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="disableinput">
-                                                  Book ID:
-                                                </label>
-                                                <input type="text" class="form-control" id="bookId" name="bookId" value="<%= val.bookId.id %>"
-                                                  disabled>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="bookTitle">
-                                                  Book Name:
-                                                </label>
-                                                <input type="text" class="form-control" id="bookTitle" name="bookTitle" value="<%= val.bookId.title %>"
-                                                  disabled>
-                                            </div>
-                                            <div class="form-group">
-                                              <label for="returnDeadline">Return Deadline:</label>
-                                              <input class="form-control" type="text" id="returnDeadline" name="returnDeadline" disabled
-                                                value="<%= val.returnDeadline %>">
-                                            </div>
-                                            <!-- Lend Status Radio Button -->
-                                            <div class="form-group">
-                                                <label>Lend Status:</label> <br>
-
-                                                <input <% if(val.lendStatus=="Borrowed") { %> checked <% } %>
-                                                    type="radio"
-                                                    id="lendStatus1"
-                                                    name="lendStatus"
-                                                    value="Borrowed">
-                                                <label for="verificationStatus1">Borrowed</label>
-                                                <input <% if(val.lendStatus=="Returned") { %> checked <% } %>
-                                                    type="radio"
-                                                    id="lendStatus2"
-                                                    name="lendStatus"
-                                                    value="False">
-                                                <label for="lendStatus2">Returned</label>
-                                                <input <% if(val.lendStatus=="Overdue") { %> checked <% } %>
-                                                    type="radio"
-                                                    id="lendStatus3"
-                                                    name="lendStatus"
-                                                    value="False">
-                                                <label for="lendStatus3">Overdue</label>
-                                              </div>
-                                            <div class="form-group">
-                                              <label for="penaltyAmount">Penalty Amount:</label>
-                                              <input class="form-control" type="text" id="penaltyAmount" name="penaltyAmount"
-                                                value="<%= val.penaltyAmount %>" disabled>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="quantity">Quantity:</label>
-                                                <input class="form-control" type="text" id="quantity" name="quantity"
-                                                  value="<%= val.quantity %>" disabled>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                      data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save
-                                      changes</button>
-                                  </div>
-                                  </form>
-                                </div>
-                              </div>
-                  </div>
-                  <!-- Delete modal -->
-                  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-7 text-danger" id="deleteModalLabel">Do
-                            you really
-                            want
-                            to delete this user?</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body text-start">
-                            <h4 class="fw-bold text-info">Order ID: </h4>
-                            <p>
-                              <%= val.orderId.id %>
-                            </p>
-                            <h4 class="fw-bold text-info">Order Item ID:
-                            </h4>
-                            <p>
-                              <%= val.id%>
-                            </p>
-                            <h4 class="fw-bold text-info">
-                              Book ID:
-                            </h4>
-                            <p>
-                              <%= val.bookId.id%>
-                            </p>
-                            <h4 class="fw-bold text-info">Book Name: </h4>
-                            <p>
-                              <%= val.bookId.title%>
-                            </p>
-                            <h4 class="fw-bold text-info">
-                              Return Deadline:
-                            </h4>
-                            <p>
-                              <%= val.returnDeadline%>
-                            </p>
-                            <h4 class="fw-bold text-info">
-                              Lend Status:
-                            </h4>
-                            <p>
-                              <%= val.lendStatus%>
-                            </p>
-                            <h4 class="fw-bold text-info">
-                              Penalty Amount:
-                            </h4>
-                            <p>
-                              <%= val.penaltyAmount%>
-                            </p>
-                            <h4 class="fw-bold text-info">
-                              Quantity:
-                            </h4>
-                            <p>
-                              <%= val.quantity %>
-                            </p>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <!-- Delete book button form-->
-                        <form action="/orders/order_item/<%= val.id %>/delete" method="post">
-                          <input type="hidden" name="authorId" value="<%= val.id %>">
-                          <button type="submit" class="btn btn-primary">Delete</button>
-                        </form>
+                <form action="/orders/<%= order_detail.id %>/update" method="post">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex align-items-center">
+                        <h4 class="card-title">
+                          <%= title %>
+                        </h4>
                       </div>
                     </div>
-                  </div>
-                </div>
-                </td>
-                </tr>
-                <% } %>
-                  </tbody>
-                  </table>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table id="basic-datatables" class="display table table-striped table-hover">
+                          <!-- Table top -->
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Book Name</th>
+                              <th>Return Deadline</th>
+                              <th>Penalty Amount</th>
+                              <th>Quantity</th>
+                              <th class="text-center">Lend Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Table data -->
+                            <% for( let [index, val] of order_item_list.entries()) { %>
+                              <tr>
+                                <td>
+                                  <%= index + 1 %>
+                                </td>
+                                <td>
+                                  <%= val.bookId.title %>
+                                </td>
+                                <td>
+                                  <%= val.returnDeadline.toLocaleString() %>
+                                </td>
+                                <td>
+                                  <%= val.penaltyAmount %>
+                                </td>
+                                <td>
+                                  <%= val.quantity %>
+                                </td>
+                                <!-- Action field modal -->
+                                <td class="text-center">
+                                  <!-- Lend Status Radio Button -->
+                                  <div class="form-group">
+                                    <label for="verificationStatus1">
+                                      Borrowed <% if(val.lendStatus=="Borrowed" ) { %> (Current) <% } %>
+                                    </label>
+                                    <input <% if(val.lendStatus=="Borrowed" ) { %> checked <% } %>
+                                      type="radio"
+                                      id="lendStatus1"
+                                      name="lendStatus<%= index %>"
+                                        value="Borrowed">
+                                        <br>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="lendStatus2">
+                                      Returned
+                                      <% if(val.lendStatus=="Returned" ) { %> (Current) <% } %>
+                                    </label>
+                                    <input <% if(val.lendStatus=="Returned" ) { %> checked <% } %>
+                                      type="radio"
+                                      id="lendStatus2"
+                                      name="lendStatus<%= index %>"
+                                        value="Returned"> <br>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="lendStatus3">
+                                      Overdue
+                                      <% if(val.lendStatus=="Overdue" ) { %> (Current) <% } %>
+                                    </label>
+                                    <input <% if(val.lendStatus=="Overdue" ) { %> checked <% } %>
+                                      type="radio"
+                                      id="lendStatus3"
+                                      name="lendStatus<%= index %>"
+                                        value="Overdue">
+                                  </div>
+                                  <!-- Book Id -->
+                                  <input type="hidden" id="orderItemId<%= index %>" name="orderItemId<%= index %>"
+                                    value="<%= val.id %>">
+                                </td>
+                              </tr>
+                              <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <h2>Order Status:</h2>
+                      <div class="form-group">
+                        <label for="orderStatus">Processing</label>
+                        <input type="radio" name="orderStatus" id="orderStatus1" value="Processing" 
+                        <% if(order_detail.orderStatus=="Processing" ) { %> checked <% } %> >
+                        <% if(order_detail.orderStatus=="Processing" ) { %> (Current) <% } %>
+                        <label for="orderStatus">Ready for Pick Up</label>
+                        <input type="radio" name="orderStatus" id="orderStatus2" value="Ready for Pick Up"
+                        <% if(order_detail.orderStatus=="Ready for Pick Up" ) { %> checked <% } %> >
+                        <% if(order_detail.orderStatus=="Ready for Pick Up" ) { %> (Current) <% } %>
+                        <label for="orderStatus">Completed</label>
+                        <input type="radio" name="orderStatus" id="orderStatus3" value="Completed"
+                        <% if(order_detail.orderStatus=="Completed" ) { %> checked <% } %> > 
+                        <% if(order_detail.orderStatus=="Completed" ) { %> (Current) <% } %>
+                        <br>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <input type="hidden" name="orderId" id="orderId" value="<%= order_detail.id %>">
+                      </div>
+                    </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
+  </div>
   </div>
   </div>
   <footer class="footer">
