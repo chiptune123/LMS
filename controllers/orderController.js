@@ -1,11 +1,28 @@
 const asyncHandler = require("express-async-handler");
 const OrderModel = require("../models/orders");
 const OrderItemModel = require("../models/orderItems");
+const RenewalRequestModel = require("../models/renewalRequests");
 const { options } = require("../routes/authenticationRoutes");
 
 const ORDER_MANAGEMENT_PAGE = "order_management";
 const ORDER_MANAGEMENT_PAGE_URL = "admin/dashboard/order_management";
 const ORDER_DETAIL_USER_PAGE = "order_detail";
+const ORDER_USER_PAGE = "/orders";
+
+async function penalty_calculate(oldDate, newDate) {
+  const diffTime = Math.abs(newDate - oldDate);
+  const diffDay = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  let penaltyAmount = 0;
+
+  if (diffDay > 0 && diffDay <= 7) {
+    penaltyAmont = diffDay * 1;
+  } else if (diffDay > 7) {
+    penaltyAmont = 7 + (diffDay * 5);
+  }
+
+  return penaltyAmount;
+}
 
 exports.order_detail_return = asyncHandler(async (req, res, next) => {
   try {
@@ -75,9 +92,15 @@ exports.order_list_by_user = asyncHandler(async (req, res, next) => {
     // *** Implement checking case if user is login
     const orderList = await OrderModel.find({ memberId: req.session.tokenUserId }).sort({ createdAt: 1 });
 
+    // Add orderItemList property according to each order
+    for (let i = 0; i < orderList.length; i++) {
+      let orderItemList = await OrderItemModel.find({ orderId: orderList[i].id }).populate('bookId').exec();
+      orderList[i].orderItemList = orderItemList;
+    }
+
     if (orderList) {
-      res.render("order_list", {
-        title: "Order list",
+      res.render("user_order", {
+        title: "Your Order",
         order_list: orderList,
       });
     } else {
@@ -176,58 +199,7 @@ exports.order_delete_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.order_item_update_post = asyncHandler(async (req, res, next) => {
-  try {
-    const [orderDetail] = await Promise.all([
-      OrderModel.findById(req.params.orderId).exec()
-    ]);
-
-    const formData = req.body;
-    const orderId = req.body.orderId;
-    const orderItemList = [];
-
-    // Format formData to array
-    for (let i = 0; i < Object.keys(formData).length; i++) {
-      const statusKey = `lendStatus${i}`;
-      const orderItemIdKey = `orderItemId${i}`
-      if (formData.hasOwnProperty(statusKey) && formData.hasOwnProperty(orderItemIdKey)) {
-        orderItemList.push({
-          index: i,
-          lendStatus: formData[statusKey],
-          orderItemId: formData[orderItemIdKey],
-        });
-      }
-    }
-
-    // Save lend status for each book
-    for (let orderItem of orderItemList) {
-      await OrderItemModel.findByIdAndUpdate({ _id: orderItem.orderItemId }, {
-        $set: {
-          lendStatus: orderItem.lendStatus,
-        }
-      })
-    }
-
-    await OrderModel.findByIdAndUpdate({ _id: orderId }, {
-      $set: {
-        orderStatus: req.body.orderStatus,
-      }
-    })
 
 
-    res.redirect('back');
 
-    // if (orderItemDetail && orderDetail) {
-    //   for (let orderItem of orderItems) {
-    //     // Save each book information to database
-    //     await OrderItemModel.findByIdAndUpdate({ id: orderItem.id }, {
-    //       $set: {
-    //         lendStatus: req.body.
-    //       }
-    //     })
-    //   }
-    // }
-  } catch (err) {
-    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
-  }
-})
+
