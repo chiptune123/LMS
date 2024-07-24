@@ -142,11 +142,14 @@ exports.user_create_post = [
       });
     }
 
+    let Id = getUniqueSimplifyId();
+
     const newUser = new User({
       username: req.body.username,
       password: bcrypt.hashSync(req.body.password, 8),
       name: req.body.name,
       email: req.body.email,
+      simplifyId: Id,
     })
 
     await newUser.save();
