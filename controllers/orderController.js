@@ -244,5 +244,65 @@ exports.order_item_update_post = asyncHandler(async (req, res, next) => {
   }
 })
 
+exports.request_extend_post = asyncHandler(async (req, res, next) => {
+  const orderItemdetail = await OrderItemModel.findById(req.body.orderItemId).populate('bookId').exec();
+  const requestExtendList = await RenewalRequestModel.find({ orderItemId: req.body.orderItemId }).exec();
 
+  // Denided request if request more than 2 times
+  if (requestExtendList.length >= 2) {
+    const errors = [];
+    errors.push("Can't request extend for more than 2 times!");
+
+    res.render(ORDER_USER_PAGE, { errors_object: errors });
+  }
+
+  // Set next deadline 2 weeks after the old deadline
+  let oldDeadline = orderItemDetail.returnDeadline;
+  let newDeadline = oldDeadline.getDate() + 14;
+
+  if (orderItemDetail) {
+    // Check book quantity before allow to extend
+    let quantity = orderItemDetail.bookId.quantity;
+
+    // If no book available, denide the request
+    if (quantity == 0) {
+      const RenewalRequest = new RenewalRequestModel({
+        orderItemId: req.body.orderItemId,
+        bookId: req.body.bookId,
+        userId: req.session.tokenUserId,
+        oldReturnDeadline: orderItemDetail.returnDeadline,
+        requestExtendDate: newDeadline,
+        requestStatus: "Denied"
+      })
+
+      await RenewalRequest.save();
+      res.redirect(ORDER_USER_PAGE);
+    }
+
+    // If book available, accept the request within 2 weeks
+    const renewalRequest = new RenewalRequestModel({
+      orderItemId: req.body.orderItemId,
+      bookId: req.body.bookId,
+      userId: req.session.tokenUserId,
+      oldReturnDeadline: orderItemDetail.returnDeadline,
+      requestExtendDate: newDeadline,
+      requestStatus: "Accepted"
+    })
+
+    let newPenalty = penalty_calculator(oldDeadline, newDeadline);
+
+    // Save renewal request
+    await renewalRequest.save();
+
+    // Save the status to orderItem
+    await OrderItemModel.findByIdAndUpdate(req.body.orderItemId, {
+      $set: {
+        returnDeadline: newDeadline,
+        penaltyAmont: newPenalty,
+      }
+    })
+
+    res.redirect(ORDER_USER_PAGE);
+  }
+})
 
