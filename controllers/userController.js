@@ -58,8 +58,9 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
 
 // 
 exports.user_profile = asyncHandler(async (req, res, next) => {
-  const userDetail = await User.findOne({ username: req.params.id }).exec();
-  res.render("user_detail", { user_information: userDetail });
+  const userDetail = await User.findOne({ _id: req.params.id }).exec();
+  console.log(userDetail);
+  res.render("user_profile", {title: "Your Profile", user_detail: userDetail });
 });
 
 exports.user_create_get = asyncHandler((req, res, next) => {
