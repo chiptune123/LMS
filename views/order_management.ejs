@@ -28,11 +28,14 @@
             },
         });
     </script>
+    <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
+
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
     <link rel="stylesheet" href="/stylesheets/plugins.min.css" />
     <link rel="stylesheet" href="/stylesheets/kaiadmin.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="/stylesheets/demo.css" />
@@ -344,28 +347,6 @@
                 <div class="container">
                     <div class="page-inner">
                         <div class="page-header">
-                            <h3 class="fw-bold mb-3">
-                                <%= title %>
-                            </h3>
-                            <ul class="breadcrumbs mb-3">
-                                <li class="nav-home">
-                                    <a href="#">
-                                        <i class="icon-home"></i>
-                                    </a>
-                                </li>
-                                <li class="separator">
-                                    <i class="icon-arrow-right"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#">Tables</a>
-                                </li>
-                                <li class="separator">
-                                    <i class="icon-arrow-right"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#">Datatables</a>
-                                </li>
-                            </ul>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -401,10 +382,10 @@
                                                                 <%= index + 1 %>
                                                             </td>
                                                             <td>
-                                                                <%= val.createdAt %>
+                                                                <%= val.createdAt.toLocaleString() %>
                                                             </td>
                                                             <td>
-                                                                <%= val.updatedAt %>
+                                                                <%= val.updatedAt.toLocaleString() %>
                                                             </td>
                                                             <td>
                                                                 <%= val.memberId.name %>
@@ -413,36 +394,39 @@
                                                                 <%= val.orderStatus %>
                                                             </td>
                                                             <td>
-                                                                <%= val.orderPreparer.name %>
+                                                                <% if (val.orderPreparer !==null) { %>
+                                                                    <%= val.orderPreparer.name %>
+                                                                        <% } else { %>
+                                                                            Unassigned
+                                                                            <% } %>
                                                             </td>
                                                             <!-- Action field modal -->
                                                             <td class="text-center">
                                                                 <!-- Button trigger detailModal -->
-                                                                <form
-                                                                    action="/admin/dashboard/order_management/<%= val.bookId.uniqueBarcode %>/"
-                                                                    method="get">
-                                                                    <button type="button" class="btn btn-primary"
+                                                                <form action="/admin/dashboard/order_management/order_detail/<%= val.id %>">
+                                                                    <button type="submit" class="btn btn-primary"
                                                                         data-bs-toggle="modal"
-                                                                        data-bs-target="#detailModal">
+                                                                        data-bs-target="#detailModal<%= index %>">
                                                                         Detail
                                                                     </button>
                                                                 </form>
+
                                                                 <!-- Button trigger deleteModal -->
                                                                 <button type="button" class="btn btn-danger my-1"
                                                                     data-bs-toggle="modal"
-                                                                    data-bs-target="#deleteModal">
+                                                                    data-bs-target="#deleteModal<%= index %>">
                                                                     Delete
                                                                 </button>
 
-                                                                <!-- Delete modal -->
-                                                                <div class="modal fade" id="deleteModal" tabindex="-1"
-                                                                    aria-labelledby="deleteModalLabel"
+                                                                <!-- Detail modal -->
+                                                                <div class="modal fade" id="detailModal" tabindex="-1"
+                                                                    aria-labelledby="detailModalLabel"
                                                                     aria-hidden="true">
                                                                     <div class="modal-dialog">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
                                                                                 <h1 class="modal-title fs-7 text-danger"
-                                                                                    id="deleteModalLabel">Do you
+                                                                                    id="detailModalLabel">Do you
                                                                                     really
                                                                                     want
                                                                                     to delete this book?</h1>
@@ -458,15 +442,19 @@
                                                                                 <p>
                                                                                     <%= val.id%>
                                                                                 </p>
-                                                                                <h4 class="fw-bold text-info">Created At:
+                                                                                <h4 class="fw-bold text-info">Created
+                                                                                    At:
                                                                                 </h4>
                                                                                 <p>
-                                                                                    <%= val.createdAt%>
+                                                                                    <%= val.createdAt.toLocaleString()
+                                                                                        %>
                                                                                 </p>
-                                                                                <h4 class="fw-bold text-info">Updated At:
+                                                                                <h4 class="fw-bold text-info">Updated
+                                                                                    At:
                                                                                 </h4>
                                                                                 <p>
-                                                                                    <%= val.updatedAt%>
+                                                                                    <%= val.updatedAt.toLocaleString()
+                                                                                        %>
                                                                                 </p>
                                                                                 <h4 class="fw-bold text-info">
                                                                                     Buyer ID:
@@ -490,13 +478,21 @@
                                                                                     Order Preparer ID:
                                                                                 </h4>
                                                                                 <p>
-                                                                                    <%= val.orderPreparer.id %>
+                                                                                    <% if (val.orderPreparer !==null) { %>
+                                                                                        <%= val.orderPreparer.id %>
+                                                                                            <% } else { %>
+                                                                                                Unassigned
+                                                                                                <% } %>
                                                                                 </p>
                                                                                 <h4 class="fw-bold text-info">
                                                                                     Order Preparer Name:
                                                                                 </h4>
                                                                                 <p>
-                                                                                    <%= val.orderPreparer.name %>
+                                                                                    <% if (val.orderPreparer !==null) { %>
+                                                                                        <%= val.orderPreparer.name %>
+                                                                                            <% } else { %>
+                                                                                                Unassigned
+                                                                                                <% } %>
                                                                                 </p>
                                                                             </div>
                                                                             <div class="modal-footer">
@@ -509,11 +505,107 @@
                                                                                 <form
                                                                                     action="/orders/<%= val.id %>/delete"
                                                                                     method="post">
-                                                                                    <input type="hidden"
-                                                                                        name="orderId"
+                                                                                    <input type="hidden" name="orderId"
                                                                                         value="<%= val.id %>">
                                                                                     <button type="submit"
                                                                                         class="btn btn-primary">Delete</button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Delete modal -->
+                                                                <div class="modal fade" id="deleteModal<%= index %>"
+                                                                    tabindex="-1" aria-labelledby="deleteModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h1 class="modal-title fs-7 text-danger"
+                                                                                    id="deleteModalLabel">Do you
+                                                                                    really
+                                                                                    want
+                                                                                    to delete this book?</h1>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body text-start">
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Order ID:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.id%>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">Created
+                                                                                    At:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.createdAt.toLocaleString()
+                                                                                        %>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">Updated
+                                                                                    At:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.updatedAt.toLocaleString()
+                                                                                        %>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Buyer ID:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.memberId.id%>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Buyer Name:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.memberId.name %>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Order Status:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <%= val.orderStatus %>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Order Preparer ID:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <% if (val.orderPreparer !==null) { %>
+                                                                                        <%= val.orderPreparer.id %>
+                                                                                            <% } else { %>
+                                                                                                Unassigned
+                                                                                                <% } %>
+                                                                                </p>
+                                                                                <h4 class="fw-bold text-info">
+                                                                                    Order Preparer Name:
+                                                                                </h4>
+                                                                                <p>
+                                                                                    <% if (val.orderPreparer !==null) { %>
+                                                                                        <%= val.orderPreparer.name %>
+                                                                                            <% } else { %>
+                                                                                                Unassigned
+                                                                                                <% } %>
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">
+                                                                                    Close
+                                                                                </button>
+
+                                                                                <form
+                                                                                    action="/orders/<%= val.id %>/delete"
+                                                                                    method="post">
+                                                                                    <input type="hidden" name="orderId"
+                                                                                        value="<%= val.id %>">
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-danger">Delete</button>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
