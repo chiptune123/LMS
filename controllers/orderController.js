@@ -306,3 +306,16 @@ exports.request_extend_post = asyncHandler(async (req, res, next) => {
   }
 })
 
+exports.renewal_request_list_get = asyncHandler(async (req, res, next) => {
+  try {
+    const renewalRequestList = await RenewalRequestModel.find({}).populate("orderItemId").populate("bookId").populate("userId").exec();
+
+    if (renewalRequestList) {
+      res.render("renewal_request_management", { title: "Renewal Request", renewal_request_list: renewalRequestList });
+    } else {
+      res.status(404).render("errorPage", { message: "Renewal Request not found!", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
