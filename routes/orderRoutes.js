@@ -9,6 +9,8 @@ router.get("/", order_controller.order_list_by_user);
 
 router.post("/checkout", order_controller.order_create_post);
 
+router.post("/order_item/request_extend", order_controller.request_extend_post);
+
 router.get("/:orderId", order_controller.order_detail);
 
 router.post("/:orderId/delete", order_controller.order_delete_post);
