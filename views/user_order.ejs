@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/e714a688f6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="bg-light">
+    <%- include('navigationBar') %>
+    <section class="container-fluid p-4">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-12">
+            <!-- Page header -->
+            <div class="border-bottom pb-3 mb-3 ">
+              <div class="mb-2 mb-lg-0 text-center">
+                <h1 class="mb-0 h2 fw-bold">Order History </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- row -->
+        <div class="row justify-content-center">
+          <div class="col-xxl-8 col-12">
+            <!-- card -->
+            <div class="card">
+              <!-- card body-->
+              <div class="card-body">
+                <div class="mb-12">
+                  <h4 class="mb-0">Your Order</h4>
+                  <p>Check the status of recent orders, manage returns, and discover similar products.</p>
+                </div>
+                <% for( let i = 0; i < order_list.length; i++ ) { %>
+                  <div class="mb-8">
+                    <div class="border-bottom mb-3 pb-3 d-lg-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Order #<%= order_list[i].id %></h5>
+                        <span class="ms-2 text-secondary">Delivered on <%= order_list[i].createdAt.toLocaleDateString() %></span>
+                      </div>
+                      <% if (order_list[i].orderStatus == "Completed") { %>
+                          <span class="badge bg-success">Order Status: Completed</span>
+                      <% } %>
+                      <% if (order_list[i].orderStatus == "Processing") { %>
+                        <span class="badge bg-warning text-dark">Order Status: Processing</span>
+                      <% } %>
+                      <% if (order_list[i].orderStatus == "Ready for Pick Up") { %>
+                        <span class="badge bg-primary">Order Status: Ready for Pick Up</span>
+                      <% } %>
+                    </div>
+                    <% for( let j = 0; j < order_list[i].orderItemList.length; j++ ) { %>
+                        <div class="row justify-content-between  mb-4">
+                        <!-- col -->
+                        <div class="col-lg-8 col-12">
+                          <div class="d-md-flex">
+                            <div>
+                              <!-- img -->
+                              <img src="https://picsum.photos/200" alt="" class="img-4by3-xl rounded">
+                            </div>
+                            <div class="ms-md-4 mt-2 mt-lg-0">
+                              <!-- heading -->
+                              <h5 class="mb-1">
+                                <%= order_list[i].orderItemList[j].bookId.title %>
+                              </h5>
+                              <!-- text -->
+                              <span class="text-secondary">Return Status:</span>
+                              <span
+                              <% if (order_list[i].orderItemList[j].lendStatus == "Borrowed") { %>
+                                  class="text-info"
+                              <% } %>
+                              <% if (order_list[i].orderItemList[j].lendStatus == "Returned") { %>
+                                class="text-success"
+                              <% } %>
+                              <% if (order_list[i].orderItemList[j].lendStatus == "Overdue") { %>
+                                class="text-danger"
+                              <% } %>
+                              >
+                              <%= order_list[i].orderItemList[j].lendStatus %>
+                              </span>
+                              <p class="text-secondary">Return deadline: <%= order_list[i].orderItemList[j].returnDeadline.toLocaleDateString() %></p>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- button -->
+                        <div class="col-lg-2 col-12 ">
+                          <% if (order_list[i].orderItemList[j].lendStatus == "Overdue") { %>
+                              <form action="/orders/order_item/request_extend" method="post">
+                                <input type="hidden" id="orderItemId" name="orderItemId" value="<%= order_list[i].orderItemList[j].id %>">
+                                <input type="hidden" id="bookId" name="bookId" value="<%= order_list[i].orderItemList[j].bookId.id %>">
+                                <button class="btn btn-primary my-2" type="submit">Request Extend</button>
+                                <p>Penalty Amount: <span class="text-danger">$<%= order_list[i].orderItemList[j].penaltyAmount %></span></p>
+                              </form>
+                          <% } %>
+                        </div>
+                        </div>
+                    <% } %>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </section>
+</body>
+</html>
