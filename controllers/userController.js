@@ -19,6 +19,26 @@ const USER_MANAGEMENT_PAGE = "user_management";
 //   res.render("user_list", { title: "User List", user_list: allUsers });
 // });
 
+async function getUniqueSimplifyId() {
+  let currentYear = new Date().getFullYear() * 10000
+  let max = currentYear + 9999;
+  let randomId, user;
+
+  let isDuplicated = false;
+  // Return with the first 4 number is current year and the last 4 number is 9999
+
+  do {
+    randomId= Math.floor(Math.random() * (max - currentYear + 1)) + currentYear;
+    let userDetail = await User.find({ simplifyId: randomId }).exec;
+
+    if (userDetail) {
+      isDuplicated = true;
+    }
+  } while (isDuplicated == true);
+
+  return randomId;
+}
+
 exports.user_list_by_member = asyncHandler(async (req, res, next) => {
   try {
     const allMember = await User.find({ role: "User" })
@@ -60,7 +80,7 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
 exports.user_profile = asyncHandler(async (req, res, next) => {
   const userDetail = await User.findOne({ _id: req.params.id }).exec();
   console.log(userDetail);
-  res.render("user_profile", {title: "Your Profile", user_detail: userDetail });
+  res.render("user_profile", { title: "Your Profile", user_detail: userDetail });
 });
 
 exports.user_create_get = asyncHandler((req, res, next) => {
