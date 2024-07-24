@@ -13,9 +13,9 @@
 </head>
 <%- include('navigationBar.ejs') %>
 
-  <body>
+  <body class="bg-light">
     <!-- cart + summary -->
-    <section class="bg-light my-5">
+    <section class="my-5">
       <div class="container">
         <div class="row">
           <!-- cart -->
@@ -59,8 +59,8 @@
                           </div>
                         </div>
                         <input type="hidden" name="book[]" id="book<%= i %>_id" value="<%= book_list[i].id %>">
-                        <input type="hidden" name="bookLength" id="bookLength" value="<%= book_list.length %>">
                         <% } %>
+                        <input type="hidden" name="bookLength" id="bookLength" value="<%= book_list.length %>">
               </div>
             </div>
           </div>
