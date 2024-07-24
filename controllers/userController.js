@@ -28,12 +28,14 @@ async function getUniqueSimplifyId() {
   // Return with the first 4 number is current year and the last 4 number is 9999
 
   do {
-    randomId= Math.floor(Math.random() * (max - currentYear + 1)) + currentYear;
+    randomId = Math.floor(Math.random() * (max - currentYear + 1)) + currentYear;
     let userDetail = await User.find({ simplifyId: randomId }).exec;
 
     if (userDetail) {
       isDuplicated = true;
     }
+
+    isDuplicated = false;
   } while (isDuplicated == true);
 
   return randomId;
@@ -117,14 +119,14 @@ exports.user_create_post = [
     // Extract result object from express-validator
     const errors = validationResult(req);
 
-    const [userDetail, emailDetail] = await Promise.all([User.find({ username: req.body.username }), User.find({ email: req.body.email })]);
+    const [userDetail, emailDetail] = await Promise.all([User.find({ username: req.body.username }).exec(), User.find({ email: req.body.email }).exec()]);
     // If username duplicate, add error to errors object
-    if (userDetail) {
+    if (userDetail.length > 0) {
       errors.errors.push({
         msg: "The username is already taken"
       })
     }
-    if (emailDetail) {
+    if (emailDetail.length > 0) {
       errors.errors.push({
         msg: "The email is already taken"
       })
@@ -142,7 +144,7 @@ exports.user_create_post = [
       });
     }
 
-    let Id = getUniqueSimplifyId();
+    let Id = await getUniqueSimplifyId();
 
     const newUser = new User({
       username: req.body.username,
