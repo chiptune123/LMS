@@ -42,8 +42,6 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     res.locals.tokenUserId = req.session.tokenUserId;
     // Login status to print logout button in user icon
     res.locals.loginStatus = true;  
-    console.log(res.locals.loginStatus );
-
     next();
 })
 
