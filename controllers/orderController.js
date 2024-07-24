@@ -199,7 +199,50 @@ exports.order_delete_post = asyncHandler(async (req, res, next) => {
   }
 });
 
+exports.order_item_update_post = asyncHandler(async (req, res, next) => {
+  try {
+    const [orderDetail] = await Promise.all([
+      OrderModel.findById(req.params.orderId).exec()
+    ]);
 
+    const formData = req.body;
+    const orderId = req.body.orderId;
+    const orderItemList = [];
+
+    // Format formData to array
+    for (let i = 0; i < Object.keys(formData).length; i++) {
+      const statusKey = `lendStatus${i}`;
+      const orderItemIdKey = `orderItemId${i}`
+      if (formData.hasOwnProperty(statusKey) && formData.hasOwnProperty(orderItemIdKey)) {
+        orderItemList.push({
+          index: i,
+          lendStatus: formData[statusKey],
+          orderItemId: formData[orderItemIdKey],
+        });
+      }
+    }
+
+    // Save lend status for each book
+    for (let orderItem of orderItemList) {
+      await OrderItemModel.findByIdAndUpdate({ _id: orderItem.orderItemId }, {
+        $set: {
+          lendStatus: orderItem.lendStatus,
+        }
+      })
+    }
+
+    await OrderModel.findByIdAndUpdate({ _id: orderId }, {
+      $set: {
+        orderStatus: req.body.orderStatus,
+        orderPreparer: req.session.tokenUserId
+      }
+    })
+
+    res.redirect('back');
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
 
 
 
