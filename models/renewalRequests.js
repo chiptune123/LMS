@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const RenewalRequestSchema = new Schema(
     {
-        orderItemId: { typeof: Schema.Types.ObjectId, ref: "OrderItem", required: true },
-        requestUser: { typeof: Schema.Types.ObjectId, ref: "User", required: true },
-        librarianId: { typeof: Schema.Types.ObjectId, ref: "User", default: "" },
-        reason: { typeof: String, required: true, maxLength: 500 },
-        requestExtendDate: { typeof: Date, required: true, default: Date.now },
-        requestStatus: { typeof: String, required: true, enum: ["Denided", "Accept"], default: "Processing" }
+        orderItemId: { type: Schema.Types.ObjectId, ref: "OrderItem", required: true },
+        bookId: { type: Schema.Types.ObjectId, ref: "book", required: true },
+        userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        oldReturnDeadline: { type: Date, require: true },
+        requestExtendDate: { type: Date, required: true },
+        requestStatus: { type: String, required: true, enum: ["Denided", "Accepted"] }
     },
     { timestamps: true });
 
