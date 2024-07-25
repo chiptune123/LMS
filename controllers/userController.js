@@ -10,6 +10,7 @@ const CartModel = require("../models/carts");
 const BOOK_LIST_URL = "/books";
 const LOGIN_PAGE_URL = "/auth/login";
 const USER_MANAGEMENT_MEMBER_URL = "/admin/dashboard/user_management/member";
+const STAFF_MANAGEMENT_URL = "/admin/dashboard/user_management/staff"
 const USER_MANAGEMENT_PAGE = "user_management";
 
 // exports.user_list = asyncHandler(async (req, res, next) => {
@@ -65,7 +66,7 @@ exports.user_list_by_staff = asyncHandler(async (req, res, next) => {
     const allStaff = await User.find({ role: "Librarian" })
       .sort({ username: 1 })
       .exec();
-
+    console.log(allStaff);
     if (allStaff) {
       if (req.baseUrl == "/admin") {
         res.render(USER_MANAGEMENT_PAGE, { title: "Staff Collection", user_list: allStaff });
@@ -117,9 +118,17 @@ exports.user_create_post = [
   // Start to process request after validation
   asyncHandler(async (req, res, next) => {
     // Extract result object from express-validator
-    const errors = validationResult(req);
+    const bodyValidate = validationResult(req);
 
-    const [userDetail, emailDetail] = await Promise.all([User.find({ username: req.body.username }).exec(), User.find({ email: req.body.email }).exec()]);
+    const [userDetail, emailDetail] = await Promise.all([
+      User.find({ username: req.body.username }).exec(),
+      User.find({ email: req.body.email }).exec()
+    ]);
+    const [memberList, staffList] = await Promise.all([
+      User.find({ role: "User" }).sort({ createdAt: 1 }).exec(),
+      User.find({ role: "Librarian" }).sort({ createdAt: 1 }).exec(),
+    ]);
+
     // If username duplicate, add error to errors object
     if (userDetail.length > 0) {
       errors.errors.push({
@@ -131,18 +140,34 @@ exports.user_create_post = [
         msg: "The email is already taken"
       })
     }
-    if (!errors.isEmpty()) {
+
+    if (!bodyValidate.isEmpty()) {
+      // Create errors object
+      let errors = [];
+      for (let result of bodyValidate.errors) {
+        errors.push(result.msg);
+      }
+
       const inputData = {
         username: req.body.username,
         email: req.body.email,
         name: req.body.name,
       }
-      res.render("sign_up_form", {
-        title: "Create User",
+      if (res.locals.userRole == "Admin") {
+        return res.render(USER_MANAGEMENT_PAGE, {
+          title: "Staff Collection",
+          errors_object: errors,
+          user_list: staffList,
+        });
+      }
+
+      return res.render("sign_up_form", {
+        title: "Staff Collection",
         user: inputData,
         errors: errors.array(),
       });
     }
+
 
     let Id = await getUniqueSimplifyId();
 
@@ -154,11 +179,13 @@ exports.user_create_post = [
       simplifyId: Id,
     })
 
-    await newUser.save();
-
-    res.redirect(LOGIN_PAGE_URL);
+    const result = await newUser.save();
+    if (res.locals.userRole == "Admin") {
+      res.render(STAFF_MANAGEMENT_URL);
+    } else {
+      res.redirect(LOGIN_PAGE_URL);
+    }
   })
-
 ];
 
 exports.user_update_post = [
@@ -202,11 +229,12 @@ exports.user_update_post = [
         errors: errors.array(),
       });
     } else {
-      await User.findByIdAndUpdate(
+      const userInfo = await User.findByIdAndUpdate(
         { _id: req.params.id },
         {
           $set: {
             name: req.body.name,
+            password: bcrypt.hashSync(req.body.password, 8),
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
             address: req.body.address,
