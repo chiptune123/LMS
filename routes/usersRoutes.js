@@ -11,7 +11,9 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.post("/create", verifySignUp.checkDuplicateUsernameOrEmail, user_controller.user_create_post);
+router.post("/create", user_controller.user_create_post);
+
+router.post("/create_staff", user_controller.staff_create_post);
 
 router.get("/:id", user_controller.user_profile);
 
