@@ -119,6 +119,7 @@ exports.user_create_post = [
   asyncHandler(async (req, res, next) => {
     // Extract result object from express-validator
     const bodyValidate = validationResult(req);
+    let errors = [];
 
     const [userDetail, emailDetail] = await Promise.all([
       User.find({ username: req.body.username }).exec(),
@@ -131,19 +132,19 @@ exports.user_create_post = [
 
     // If username duplicate, add error to errors object
     if (userDetail.length > 0) {
-      errors.errors.push({
+      errors.push({
         msg: "The username is already taken"
       })
     }
     if (emailDetail.length > 0) {
-      errors.errors.push({
+      errors.push({
         msg: "The email is already taken"
       })
     }
 
     if (!bodyValidate.isEmpty()) {
       // Create errors object
-      let errors = [];
+
       for (let result of bodyValidate.errors) {
         errors.push(result.msg);
       }
@@ -168,7 +169,6 @@ exports.user_create_post = [
       });
     }
 
-
     let Id = await getUniqueSimplifyId();
 
     const newUser = new User({
@@ -180,11 +180,96 @@ exports.user_create_post = [
     })
 
     const result = await newUser.save();
+
+    console.log(result)
     if (res.locals.userRole == "Admin") {
-      res.render(STAFF_MANAGEMENT_URL);
+      res.redirect(STAFF_MANAGEMENT_URL);
     } else {
       res.redirect(LOGIN_PAGE_URL);
     }
+  })
+];
+
+exports.staff_create_post = [
+  // Validate and sanitizer field
+  body("username")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Username must be specified."),
+  body("password")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Password must be specified"),
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Name must be specified")
+    .isAlphanumeric()
+    .withMessage("Name has non-alphanumeric character"),
+  body("email")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Email must be specified"),
+  // Start to process request after validation
+  asyncHandler(async (req, res, next) => {
+    // Extract result object from express-validator
+    const bodyValidate = validationResult(req);
+    let errors = [];
+
+    const [userDetail, emailDetail] = await Promise.all([
+      User.find({ username: req.body.username }).exec(),
+      User.find({ email: req.body.email }).exec()
+    ]);
+    const [memberList, staffList] = await Promise.all([
+      User.find({ role: "User" }).sort({ createdAt: 1 }).exec(),
+      User.find({ role: "Librarian" }).sort({ createdAt: 1 }).exec(),
+    ]);
+
+    // If username duplicate, add error to errors object
+    if (userDetail.length > 0) {
+      errors.push(
+        "The username is already taken"
+      );
+    }
+    if (emailDetail.length > 0) {
+      errors.push(
+        "The email is already taken"
+      );
+    }
+
+    if (!bodyValidate.isEmpty()) {
+      // Create errors object
+
+      for (let result of bodyValidate.errors) {
+        errors.push(result.msg);
+      }
+
+      return res.render(USER_MANAGEMENT_PAGE, {
+        title: "Staff Collection",
+        errors_object: errors,
+        user_list: staffList,
+      });
+
+    }
+
+    let Id = await getUniqueSimplifyId();
+
+    const newUser = new User({
+      username: req.body.username,
+      password: bcrypt.hashSync(req.body.password, 8),
+      name: req.body.name,
+      role: req.body.role,
+      email: req.body.email,
+      simplifyId: Id,
+    })
+
+    await newUser.save();
+
+    res.redirect(STAFF_MANAGEMENT_URL);
   })
 ];
 
@@ -247,7 +332,7 @@ exports.user_update_post = [
         }
       );
 
-      res.redirect(USER_MANAGEMENT_MEMBER_URL);
+      res.redirect('back');
     }
   }),
 ];
@@ -258,7 +343,7 @@ exports.user_delete_post = asyncHandler(async (req, res, next) => {
     if (userDetail) {
       await User.findByIdAndDelete(req.params.id);
 
-      res.redirect(USER_MANAGEMENT_MEMBER_URL);
+      res.redirect('back');
     } else {
       res.status(404).render("errorPage", { message: "User not found!", errorStatus: 404 });
     }
