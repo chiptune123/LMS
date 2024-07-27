@@ -35,7 +35,11 @@ router.get('/dashboard/order_management/order_detail/:orderId', order_controller
 
 router.get('/dashboard/order_management/order_return/:uniqueBarcode', order_controller.order_return_get);
 
+router.post("/dashboard/return/return_management", order_controller.order_return_by_user);
+
 router.get('/dashboard/renewal_request_management/', order_controller.renewal_request_list_get);
+
+router.get("/dashboard/return", order_controller.order_return_get);
 
 module.exports = router;
 
