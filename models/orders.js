@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const OrderSchema = new Schema(
   {
     memberId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    simplifyId: { type: String, required: true },
     orderStatus: {
       type: String,
       required: true,
@@ -24,6 +25,7 @@ const OrderSchema = new Schema(
       //required: true,
     },
     deleteStatus: { type: Boolean, default: false },
+    //studentId: {type: String, maxLength: 8, required: true}
   },
   {
     timestamps: true,

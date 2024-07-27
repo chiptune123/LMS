@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     profilePicture: {type: String, maxLength: 500, default: ""},
     deleteStatus: {type: Boolean, default: false},
     deleteReason: {type: String, maxLength: 500, default: ""},
-    studentId: {type: String, maxLength: 8, required: true}
+    simplifyId: {type: String, maxLength: 8, required: true}
 })
 
 // This virtual instance return a url direct to a user
