@@ -1,10 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const OrderModel = require("../models/orders");
+const UserModel = require("../models/users");
+const BookModel = require("../models/books");
 const OrderItemModel = require("../models/orderItems");
 const RenewalRequestModel = require("../models/renewalRequests");
 const { options } = require("../routes/authenticationRoutes");
 
 const ORDER_MANAGEMENT_PAGE = "order_management";
+const ORDER_RETURN_MANAGEMENT_PAGE = "order_return_management";
 const ORDER_MANAGEMENT_PAGE_URL = "admin/dashboard/order_management";
 const ORDER_DETAIL_USER_PAGE = "order_detail";
 const ORDER_USER_PAGE = "/orders";
@@ -22,6 +25,22 @@ async function penalty_calculate(oldDate, newDate) {
   }
 
   return penaltyAmount;
+}
+
+async function decrease_book_quantity_by_one(bookId) {
+  await BookModel.findByIdAndUpdate({ bookId }, {
+    $inc: {
+      quantity: -1
+    }
+  })
+}
+
+async function increase_book_quantity_by_one(bookId) {
+  await BookModel.findByIdAndUpdate({ bookId }, {
+    $inc: {
+      quantity: 1
+    }
+  })
 }
 
 exports.order_detail_return = asyncHandler(async (req, res, next) => {
@@ -111,6 +130,34 @@ exports.order_list_by_user = asyncHandler(async (req, res, next) => {
   }
 });
 
+exports.order_return_by_user = asyncHandler(async (req, res, next) => {
+  try {
+    // *** Implement checking case if user is login
+    const [orderList, userDetail] = await Promise.all([
+      OrderModel.find({ simplifyId: req.body.simplifyId }).sort({ createdAt: 1 }).exec(),
+      UserModel.findOne({ simplifyId: req.body.simplifyId }).exec(),
+    ]);
+
+    // Add orderItemList property according to each order
+    for (let i = 0; i < orderList.length; i++) {
+      let orderItemList = await OrderItemModel.find({ orderId: orderList[i].id }).populate('bookId').exec();
+      orderList[i].orderItemList = orderItemList;
+    }
+
+    if (orderList) {
+      res.render(ORDER_RETURN_MANAGEMENT_PAGE, {
+        title: "Order History",
+        order_list: orderList,
+        user_detail: userDetail,
+      });
+    } else {
+      res.status(404).render("errorPage", { message: "Order not found", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
+
 exports.order_list = asyncHandler(async (req, res, next) => {
   try {
     const orderList = await OrderModel.find({}).populate("memberId").populate("orderPreparer").sort({ createAt: 1 }).exec();
@@ -141,9 +188,12 @@ exports.order_return_get = asyncHandler(async (req, res, next) => {
 exports.order_create_post = asyncHandler(async (req, res, next) => {
   try {
     // If user not login then render login page
+    const userDetail = await UserModel.findById(req.session.tokenUserId).exec();
+
     if (res.locals.loginStatus == true) {
       const newOrder = await new OrderModel({
-        memberId: req.session.tokenUserId
+        memberId: userDetail.id,
+        simplifyId: userDetail.simplifyId,
       })
 
       await newOrder.save();
@@ -317,5 +367,48 @@ exports.renewal_request_list_get = asyncHandler(async (req, res, next) => {
     }
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
+
+exports.order_return_get = asyncHandler(async (req, res, next) => {
+  res.render("return_form", { title: "Order Return" });
+})
+
+exports.process_return_post = asyncHandler(async (req, res, next) => {
+  try {
+    const orderItemDetail = await OrderItemModel.findById(req.body.orderItemId).populate("bookId").exec();
+
+    if (orderItemDetail) {
+      // Change orderItem lend status
+      await OrderItemModel.findByIdAndUpdate(req.body.orderItemId, {
+        $set: {
+          lendStatus: "Returned"
+        }
+      })
+
+      increase_book_quantity_by_one(orderItemDetail.bookId.id);
+
+      const [orderList, userDetail] = await Promise.all([
+        OrderModel.find({ simplifyId: req.body.simplifyId }).sort({ createdAt: 1 }).exec(),
+        UserModel.findOne({ simplifyId: req.body.simplifyId }).exec(),
+      ]);
+
+      // Add orderItemList property according to each order
+      for (let i = 0; i < orderList.length; i++) {
+        let orderItemList = await OrderItemModel.find({ orderId: orderList[i].id }).populate('bookId').exec();
+        orderList[i].orderItemList = orderItemList;
+      }
+
+      res.render(ORDER_RETURN_MANAGEMENT_PAGE, {
+        title: "Order History",
+        order_list: orderList,
+        user_detail: userDetail,
+      });
+
+    } else {
+      res.status(404).render("errorPage", { message: "Book not found!", errorStatus: 404 });
+    }
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 })
   }
 })
