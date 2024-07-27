@@ -350,21 +350,43 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
+                                <!-- Author has associate books -->
+                                <% if (typeof errors_object !== "undefined") { %>
+                                    <div class="card">
+                                       <div class="card-header">
+                                           <h4 class="card-title text-warning">Errors</h4>
+                                       </div>
+                                       <div class="card-body">
+                                            <ul class="list-group list-group-bordered">
+                                                <% for( let error of errors_object) { %>
+                                                    <li class="list-group-item text-danger"><%= error %></li>
+                                                <% } %>
+                                            </ul>
+                                       </div>
+                                    </div>
+                                <% } %>
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="d-flex align-items-center">
                                             <h4 class="card-title">
                                                 <%= title %>
                                             </h4>
-                                            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
-                                                data-bs-target="#addRowModal">
-                                                <i class="fa fa-plus"></i>
-                                                Add Member
-                                            </button>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <!-- Add Book Modal -->
+                                        <div class="d-flex align-items-center">
+                                            <h4 class="card-title">
+                                                <%= title %>
+                                            </h4>
+                                            <% if(userRole == "Admin") { %>
+                                                <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal"
+                                                data-bs-target="#addRowModal">
+                                                <i class="fa fa-plus"></i>
+                                                Add User
+                                                </button>
+                                            <% } %> 
+                                        </div>
+
                                         <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog"
                                             aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -378,8 +400,8 @@
                                                             aria-label="Close"></button>
                                                         </button>
                                                     </div>
-                                                    <!-- Book Create Form -->
-                                                    <form action="/books/create" method="post">
+                                                    <!-- User Create Form -->
+                                                    <form action="/users/create_staff" method="post">
                                                         <div class="modal-body text-start">
                                                             <div class="card-body">
                                                                 <div class="row">
@@ -392,6 +414,15 @@
                                                                         <label for="password">Password:</label>
                                                                         <input class="form-control" type="password"
                                                                             name="password" id="password" value="">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="name">Role:</label> <br>
+                                                                        <label for="role1">Librarian:</label>
+                                                                        <input type="radio"
+                                                                            name="role" id="role1" value="Librarian">
+                                                                        <label for="role1">User:</label>
+                                                                        <input type="radio"
+                                                                            name="role" id="role2" value="User" checked>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="name">Name:</label>
@@ -435,7 +466,7 @@
                                                             </div>
                                                             <!-- End Book Create Form -->
                                                             <div class="modal-footer">
-                                                                <button type="button"
+                                                                <button type="submit"
                                                                     class="btn btn-primary">Add</button>
                                                                 <button type="button" class="btn btn-secondary"
                                                                     data-bs-dismiss="modal">Close</button>
@@ -458,6 +489,7 @@
                                                     <th>Email</th>
                                                     <th>Role</th>
                                                     <th>Delete Status</th>
+                                                    <th>ID:</th>
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
@@ -482,6 +514,9 @@
                                                         </td>
                                                         <td>
                                                             <%= val.deleteStatus %>
+                                                        </td>
+                                                        <td>
+                                                            <%= val.simplifyId %>
                                                         </td>
                                                         <!-- Action field modal -->
                                                         <td class="text-center">
@@ -520,17 +555,12 @@
                                                                         <div class="modal-body text-start">
                                                                             <h4 class="fw-bold text-info">User ID: </h4>
                                                                             <p>
-                                                                                <%= val.id %>
+                                                                                <%= val.simplifyId %>
                                                                             </p>
                                                                             <h4 class="fw-bold text-info">Username:
                                                                             </h4>
                                                                             <p>
                                                                                 <%= val.username%>
-                                                                            </p>
-                                                                            <h4 class="fw-bold text-info">Password
-                                                                                (encrypted): </h4>
-                                                                            <p>
-                                                                                <%= val.password%>
                                                                             </p>
                                                                             <h4 class="fw-bold text-info">Email: </h4>
                                                                             <p>
@@ -605,8 +635,8 @@
                                                                                             <input type="text"
                                                                                                 class="form-control"
                                                                                                 id="bookId"
-                                                                                                value="<%= val.id %>"
-                                                                                                disabled="">
+                                                                                                value="<%= val.simplifyId %>"
+                                                                                                readonly>
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label
@@ -615,7 +645,20 @@
                                                                                                 type="text"
                                                                                                 id="username"
                                                                                                 name="username"
-                                                                                                value="<%= val.username %>">
+                                                                                                value="<%= val.username %>"
+                                                                                                readonly>
+                                                                                        </div>
+                                                                                        <div class="form-group">
+                                                                                            <label
+                                                                                                for="username">Password:
+                                                                                            </label>
+                                                                                            <input class="form-control"
+                                                                                                type="text"
+                                                                                                id="password"
+                                                                                                name="password"
+                                                                                                value=""
+                                                                                                placeholder="Enter new password"
+                                                                                            >
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label
@@ -634,33 +677,31 @@
                                                                                                 value="<%= val.email %>">
                                                                                         </div>
                                                                                         <div class="form-group">
-                                                                                            <label
-                                                                                                for="pageNumber">
-                                                                                                Phone
-                                                                                                Number:
+                                                                                            <label for="role">
+                                                                                                Role:
+                                                                                            </label> <br>
+                                                                                            <label for="role">
+                                                                                                Librarian:
                                                                                             </label>
-                                                                                            <input class="form-control"
-                                                                                                type="text"
-                                                                                                name="phoneNumber"
-                                                                                                id="phoneNumber"
-                                                                                                value="<%= val.phoneNumber%>">
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label
-                                                                                                for="address">Address:</label>
-                                                                                            <input class="form-control"
-                                                                                                type="text"
-                                                                                                name="address"
-                                                                                                id="address"
-                                                                                                value="<%= val.address %>">
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label for="role">Role:
+                                                                                            <input 
+                                                                                                type="radio" name="role"
+                                                                                                id="role1" 
+                                                                                                value="Librarian"
+                                                                                                <% if(val.role == "Librarian") { %> checked <% } %>
+                                                                                            >
+                                                                                            <% if(val.role == "Librarian") { %> (Current) <% } %>
+                                                                                            <br>
+                                                                                            <label for="role">
+                                                                                                User:
                                                                                             </label>
-                                                                                            <input class="form-control"
-                                                                                                type="text" name="role"
-                                                                                                id="role" disabled
-                                                                                                value="<%= val.role %>">
+                                                                                            <input
+                                                                                                type="radio" name="role"
+                                                                                                id="role2"
+                                                                                                value="User"
+                                                                                                <% if(val.role == "User") { %> checked <% } %>
+                                                                                            >
+                                                                                            <% if(val.role == "User") { %> (Current) <% } %>
+                                                                                            
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label>Verification
@@ -674,6 +715,7 @@
                                                                                                 Yes
                                                                                                 <% if(val.verificationStatus==true) { %> (Current) <% } %>
                                                                                             </label>
+                                                                                            <br>
                                                                                             <input 
                                                                                                 type="radio"
                                                                                                 id="verificationStatus2"
@@ -683,16 +725,6 @@
                                                                                             <label for="verificationStatus2">
                                                                                                     No <% if(val.verificationStatus==false) { %> (Current) <% } %>
                                                                                             </label>
-                                                                                        </div>
-                                                                                        <div class="form-group">
-                                                                                            <label
-                                                                                                for="profilePicture">Profile
-                                                                                                Picture:</label>
-                                                                                            <input class="form-control"
-                                                                                                type="text"
-                                                                                                name="profilePicture"
-                                                                                                id="profilePicture"
-                                                                                                value="<%= val.profilePicture %>">
                                                                                         </div>
                                                                                         <div class="form-group">
                                                                                             <label>
@@ -706,6 +738,7 @@
                                                                                             <label
                                                                                                     for="verificationStatus1">Yes
                                                                                             </label>
+                                                                                            <br>
                                                                                             <input <%  if(val.verificationStatus==false) { %> checked <% } %>
                                                                                                 type="radio"
                                                                                                 id="deleteStatus2"
@@ -760,17 +793,12 @@
                                                                         <div class="modal-body text-start">
                                                                             <h4 class="fw-bold text-info">User ID: </h4>
                                                                             <p>
-                                                                                <%= val.id %>
+                                                                                <%= val.simplifyId %>
                                                                             </p>
                                                                             <h4 class="fw-bold text-info">Username:
                                                                             </h4>
                                                                             <p>
                                                                                 <%= val.username%>
-                                                                            </p>
-                                                                            <h4 class="fw-bold text-info">Password
-                                                                                (encrypted): </h4>
-                                                                            <p>
-                                                                                <%= val.password%>
                                                                             </p>
                                                                             <h4 class="fw-bold text-info">Email: </h4>
                                                                             <p>
@@ -822,11 +850,10 @@
                                                                                 <input type="hidden" name="authorId"
                                                                                     value="<%= val.id %>">
                                                                                 <button type="submit"
-                                                                                    class="btn btn-primary">Delete</button>
+                                                                                    class="btn btn-danger">Delete</button>
                                                                             </form>
                                                                         </div>
                                                                     </div>
-                                                                    
                                                                 </div>
                                                             </div>
                                     </div>
