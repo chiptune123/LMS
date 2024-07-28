@@ -160,7 +160,7 @@ exports.order_return_by_user = asyncHandler(async (req, res, next) => {
 
 exports.order_list = asyncHandler(async (req, res, next) => {
   try {
-    const orderList = await OrderModel.find({}).populate("memberId").populate("orderPreparer").sort({ createAt: 1 }).exec();
+    const orderList = await OrderModel.find({}).populate("memberId").populate("orderPreparer").sort({ createdAt: -1 }).exec();
 
     if (orderList) {
       if (req.baseUrl == "/admin") {
