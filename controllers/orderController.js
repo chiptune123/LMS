@@ -109,7 +109,7 @@ exports.order_detail = asyncHandler(async (req, res, next) => {
 exports.order_list_by_user = asyncHandler(async (req, res, next) => {
   try {
     // *** Implement checking case if user is login
-    const orderList = await OrderModel.find({ memberId: req.session.tokenUserId }).sort({ createdAt: 1 });
+    const orderList = await OrderModel.find({ memberId: req.session.tokenUserId }).sort({ createdAt: -1 });
 
     // Add orderItemList property according to each order
     for (let i = 0; i < orderList.length; i++) {
@@ -261,12 +261,12 @@ exports.order_detail_update_post = asyncHandler(async (req, res, next) => {
 
     // Format formData to array
     for (let i = 0; i < Object.keys(formData).length; i++) {
-      const statusKey = `lendStatus${i}`;
+      const statusKey = `pickupStatus${i}`;
       const orderItemIdKey = `orderItemId${i}`
       if (formData.hasOwnProperty(statusKey) && formData.hasOwnProperty(orderItemIdKey)) {
         orderItemList.push({
           index: i,
-          lendStatus: formData[statusKey],
+          pickupStatus: formData[statusKey],
           orderItemId: formData[orderItemIdKey],
         });
       }
@@ -276,7 +276,7 @@ exports.order_detail_update_post = asyncHandler(async (req, res, next) => {
     for (let orderItem of orderItemList) {
       await OrderItemModel.findByIdAndUpdate({ _id: orderItem.orderItemId }, {
         $set: {
-          lendStatus: orderItem.lendStatus,
+          pickupStatus: orderItem.pickupStatus,
         }
       })
     }
