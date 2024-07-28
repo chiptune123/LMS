@@ -249,7 +249,7 @@ exports.order_delete_post = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.order_item_update_post = asyncHandler(async (req, res, next) => {
+exports.order_detail_update_post = asyncHandler(async (req, res, next) => {
   try {
     const [orderDetail] = await Promise.all([
       OrderModel.findById(req.params.orderId).exec()
