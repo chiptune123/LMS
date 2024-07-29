@@ -10,7 +10,8 @@ const ORDER_MANAGEMENT_PAGE = "order_management";
 const ORDER_RETURN_MANAGEMENT_PAGE = "order_return_management";
 const ORDER_MANAGEMENT_PAGE_URL = "admin/dashboard/order_management";
 const ORDER_DETAIL_USER_PAGE = "order_detail";
-const ORDER_USER_PAGE = "/orders";
+const ORDER_USER_URL = "/orders";
+const ORDER_USER_PAGE = "user_order";
 
 async function penalty_calculate(oldDate, newDate) {
   const diffTime = Math.abs(newDate - oldDate);
@@ -214,6 +215,9 @@ exports.order_create_post = asyncHandler(async (req, res, next) => {
           returnDeadline: currentDate,
         })
 
+        // Decrease book quantity by 1 when user make order
+        decrease_book_quantity_by_one(req.body.book[i])
+
         await newOrderItem.save();
       }
 
@@ -295,20 +299,38 @@ exports.order_detail_update_post = asyncHandler(async (req, res, next) => {
 })
 
 exports.request_extend_post = asyncHandler(async (req, res, next) => {
-  const orderItemdetail = await OrderItemModel.findById(req.body.orderItemId).populate('bookId').exec();
+  const orderItemDetail = await OrderItemModel.findById(req.body.orderItemId).populate('bookId').exec();
   const requestExtendList = await RenewalRequestModel.find({ orderItemId: req.body.orderItemId }).exec();
 
   // Denided request if request more than 2 times
   if (requestExtendList.length >= 2) {
-    const errors = [];
-    errors.push("Can't request extend for more than 2 times!");
+    const orderList = await OrderModel.find({ memberId: req.session.tokenUserId }).sort({ createdAt: -1 });
 
-    res.render(ORDER_USER_PAGE, { errors_object: errors });
+    // Add orderItemList property according to each order
+    for (let i = 0; i < orderList.length; i++) {
+      let orderItemList = await OrderItemModel.find({ orderId: orderList[i].id }).populate('bookId').exec();
+      orderList[i].orderItemList = orderItemList;
+    }
+
+    if (orderList) {
+      const errors = [];
+      errors.push("Can't request extend for more than 2 times!");
+
+      res.render(ORDER_USER_PAGE, {
+        title: "Your Order",
+        errors_object: errors,
+        order_list: orderList,
+      });
+    } else {
+      res.status(404).render("errorPage", { message: "Order not found", errorStatus: 404 });
+    }
+
   }
 
   // Set next deadline 2 weeks after the old deadline
   let oldDeadline = orderItemDetail.returnDeadline;
-  let newDeadline = oldDeadline.getDate() + 14;
+  let newDeadline = new Date(oldDeadline);
+  newDeadline.setDate(oldDeadline.getDate() + 14);
 
   if (orderItemDetail) {
     // Check book quantity before allow to extend
@@ -329,7 +351,7 @@ exports.request_extend_post = asyncHandler(async (req, res, next) => {
       res.redirect(ORDER_USER_PAGE);
     }
 
-    // If book available, accept the request within 2 weeks
+    // If book available, accept the request and extended 2 weeks
     const renewalRequest = new RenewalRequestModel({
       orderItemId: req.body.orderItemId,
       bookId: req.body.bookId,
@@ -339,7 +361,7 @@ exports.request_extend_post = asyncHandler(async (req, res, next) => {
       requestStatus: "Accepted"
     })
 
-    let newPenalty = penalty_calculator(oldDeadline, newDeadline);
+    let newPenalty = penalty_calculate(oldDeadline, newDeadline);
 
     // Save renewal request
     await renewalRequest.save();
@@ -352,7 +374,7 @@ exports.request_extend_post = asyncHandler(async (req, res, next) => {
       }
     })
 
-    res.redirect(ORDER_USER_PAGE);
+    res.redirect(ORDER_USER_URL);
   }
 })
 
@@ -386,6 +408,7 @@ exports.process_return_post = asyncHandler(async (req, res, next) => {
         }
       })
 
+      // Increase book quantity when student return
       increase_book_quantity_by_one(orderItemDetail.bookId.id);
 
       const [orderList, userDetail] = await Promise.all([
