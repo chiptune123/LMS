@@ -12,6 +12,7 @@ const ORDER_MANAGEMENT_PAGE_URL = "admin/dashboard/order_management";
 const ORDER_DETAIL_USER_PAGE = "order_detail";
 const ORDER_USER_URL = "/orders";
 const ORDER_USER_PAGE = "user_order";
+const PENALTY_LIST_PAGE = "penalty_list";
 
 async function penalty_calculate(oldDate, newDate) {
   const diffTime = Math.abs(newDate - oldDate);
@@ -80,7 +81,7 @@ exports.order_detail_return = asyncHandler(async (req, res, next) => {
 exports.order_detail = asyncHandler(async (req, res, next) => {
   try {
     //*** Implement Check if the order belong to user, if not then return 403 denided. Admin | librarian | authentic user then allow
-    const orderDetail = await OrderModel.findById(req.params.orderId);
+    const orderDetail = await OrderModel.findById(req.params.orderId).populate("memberId").exec();
     const orderItemList = await OrderItemModel.find({ orderId: req.params.orderId }).populate("bookId").sort({ createdAt: 1 });
 
     if (orderDetail && orderItemList) {
@@ -435,3 +436,21 @@ exports.process_return_post = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 })
   }
 })
+
+exports.order_item_penalty_list_get = asyncHandler(async (req, res, next) => {
+  try {
+    const orderItemList = await OrderItemModel.find({ lendStatus: "Overdue" }).populate("bookId").exec();
+
+    if (orderItemList) {
+      res.render(PENALTY_LIST_PAGE, {
+        title: "Penalty Book",
+        order_list: orderItemList
+      });
+    } else {
+      res.status(404).render("errorPage", { message: "Order not found!", errorStatus: 404 });
+    }
+
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+});
