@@ -380,7 +380,7 @@ exports.request_extend_post = asyncHandler(async (req, res, next) => {
 
 exports.renewal_request_list_get = asyncHandler(async (req, res, next) => {
   try {
-    const renewalRequestList = await RenewalRequestModel.find({}).populate("orderItemId").populate("bookId").populate("userId").exec();
+    const renewalRequestList = await RenewalRequestModel.find({}).populate("orderItemId").populate("bookId").populate("userId").sort({ createdAt: -1 }).exec();
 
     if (renewalRequestList) {
       res.render("renewal_request_management", { title: "Renewal Request", renewal_request_list: renewalRequestList });
