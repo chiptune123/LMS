@@ -41,5 +41,7 @@ router.get('/dashboard/renewal_request_management/', order_controller.renewal_re
 
 router.get("/dashboard/return", order_controller.order_return_get);
 
+router.get("/dashboard/penalty", order_controller.order_item_penalty_list_get);
+
 module.exports = router;
 
