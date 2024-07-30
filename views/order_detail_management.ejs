@@ -339,6 +339,20 @@
             </div>
             <div class="row">
               <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="d-flex align-items-center">
+                      <h4 class="card-title">
+                        Student Information:
+                      </h4>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p>Student name: <%= order_detail.memberId.name %></p>
+                    <p>Student ID: <%= order_detail.memberId.simplifyId %></p>
+                    <p>Student Email: <%= order_detail.memberId.email %></p>
+                  </div>
+                </div>
                 <form action="/orders/<%= order_detail.id %>/update" method="post">
                   <div class="card">
                     <div class="card-header">
@@ -359,7 +373,7 @@
                               <th>Return Deadline</th>
                               <th>Penalty Amount</th>
                               <th>Quantity</th>
-                              <th class="text-center">Lend Status</th>
+                              <th class="text-center">Pickup Status</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -385,39 +399,28 @@
                                 <td class="text-center">
                                   <!-- Lend Status Radio Button -->
                                   <div class="form-group">
-                                    <label for="verificationStatus1">
-                                      Borrowed <% if(val.lendStatus=="Borrowed" ) { %> (Current) <% } %>
+                                    <label for="pickupStatus1">
+                                      Ready <% if(val.pickupStatus=="Ready" ) { %> (Current) <% } %>
                                     </label>
-                                    <input <% if(val.lendStatus=="Borrowed" ) { %> checked <% } %>
+                                    <input <% if(val.pickupStatus=="Ready" ) { %> checked <% } %>
                                       type="radio"
-                                      id="lendStatus1"
-                                      name="lendStatus<%= index %>"
-                                        value="Borrowed">
+                                      id="pickupStatus1"
+                                      name="pickupStatus<%= index %>"
+                                        value="Ready">
                                         <br>
                                   </div>
                                   <div class="form-group">
-                                    <label for="lendStatus2">
-                                      Returned
-                                      <% if(val.lendStatus=="Returned" ) { %> (Current) <% } %>
+                                    <label for="pickupStatus2">
+                                      Not Ready
+                                      <% if(val.pickupStatus=="Not Ready" ) { %> (Current) <% } %>
                                     </label>
-                                    <input <% if(val.lendStatus=="Returned" ) { %> checked <% } %>
+                                    <input <% if(val.pickupStatus=="Not Ready" ) { %> checked <% } %>
                                       type="radio"
-                                      id="lendStatus2"
-                                      name="lendStatus<%= index %>"
-                                        value="Returned"> <br>
+                                      id="pickupStatus2"
+                                      name="pickupStatus<%= index %>"
+                                        value="Not Ready"> <br>
                                   </div>
-                                  <div class="form-group">
-                                    <label for="lendStatus3">
-                                      Overdue
-                                      <% if(val.lendStatus=="Overdue" ) { %> (Current) <% } %>
-                                    </label>
-                                    <input <% if(val.lendStatus=="Overdue" ) { %> checked <% } %>
-                                      type="radio"
-                                      id="lendStatus3"
-                                      name="lendStatus<%= index %>"
-                                        value="Overdue">
-                                  </div>
-                                  <!-- Book Id -->
+                                  <!-- Order Item Id -->
                                   <input type="hidden" id="orderItemId<%= index %>" name="orderItemId<%= index %>"
                                     value="<%= val.id %>">
                                 </td>
@@ -430,15 +433,17 @@
                     <div class="card-footer">
                       <h2>Order Status:</h2>
                       <div class="form-group">
-                        <label for="orderStatus">Processing</label>
+                        <label for="orderStatus">Processing:</label>
                         <input type="radio" name="orderStatus" id="orderStatus1" value="Processing" 
                         <% if(order_detail.orderStatus=="Processing" ) { %> checked <% } %> >
                         <% if(order_detail.orderStatus=="Processing" ) { %> (Current) <% } %>
-                        <label for="orderStatus">Ready for Pick Up</label>
+                        <br>
+                        <label for="orderStatus">Ready for Pick Up:</label>
                         <input type="radio" name="orderStatus" id="orderStatus2" value="Ready for Pick Up"
                         <% if(order_detail.orderStatus=="Ready for Pick Up" ) { %> checked <% } %> >
                         <% if(order_detail.orderStatus=="Ready for Pick Up" ) { %> (Current) <% } %>
-                        <label for="orderStatus">Completed</label>
+                        <br>
+                        <label for="orderStatus">Completed:</label>
                         <input type="radio" name="orderStatus" id="orderStatus3" value="Completed"
                         <% if(order_detail.orderStatus=="Completed" ) { %> checked <% } %> > 
                         <% if(order_detail.orderStatus=="Completed" ) { %> (Current) <% } %>
@@ -453,37 +458,6 @@
           </div>
         </div>
       </div>
-  </div>
-  </div>
-  </div>
-  <footer class="footer">
-    <div class="container-fluid d-flex justify-content-between">
-      <nav class="pull-left">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="http://www.themekita.com">
-              ThemeKita
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"> Help </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"> Licenses </a>
-          </li>
-        </ul>
-      </nav>
-      <div class="copyright">
-        2024, made with <i class="fa fa-heart heart text-danger"></i> by
-        <a href="http://www.themekita.com">ThemeKita</a>
-      </div>
-      <div>
-        Distributed by
-        <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-      </div>
-    </div>
-  </footer>
-  </div>
   </div>
   <!--   Core JS Files   -->
   <script src="/js/core/jquery-3.7.1.min.js"></script>
