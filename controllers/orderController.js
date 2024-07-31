@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const OrderModel = require("../models/orders");
 const UserModel = require("../models/users");
 const BookModel = require("../models/books");
+const AuthorModel = require("../models/authors");
 const OrderItemModel = require("../models/orderItems");
 const RenewalRequestModel = require("../models/renewalRequests");
 const { options } = require("../routes/authenticationRoutes");
@@ -43,6 +44,49 @@ async function increase_book_quantity_by_one(bookId) {
       quantity: 1
     }
   })
+}
+
+async function getAllMonths() {
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  return months;
+}
+
+async function formatDataForChart(aggregatedData) {
+  const textMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthData = {};
+
+  // Initialize each month with 0
+  textMonths.forEach(month => {
+    monthData[month] = 0;
+  });
+
+  //*** Example Data
+  // [
+  //   { _id: { year: 2024, month: 6 }, totalCount: 1 },
+  //   { _id: { year: 2024, month: 7 }, totalCount: 9 }
+  // ]
+
+  for (let data of aggregatedData) {
+    let year = data._id.year;
+    let month = data._id.month;
+
+    // Convert month number to text
+    // -1 Due to javascript date constructor uses zero-base index
+    let monthText = new Date(year, month - 1).toLocaleString('en-US', { month: 'short' });
+    // Check if monthText exist in monthData, if exist, add count data to that month
+    if (monthData.hasOwnProperty(monthText)) {
+      monthData[monthText] = data.totalCount;
+    }
+  }
+
+  return {
+    labels: textMonths,
+    data: textMonths.map(month => monthData[month])
+  }
+
 }
 
 exports.order_detail_return = asyncHandler(async (req, res, next) => {
@@ -454,3 +498,61 @@ exports.order_item_penalty_list_get = asyncHandler(async (req, res, next) => {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
 });
+
+exports.dashboard_get = asyncHandler(async (req, res, next) => {
+  try {
+    const titleAmount = await BookModel.countDocuments().exec();
+    const bookAmount = await BookModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$quantity" }
+        }
+      }
+    ]).exec();
+    const totalPenaltyAmount = await OrderItemModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$penaltyAmount" }
+        }
+      }
+    ]).exec();
+    const totalOrderEachMonth = await OrderModel.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { "$year": "$createdAt" },
+            month: { "$month": "$createdAt" }
+          },
+          "totalCount": { $sum: 1 }
+        }
+      }
+    ]).exec();
+    let chartData = await formatDataForChart(totalOrderEachMonth);
+
+    const orderAmount = await OrderModel.countDocuments().exec();
+    const userAmount = await UserModel.countDocuments().exec();
+    const penaltyAmount = await OrderItemModel.countDocuments({ lendStatus: "Overdue" }).exec();
+    const authorAmount = await AuthorModel.countDocuments().exec();
+    const totalRent = await OrderItemModel.countDocuments().exec();
+    const totalReturn = await OrderItemModel.countDocuments({ lendStatus: "Returned" }).exec();
+
+
+    res.render("dashboard", {
+      title: "Dashhboard Page",
+      title_amount: titleAmount,
+      book_amount: bookAmount[0].totalAmount,
+      order_amount: orderAmount,
+      user_amount: userAmount,
+      penalty_amount: penaltyAmount,
+      total_penalty_amount: totalPenaltyAmount[0].totalAmount,
+      author_amount: authorAmount,
+      total_rent: totalRent,
+      total_return: totalReturn,
+      chart_data: chartData,
+    });
+  } catch (err) {
+    res.status(500).render("errorPage", { message: err, errorStatus: 500 });
+  }
+})
