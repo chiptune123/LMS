@@ -269,9 +269,9 @@ async function createBooks() {
             10,
             "0132350882",
             "9780132350884",
-            "https://i.imgur.com/KReTdbf.jpeg",
+            "https://i.imgur.com/KReTdbf.jpg",
             20240000000,
-            0,
+            3.89,
         ),
         bookCreate(
             1,
@@ -285,9 +285,9 @@ async function createBooks() {
             10,
             "0137081073",
             "9780137081073",
-            "img",
+            "https://i.imgur.com/KvCQoIF.jpg",
             20240000001,
-            0,
+            5,
         ),
         bookCreate(
             2,
@@ -301,8 +301,9 @@ async function createBooks() {
             10,
             "0134757599",
             "9780134757599",
+            "https://i.imgur.com/yOunyFy.jpg",
             20240000002,
-            0
+            4.45
         ),
         bookCreate(
             3,
@@ -316,8 +317,9 @@ async function createBooks() {
             10,
             "0321127420",
             "9780321127426",
+            "https://i.imgur.com/cci97AK.jpg",
             20240000003,
-            0,
+            2.56,
         ),
         bookCreate(
             4,
@@ -331,8 +333,9 @@ async function createBooks() {
             10,
             "1593279507",
             "9781593279509",
+            "https://i.imgur.com/mWErfOz.jpg",
             20240000004,
-            0
+            3
         ),
         bookCreate(
             5,
@@ -346,8 +349,9 @@ async function createBooks() {
             10,
             "1491952024",
             "9781491952023",
+            "https://i.imgur.com/oyxQVK1.jpg",
             20240000005,
-            0,
+            4,
 
         ),
         bookCreate(
@@ -362,7 +366,9 @@ async function createBooks() {
             10,
             "1473764793",
             "978-1473764798",
-            20240000006
+            "https://i.imgur.com/BOhsTOT.jpg",
+            20240000006,
+            4.4,
         ),
         bookCreate(
             7,
@@ -373,9 +379,11 @@ async function createBooks() {
             "2020-04-07",
             599,
             32.99,
+            10,
             "1492082791",
             "9781492082798",
-            20240000007
+            "https://i.imgur.com/PZh1479.jpg",
+            20240000007,
         ),
         bookCreate(
             8,
@@ -386,10 +394,11 @@ async function createBooks() {
             "2020-06-12",
             322,
             39.99,
+            10,
             "1736049119",
             "9781736049112",
-            20240000008
-
+            "https://i.imgur.com/1ggp6Ti.jpg",
+            20240000008,
         ),
         bookCreate(
             9,
@@ -400,8 +409,10 @@ async function createBooks() {
             "2023-05-26",
             307,
             47.49,
+            10,
             "1916585256",
             "9781916585256",
+            "https://i.imgur.com/yviGiQf.jpg",
             2024000009,
         )
     ])
