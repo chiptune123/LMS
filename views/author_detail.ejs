@@ -28,21 +28,13 @@
     <div class="container overflow-hidden bsb-author-1">
       <div class="row justify-content-center gy-4 gy-md-0">
         <div class="col-12 col-md-3 col-xl-2 d-flex align-items-center justify-content-center">
-          <img class="img-fluid rounded-circle author-avatar" loading="lazy" src="https://picsum.photos/200" alt="<%= author_detail.name %>">
+          <img class="img-fluid rounded-circle author-avatar" loading="lazy" src="<%= author_detail.profilePicturePath %>" alt="<%= author_detail.name %>">
         </div>
         <!-- Biography -->
         <div class="col-12 col-md-8 col-lg-6 col-xl-5 d-flex align-items-center justify-content-center">
           <div class="text-center text-md-start author-content">
             <h2 class="fs-2 mb-3"><%= author_detail.name %></h2>
             <p class="mb-3"><%= author_detail.bio %></p>
-            <p class="mb-0">
-              <a href="#!" class="link-dark text-decoration-none">
-                View More Items
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
-                </svg>
-              </a>
-            </p>
           </div>
         </div>
         
@@ -56,9 +48,9 @@
           <!-- Card-->
           <div class="card rounded shadow-sm border-0">
             <div class="card-body p-4">
-              <a href="/books/<%= book.id %>"><img src="https://bootstrapious.com/i/snippets/sn-cards/shoes-1_gthops.jpg" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
+              <a href="/books/<%= book.id %>"><img src="<%= book.coverPicturePath %>" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
               <h5> <a href="/books/<%= book.id %>" class="text-dark"><%= book.title %> - <%= book.author.name %></a></h5>
-              <p class="small text-muted font-italic">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <p class="small text-muted font-italic"><%= book.author.bio %></p>
               <ul class="list-inline small">
                 <!-- Print star when rating = 0-->
                 <% if(book.rating == 0) { %>
