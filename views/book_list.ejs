@@ -27,16 +27,15 @@
       </header>
       <!-- First Row [Prosucts]-->
       <h2 class="font-weight-bold mb-2">From the Shop</h2>
-      <p class="font-italic text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+      <p class="font-italic text-muted mb-4">Explore our extensive book collection</p>
       <div class="row pb-5 mb-4">
       <% for(let book of book_list) { %>
           <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
             <!-- Card-->
-            <div class="card rounded shadow-sm border-0">
+            <div class="card h-100 rounded shadow-sm border-0">
               <div class="card-body p-4">
                 <a href="/books/<%= book.id %>"><img src="https://bootstrapious.com/i/snippets/sn-cards/shoes-1_gthops.jpg" alt="" class="img-fluid d-block mx-auto mb-3"> </a>
                 <h5> <a href="/books/<%= book.id %>" class="text-dark"><%= book.title %> - <%= book.author.name %></a></h5>
-                <p class="small text-muted font-italic">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                 <ul class="list-inline small">
                   <!-- Print star when rating = 0-->
                   <% if(book.rating == 0) { %>
