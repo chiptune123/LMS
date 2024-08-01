@@ -85,43 +85,49 @@ exports.cart_detail_get = asyncHandler(async (req, res, next) => {
     let orderTotalPrice = 0;
     let orderTotalQuantity = 0;
 
+    if (req.session.cart.length > 0) {
+      // Push all books in session to create an array
+      for (let i = 0; i < req.session.cart.length; i++) {
+        arrayBookId.push(req.session.cart[i].bookId);
+      }
 
+      const cartData = req.session.cart;
+      console.log(arrayBookId[0]);
+      console.log(cartData[0].bookId);
+      // Verify if all books exist in database
+      const bookList = await BookModel.find({ _id: { $in: arrayBookId } })
+        .populate("author")
+        .exec();
 
-    // Push all books in session to create an array
-    for (let i = 0; i < req.session.cart.length; i++) {
-      arrayBookId.push(req.session.cart[i].bookId);
-    }
-
-    // Test
-    const cartData = req.session.cart;
-    console.log(arrayBookId[0]);
-    console.log(cartData[0].bookId);
-    // Verify if all books exist in database
-    const bookList = await BookModel.find({ _id: { $in: arrayBookId } })
-      .populate("author")
-      .exec();
-
-    // Assign user's book quantity to bookList
-    for (let i = 0; i < bookList.length; i++) {
-      for (let j = 0; j < req.session.cart.length; j++) {
-        if (bookList[i].id == req.session.cart[j].bookId) {
-          bookList[i].quantity = req.session.cart[j].quantity;
+      // Assign user's book quantity to bookList
+      for (let i = 0; i < bookList.length; i++) {
+        for (let j = 0; j < req.session.cart.length; j++) {
+          if (bookList[i].id == req.session.cart[j].bookId) {
+            bookList[i].quantity = req.session.cart[j].quantity;
+          }
         }
       }
-    }
 
-    for (let i = 0; i < bookList.length; i++) {
-      bookList[i].bookTotalPrice = bookList[i].price * bookList[i].quantity;
-      //orderTotalPrice = orderTotalPrice + (bookList[i].quantity * bookList[i].price);
-      orderTotalQuantity = orderTotalQuantity + bookList[i].quantity;
+      for (let i = 0; i < bookList.length; i++) {
+        bookList[i].bookTotalPrice = bookList[i].price * bookList[i].quantity;
+        //orderTotalPrice = orderTotalPrice + (bookList[i].quantity * bookList[i].price);
+        orderTotalQuantity = orderTotalQuantity + bookList[i].quantity;
+      }
+      res.render("cart", {
+        title: "Cart Detail",
+        book_list: bookList,
+        order_total_price: orderTotalPrice,
+        order_total_quantity: orderTotalQuantity
+        //cart: req.session.cart,
+      });
+    } else {
+      res.render("cart", {
+        title: "Cart Detail",
+        book_list: [],
+        order_total_price: orderTotalPrice,
+        order_total_quantity: orderTotalQuantity,
+      })
     }
-    res.render("cart", {
-      title: "Cart Detail",
-      book_list: bookList,
-      order_total_price: orderTotalPrice,
-      order_total_quantity: orderTotalQuantity
-      //cart: req.session.cart,
-    });
   } catch (err) {
     res.status(500).render("errorPage", { message: err, errorStatus: 500 });
   }
@@ -138,6 +144,6 @@ exports.remove_from_cart_post = asyncHandler(async (req, res, next) => {
   if (res.locals.loginStatus == true) {
     save_cart_to_db(req.session.cart, req.session.tokenUserId);
   }
-  
+
   res.redirect(CART_PAGE);
 });
