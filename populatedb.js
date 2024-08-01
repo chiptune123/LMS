@@ -43,10 +43,17 @@ async function main() {
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDBConnect);
     console.log("Debug: database connected");
-    await createGenres();
+    // Drop documents from collection
+    console.log("Debug: Drop document");
+    await AuthorModel.deleteMany({}).exec();
+    await BookModel.deleteMany({}).exec();
+    console.log("Debug: Save new data to mongoDB");
+    // Save data to mongoDB
     await createAuthors();
     await createBooks();
-    await createBookInstances();
+    //await createGenres();
+    //await createBooks();
+    //await createBookInstances();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
 }
@@ -64,11 +71,11 @@ const announcementDetail = {
 // in which the elements of promise.all's argument complete.
 
 // Save to database functions
-async function bookCreate(index, title, author, description, publisher, publish_date, page_numbers, price, quantity,
+async function bookCreate(index, title, authorIndex, description, publisher, publish_date, page_numbers, price, quantity,
     ISBN_tenDigits, ISBN_thirteenDigits, coverPicturePath, uniqueBarcode, rating) {
     const bookDetail = {
         title: title,
-        author: authors[index],
+        author: authors[authorIndex],
         description: description,
         publisher: publisher,
         publish_date: publish_date,
@@ -87,7 +94,7 @@ async function bookCreate(index, title, author, description, publisher, publish_
     await book.save();
 
     books[index] = book;
-    console.log(`Added book: ${title}`);
+    console.log(`Added book: ${title},${index}`);
 }
 
 async function authorCreate(index, name, bio, profilePicturePath, deleteStatus, deleteReason) {
@@ -240,16 +247,18 @@ async function userCreate(index, username, password, name, email, phoneNumber, a
     console.log(`Add User: ${index}`);
 }
 
-async function authorCreate(index, first_name, family_name, d_birth, d_death) {
-    const authordetail = { first_name: first_name, family_name: family_name };
-    if (d_birth != false) authordetail.date_of_birth = d_birth;
-    if (d_death != false) authordetail.date_of_death = d_death;
+async function authorCreate(index, name, bio, profilePicturePath, deleteStatus, deleteReason) {
+    const authordetail = {
+        name: name,
+        bio: bio,
+        profilePicturePath: profilePicturePath,
+    };
 
-    const author = new Author(authordetail);
+    const author = new AuthorModel(authordetail);
 
     await author.save();
     authors[index] = author;
-    console.log(`Added author: ${first_name} ${family_name}`);
+    console.log(`Added author: ${index}`);
 }
 
 // Run the function
@@ -260,7 +269,7 @@ async function createBooks() {
         bookCreate(
             0,
             "Clean Code: A Handbook of Agile Software Craftsmanship",
-            authors[0],
+            0,
             "Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn\'t have to be that way.",
             "Pearson",
             "2008-08-01",
@@ -276,7 +285,7 @@ async function createBooks() {
         bookCreate(
             1,
             "The Clean Coder: A Code of Conduct for Professional Programmers",
-            author[0],
+            0,
             "In The Clean Coder: A Code of Conduct for Professional Programmers, legendary software expert Robert C. Martin introduces the disciplines, techniques, tools, and practices of true software craftsmanship. This book is packed with practical advice–about everything from estimating and coding to refactoring and testing. It covers much more than technique: It is about attitude. Martin shows how to approach software development with honor, self-respect, and pride; work well and work clean; communicate and estimate faithfully; face difficult decisions with clarity and honesty; and understand that deep knowledge comes with a responsibility to act.",
             "Pearson",
             "2011-05-13",
@@ -292,7 +301,7 @@ async function createBooks() {
         bookCreate(
             2,
             "Refactoring: Improving the Design of Existing Code (2nd Edition)",
-            author[1],
+            1,
             "Refactoring is about improving the design of existing code. It is the process of changing a software system in such a way that it does not alter the external behavior of the code, yet improves its internal structure. With refactoring you can even take a bad design and rework it into a good one. This book offers a thorough discussion of the principles of refactoring, including where to spot opportunities for refactoring, and how to set up the required tests. There is also a catalog of more than 40 proven refactorings with details as to when and why to use the refactoring, step by step instructions for implementing it, and an example illustrating how it works The book is written using Java as its principle language, but the ideas are applicable to any OO language.",
             "Addison-Wesley Professional",
             "2018-11-30",
@@ -308,7 +317,7 @@ async function createBooks() {
         bookCreate(
             3,
             "Patterns of Enterprise Application Architecture",
-            author[1],
+            1,
             "Developers of enterprise applications (e.g reservation systems, supply chain programs, financial systems, etc.) face a unique set of challenges, different than those faced by their desktop system and embedded system peers. For this reason, enterprise developers must uncover their own solutions. In this new book, noted software engineering expert Martin Fowler turns his attention to enterprise application development. He helps professionals understand the complex -- yet critical -- aspects of architecture. While architecture is important to all application development, it is particularly critical to the success of an enterprise project, where issues such as performance and concurrent multi-user access are paramount. The book presents patterns (proven solutions to recurring problems) in enterprise architecture, and the context provided by the author enables the reader to make the proper choices when faced with a difficult design decision.",
             "Addison-Wesley Professional",
             "2002-11-05",
@@ -324,7 +333,7 @@ async function createBooks() {
         bookCreate(
             4,
             "Eloquent JavaScript, 3rd Edition: A Modern Introduction to Programming",
-            author[2],
+            2,
             "JavaScript lies at the heart of almost every modern web application, from social apps like Twitter to browser-based game frameworks like Phaser and Babylon. Though simple for beginners to pick up and play with, JavaScript is a flexible, complex language that you can use to build full-scale applications.",
             "No Starch Press",
             "2018-12-04",
@@ -340,7 +349,7 @@ async function createBooks() {
         bookCreate(
             5,
             "JavaScript: The Definitive Guide: Master the World's Most-Used Programming Language (7th Edition)",
-            author[3],
+            3,
             "JavaScript is the programming language of the web and is used by more software developers today than any other programming language. For nearly 25 years this best seller has been the go-to guide for JavaScript programmers. The seventh edition is fully updated to cover the 2020 version of JavaScript, and new chapters cover classes, modules, iterators, generators, Promises, async/await, and metaprogramming. You’ll find illuminating and engaging example code throughout.",
             "O'Reilly Media",
             "2020-06-23",
@@ -357,7 +366,7 @@ async function createBooks() {
         bookCreate(
             6,
             "Foundations of Software Testing ISTQB Certification, 4th edition",
-            author[4],
+            4,
             "Now in its fourth edition, Foundations of Software Testing: ISTQB Certification is the essential guide to software testing and to the ISTQB Foundation qualification. Completely updated to comprehensively reflect the most recent changes to the 2018 ISTQB Foundation Syllabus, the book adopts a practical, hands-on approach, covering the fundamental topics that every system and software tester should know. The authors are themselves developers of the ISTQB syllabus and are highly respected international authorities and teachers within the field of software testing. About ISTQB ISTQB is a multinational body overseeing the development of international qualifications in software testing. It offers an internationally recognized qualification that ensures there is an international, common understanding of software and system testing issues.",
             "Cengage Learning EMEA",
             "2019-08-09",
@@ -373,7 +382,7 @@ async function createBooks() {
         bookCreate(
             7,
             "Software Engineering at Google: Lessons Learned from Programming Over Time 1st Edition",
-            author[5],
+            5,
             "Today, software engineers need to know not only how to program effectively but also how to develop proper engineering practices to make their codebase sustainable and healthy. This book emphasizes this difference between programming and software engineering.",
             "O'Reilly Media",
             "2020-04-07",
@@ -388,7 +397,7 @@ async function createBooks() {
         bookCreate(
             8,
             "System Design Interview - An Insider's Guide: Volume 2",
-            author[6],
+            6,
             "This book can be seen as a sequel to the book: System Design Interview - An Insider’s Guide. It covers a different set of system design interview questions and solutions. Although reading Volume 1 is helpful, it is not required. This book should be accessible to readers who have a basic understanding of distributed systems.",
             "Independently Published",
             "2020-06-12",
@@ -403,7 +412,7 @@ async function createBooks() {
         bookCreate(
             9,
             "Docker Deep Dive",
-            author[7],
+            7,
             "It provides comprehensive explanations of core concepts and offers step-by-step guidance on creating and managing containerized applications in the real world – from source code to executing in the cloud. If you are looking for a comprehensive resource to help you master Docker and containers in the real world, this book is for you. It also gives you valuable knowledge, skills, insights, and tips to help you confidently navigate the container and cloud-native ecosystems.",
             "Packt Publishing",
             "2023-05-26",
@@ -418,7 +427,7 @@ async function createBooks() {
     ])
 }
 
-async function createAuthor() {
+async function createAuthors() {
     console.log("Add author:");
 
     await Promise.all([
@@ -426,7 +435,7 @@ async function createAuthor() {
             0,
             "Robert Cecil Martin",
             "Robert Cecil Martin (colloquially known as Uncle Bob) is an American software engineer and author. He is a co-author of the Agile Manifesto.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -434,7 +443,7 @@ async function createAuthor() {
             1,
             "Martin Fowler",
             "For all of my career I've been interested in the design and architecture of software systems, particularly those loosely classed as Enterprise Applications. I firmly believe that poor software design leads to software that is difficult to change in response to growing needs, and encourages buggy software that saps the productivity of computer users everywhere.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -442,7 +451,7 @@ async function createAuthor() {
             2,
             "Marijn Haverbeke",
             "Marijn Haverbeke is a programming language enthusiast and polyglot. He's worked his way from trivial BASIC games on the Commodore, through a C++ phase, to the present where he mostly hacks on database systems and web APIs in dynamic languages. He recently won the JS1K—JavaScript demo in 1024 bytes—contest, and is the author of a wide range of open-source software.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -450,7 +459,7 @@ async function createAuthor() {
             3,
             "David Flanagan",
             "David Flanagan is a computer programmer who has spent much of the last 20 years writing books about programming languages. He now works at Mozilla. David lives with his wife and children in the Pacific Northwest, between the cities of Seattle and Vancouver.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -458,7 +467,7 @@ async function createAuthor() {
             4,
             "Rex black",
             "With thirty years of software and systems engineering experience, Rex Black is President of RBCS (www.rbcs-us.com), a leader in software, hardware, and systems testing. For almost twenty years, RBCS has delivered consulting, outsourcing and training services in the areas of software, hardware, and systems testing and quality.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -466,7 +475,7 @@ async function createAuthor() {
             5,
             "Titus Winters",
             "Titus Winters is a Senior Staff Software Engineer at Google, where he has worked since 2010. Today, he is the chair of the global subcommittee for the design of the C++ standard library.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -474,7 +483,7 @@ async function createAuthor() {
             6,
             "Alex Xu",
             "Alex Xu is an experienced software engineer and entrepreneur. Previously, he worked at Twitter, Apple and Zynga. ",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
@@ -482,7 +491,7 @@ async function createAuthor() {
             7,
             "Nigel Poulton",
             "Nigel Poulton is an author, video trainer, and consultant in the field of cloud computing and storage technologies. He has authored several books, including \"The Kubernetes Book,\" \"Docker Deep Dive,\" and \"Quick Start Kubernetes,\" which have become go-to resources for IT professionals worldwide.",
-            "img",
+            "https://picsum.photos/200/300",
             false,
             "",
         ),
