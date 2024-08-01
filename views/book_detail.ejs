@@ -20,42 +20,13 @@
     <div class="container">
       <div class="row gx-5">
         <aside class="col-lg-6">
-          <div class="border rounded-4 mb-3 d-flex justify-content-center">
+          <div class="mb-3 d-flex justify-content-center">
             <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
+              href="<%= book_detail.coverPicturePath %>">
               <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
+                src="<%= book_detail.coverPicturePath %>" width="300" height="450"/>
             </a>
           </div>
-          <div class="d-flex justify-content-center mb-3">
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" />
-            </a>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-              href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" class="item-thumb">
-              <img width="60" height="60" class="rounded-2"
-                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
-            </a>
-          </div>
-          <!-- thumbs-wrap.// -->
-          <!-- gallery-wrap .end// -->
         </aside>
         <main class="col-lg-6">
           <div class="ps-lg-3">
@@ -73,7 +44,11 @@
                   <%= book_detail.rating %>
                 </span>
               </div>
-              <span class="text-success ms-2">In stock</span>
+              <% if(book_detail.quantity > 0) { %>
+                  <span class="badge bg-success">In Stock</span>
+              <% } else { %>
+                  <span class="badge bg-danger">Out of Stock</span>
+              <% } %>
             </div>
             <div class="row">
               <dt class="col-12">Description:</dt>
@@ -121,43 +96,6 @@
       </div>
     </div>
   </section>
+</body>
 
-
-  <h1>
-    <%= title %>
-  </h1>
-  <p>Title: <%= book_detail.title%>
-  </p>
-  <p>Author: <%= book_detail.author.name%>
-  </p>
-  <p>Description: <%= book_detail.description%>
-  </p>
-  <p>Publisher: <%= book_detail.publisher%>
-  </p>
-  <p>Publish Date: <%= book_detail.publish_date%>
-  </p>
-  <p>Page Numbers: <%= book_detail.page_numbers%>
-  </p>
-  <p>Price: <%= book_detail.price%>
-  </p>
-  <p>Quantity: <%= book_detail.quantity%>
-  </p>
-  <p>ISBN 10: <%= book_detail.ISBN_tenDigits%>
-  </p>
-  <p>ISBN 13: <%= book_detail.ISBN_thirteenDigits%>
-  </p>
-  <p>Cover Picture Path: <%= book_detail.coverPicturePath %>
-  </p>
-  <p>Unique Barcode: <%= book_detail.uniqueBarcode %>
-  </p>
-  <p>Rating: <%= book_detail.rating %>
-  </p>
-  <a href="/books/<%= book_detail.id %>/delete">Delete</a>
-  <a href="/books/<%= book_detail.id %>/update">Update</a>
-  <form action="/cart">
-    <label for="quantity">Quantity:</label>
-    <input type="number" name="quantity" id="quantity" value="1">
-
-    <input type="hidden" name="BookId" id="BookId" value="<%= book_detail.id %>">
-    <button type="submit">Add to cart</button>
-  </form>
+</html>
