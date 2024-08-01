@@ -114,11 +114,11 @@ async function authorCreate(index, name, bio, profilePicturePath, deleteStatus, 
     console.log(`Added Author: ${name}`);
 }
 
-async function announcementCreate(index, createdAt, updatedAt, writerId, announcementContent) {
+async function announcementCreate(index, createdAt, updatedAt, writerIndex, announcementContent) {
     const announcementDetail = {
         createdAt: createdAt,
         updatedAt: updatedAt,
-        writerId: writerId,
+        writerId: users[writerIndex],
         announcementContent: announcementContent,
     }
 
@@ -504,17 +504,54 @@ async function createAnnouncement() {
     await Promise.all([
         announcementCreate(
             0,
-            "2024-06-01",
-            "2024-06-01",
-            users[0],
-            "This is announcement on June"
+            "2024-01-01",
+            "2024-01-01",
+            0,
+            `<p>Dear Library User,</p>
+            <p>The return deadline for the Winter 2024 Quarter will be 2 weeks after the final exam at&nbsp;<strong><span style="color: #e03e2d;">2024-01-24</span></strong></p>
+            <p>The library will be open to return from</p>
+            <p><span style="font-size: 18pt;"><strong>TIME:</strong></span></p>
+            <div>- Morning: 8 AM - 11:30 AM</div>
+            <div>- Afternoon: 1 PM - 5:30 PM</div>
+            <div>- Monday - Friday</div>
+            <div>&nbsp;</div>
+            <div><span style="font-size: 18pt;"><strong>NOTES:</strong></span></div>
+            <div><span style="font-size: 12pt;">- Please prepare your student card when returning books.</span></div>
+            <div><span style="font-size: 12pt;">- Please return borrowed book before the deadline, penalty will be calculated follow the library policy if return later than the deadline.</span></div>
+            <div><span style="font-size: 12pt;">- Students can view book information at this website</span></div>
+            <div>&nbsp;</div>
+            <div><strong><span style="font-size: 18pt;">IF YOU HAVE ANY QUESTION, PLEASE CONTACT US AT:</span></strong></div>
+            <div><span style="font-size: 12pt;">- Phone Number: 249-999-9999</span></div>
+            <div><span style="font-size: 12pt;">- Email: Libgrow@gmail.com</span></div>
+            <div><span style="font-size: 12pt;">- Contact page on the website</span></div>
+            <div>&nbsp;</div>
+            <div><strong><span style="font-size: 12pt;">Thank you</span></strong></div>`
         ),
         announcementCreate(
             1,
-            "2024-07-01",
-            "2024-07-01",
-            users[0],
-            "This is announcement on July"
+            "2024-04-23",
+            "2024-07-23",
+            0,
+            `<p>Dear Library User,</p>
+            <div><span style="color: #000000;"><strong>- Due to the outage caused by the storm, the library will be closed for 2 days for maintenance. The library will be open again on 2024-04-24. Thank you for your understanding.</strong></span></div>
+            <p>The return deadline for the Spring 2024 Quarter will be 2 weeks after the final exam at&nbsp;<span style="color: #e03e2d;"><strong>2024-05-24</strong></span></p>
+            <p>The library will be open to return from</p>
+            <p><span style="font-size: 18pt;"><strong>TIME:</strong></span></p>
+            <div>- Morning: 8 AM - 11:30 AM</div>
+            <div>- Afternoon: 1 PM - 5:30 PM</div>
+            <div>- Monday - Friday</div>
+            <div>&nbsp;</div>
+            <div><span style="font-size: 18pt;"><strong>NOTES:</strong></span></div>
+            <div>- Please prepare your student card when returning books.</div>
+            <div>- Please return the borrowed book before the deadline, penalty will be calculated following the library policy if returned later than the deadline.</div>
+            <div>- Students can view book information at this website</div>
+            <div>&nbsp;</div>
+            <div><strong>IF YOU HAVE ANY QUESTION, PLEASE CONTACT US AT:</strong></div>
+            <div>- Phone Number: 249-999-9999</div>
+            <div>- Email: Libgrow@gmail.com</div>
+            <div>- Contact page on the website</div>
+            <div>&nbsp;</div>
+            <div><strong>Thank you</strong></div>`
         )
     ])
 }
