@@ -8,7 +8,7 @@ exports.announcement_list = asyncHandler(async (req, res, next) => {
     // Return empty array if no document is founded: []
     const announcementList = await Announcement.find({})
       .populate('writerId')
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .exec();
 
     if (announcementList) {
@@ -50,7 +50,7 @@ exports.announcement_detail = asyncHandler(async (req, res, next) => {
   const announcementDetail = await Announcement.findById(req.params.announcementId).populate("writerId").exec();
   const announcementList = await Announcement.find({})
     .populate('writerId')
-    .sort({ createdAt: 1 })
+    .sort({ createdAt: -1 })
     .exec();
 
   res.render("announcement_detail", {
