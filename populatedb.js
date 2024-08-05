@@ -53,6 +53,7 @@ async function main() {
     await ImportLogModel.deleteMany({}).exec();
     await OrderModel.deleteMany({}).exec();
     await OrderItemModel.deleteMany({}).exec();
+    await RenewalRequestModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
@@ -64,9 +65,8 @@ async function main() {
     await createImportLog();
     await createOrder();
     await createOrderItem();
-    //await createGenres();
-    //await createBooks();
-    //await createBookInstances();
+    await createRenewalRequest();
+
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
 }
@@ -143,10 +143,6 @@ async function announcementCreate(index, createdAt, updatedAt, writerIndex, anno
     console.log(`Add Announcement: ${index}`);
 }
 
-async function commentCreate() {
-    // Not Implement
-}
-
 async function feedbackCreate(index, name, email, phoneNumber, feedbackType, feedbackStatus, feedbackMessage) {
     const feedbackDetail = {
         name: name,
@@ -219,14 +215,13 @@ async function orderCreate(index, createdAt, updatedAt, memberIdIndex, orderStat
     console.log(`Add Order: ${index}`);
 }
 
-async function renewalRequestCreate(index, createdAt, updatedAt, orderItemId, requestUser, librarianId, reason, requestExtendDate, requestStatus) {
+async function renewalRequestCreate(index, createdAt, updatedAt, orderItemIdIndex, bookIdIndex, userIdIndex, requestExtendDate, requestStatus) {
     const renewalRequestDetail = {
         createdAt: createdAt,
         updatedAt: updatedAt,
-        orderItemId: orderItemId,
-        requestUser: requestUser,
-        librarianId: librarianId,
-        reason: reason,
+        orderItemId: orderItems[orderItemIdIndex],
+        bookId: books[bookIdIndex],
+        userId: users[userIdIndex],
         requestExtendDate: requestExtendDate,
         requestStatus: requestStatus,
     }
@@ -822,13 +817,12 @@ async function createRenewalRequest() {
     await Promise.all([
         renewalRequestCreate(
             0,
-            "2024-06-01",
-            "2024-06-01",
-            orders[4],
-            users[8],
-            users[1],
-            "I need more time for the book!!!",
-            "2024-09-01",
+            "2024-07-01",
+            "2024-07-01",
+            4,
+            4,
+            8,
+            "2024-07-13",
             "Denided",
         )
     ])
