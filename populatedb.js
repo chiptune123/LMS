@@ -51,6 +51,7 @@ async function main() {
     await AnnouncementModel.deleteMany({}).exec();
     await FeedbackModel.deleteMany({}).exec();
     await ImportLogModel.deleteMany({}).exec();
+    await OrderModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
@@ -60,6 +61,7 @@ async function main() {
     await createAnnouncement();
     await createFeedback();
     await createImportLog();
+    await createOrder();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
@@ -197,13 +199,14 @@ async function orderItemCreate(index, orderId, bookId, uniqueBarcode, returnDead
     console.log(`Add Order Item: ${index}`);
 }
 
-async function orderCreate(index, createdAt, updatedAt, memberId, orderStatus, orderPreparer) {
+async function orderCreate(index, createdAt, updatedAt, memberIdIndex, orderStatus, orderPreparerIndex) {
     const orderDetail = {
         createdAt: createdAt,
         updatedAt: updatedAt,
-        memberId: memberId,
+        memberId: users[memberIdIndex],
+        simplifyId: users[memberIdIndex].simplifyId,
         orderStatus: orderStatus,
-        orderPreparer: orderPreparer,
+        orderPreparer: users[orderPreparerIndex],
     }
 
     const order = new OrderModel(orderDetail);
@@ -715,40 +718,41 @@ async function createOrder() {
             0,
             "2024-06-01",
             "2024-06-01",
-            users[1],
+            2,
             "Processing",
+            1,
             "",
         ),
         orderCreate(
             1,
             "2024-06-01",
             "2024-06-02",
-            users[5],
+            5,
             "Ready for Pick Up",
-            users[1],
+            1,
         ),
         orderCreate(
             2,
             "2024-06-01",
             "2024-06-05",
-            users[6],
+            6,
             "Completed",
-            users[1],
+            1,
         ),
         orderCreate(3,
             "2024-06-01",
             "2024-06-05",
-            users[7],
+            7,
             "Completed",
-            users[1],
+            1,
         ),
         orderCreate(
             4,
             "2024-06-01",
             "2024-06-03",
-            users[8],
+            8,
             "Completed",
-            users[1],
+            null,
         ),
     ])
 }
