@@ -12,6 +12,11 @@ const OrderItemSchema = new Schema({
         enum: ["Borrowed", "Returned", "Overdue"],
         default: "Borrowed"
     },
+    pickupStatus: {
+        type: String,
+        enum: ["Ready", "Not Ready", "Completed"],
+        default: "Not Ready",
+    },
     quantity: { type: Number, default: 1 },
 })
 
