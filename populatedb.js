@@ -48,12 +48,14 @@ async function main() {
     await AuthorModel.deleteMany({}).exec();
     await BookModel.deleteMany({}).exec();
     await UserModel.deleteMany({}).exec();
+    await AnnouncementModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
     await createAuthors();
     await createBooks();
     await createUser();
+    await createAnnouncement();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
