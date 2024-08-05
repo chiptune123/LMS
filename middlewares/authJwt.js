@@ -10,10 +10,10 @@ const userModel = require("../models/users.js");
 exports.verifyToken = asyncHandler(async (req, res, next) => {
     let token = req.session.token;
     res.locals.loginStatus = false;
-    
+
     // Implement empty cart if req.session.cart is undefined
-    if(typeof req.session.cart == "undefined") {
-        req.session.cart =[]
+    if (typeof req.session.cart == "undefined") {
+        req.session.cart = []
     }
 
     if (!token) {
@@ -36,12 +36,17 @@ exports.verifyToken = asyncHandler(async (req, res, next) => {
     });
 
     // Query user with tokenUserId from the token and set res.locals variable accessible in templates
-    
+
     const userDetail = await userModel.findById(req.session.tokenUserId).exec();
+    // If token exist but token information not match any user, guide user to bookstore
+    if(!userDetail){
+        return next();
+    }
+    res.locals.userProfilePicture = userDetail.profilePicture;
     res.locals.userRole = userDetail.role;
     res.locals.tokenUserId = req.session.tokenUserId;
     // Login status to print logout button in user icon
-    res.locals.loginStatus = true;  
+    res.locals.loginStatus = true;
     next();
 })
 
@@ -111,13 +116,18 @@ exports.isAdminOrLibrarian = asyncHandler(async (req, res, next) => {
     try {
         const user = await User.findById(req.session.tokenUserId).exec();
 
-        if (user.role === "Admin" | user.role === "Librarian") {
-            next();
+        if (user) {
+            if (user.role === "Admin" | user.role === "Librarian") {
+                next();
+            } else {
+                res.status(403).render("errorPage", { message: "Access Denied: We're sorry, but you don't have permission to view this page. Please contact the administrator if you believe this is a mistake.", errorStatus: 404 });
+            }
         } else {
-            res.status(403).send({ message: "Restrictive page for Admin or Librarian" });
+            res.status(403).render("errorPage", { message: "Please login to use this feature!", errorStatus: 403 });
         }
+
     } catch (err) {
-        res.status(500).send({ message: err });
+        res.status(500).render("errorPage", { message: err, errorStatus: 500});
         return;
     }
 
