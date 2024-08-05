@@ -49,6 +49,7 @@ async function main() {
     await BookModel.deleteMany({}).exec();
     await UserModel.deleteMany({}).exec();
     await AnnouncementModel.deleteMany({}).exec();
+    await FeedbackModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
@@ -56,6 +57,7 @@ async function main() {
     await createBooks();
     await createUser();
     await createAnnouncement();
+    await createFeedback();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
@@ -599,6 +601,7 @@ async function createFeedback() {
             "Benjamin@gmail.com",
             "999-999-9999",
             "Compliment",
+            "Completed",
             "Good service! highly recommend",
         )
     ]);
