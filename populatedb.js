@@ -47,10 +47,13 @@ async function main() {
     console.log("Debug: Drop document");
     await AuthorModel.deleteMany({}).exec();
     await BookModel.deleteMany({}).exec();
-    console.log("Debug: Save new data to mongoDB");
+    await UserModel.deleteMany({}).exec();
+
     // Save data to mongoDB
+    console.log("Debug: Save new data to mongoDB");
     await createAuthors();
     await createBooks();
+    await createUser();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
@@ -225,7 +228,7 @@ async function renewalRequestCreate(index, createdAt, updatedAt, orderItemId, re
     console.log(`Add Renewal Request: ${index}`);
 }
 
-async function userCreate(index, username, password, name, email, phoneNumber, address, role, verificationStatus, profilePicture, deleteStatus, deleteReason) {
+async function userCreate(index, username, password, name, email, phoneNumber, address, role, verificationStatus, profilePicture, deleteStatus, deleteReason, simplifyId) {
     const userDetail = {
         username: username,
         password: password,
@@ -238,6 +241,7 @@ async function userCreate(index, username, password, name, email, phoneNumber, a
         profilePicture: profilePicture,
         deleteStatus: deleteStatus,
         deleteReason: deleteReason,
+        simplifyId: simplifyId,
     }
 
     const user = new UserModel(userDetail);
@@ -576,7 +580,7 @@ async function createFeedback() {
             "999-999-9999",
             "Bug",
             "Completed",
-            "I can't change my profile picture!!!!",
+            "I can't change my profile picture!",
         ),
         feedbackCreate(
             2,
@@ -826,13 +830,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Pham",
             "chiptune@gmail.com",
-            "999-999-9999",
+            "9999999999",
             "999 Campfire Court Gibsonia, PA 99999",
             "Admin",
             true,
-            "img",
+            "/img/cat-icon.svg",
             false,
-            ""
+            "",
+            "20240005"
         ),
         userCreate(
             1,
@@ -840,13 +845,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Pham",
             "chiptune1@gmail.com",
-            "999-999-9999",
+            "9999999999",
             "9999 Purple Finch Rd. Cranberry Twp, PA 99999",
             "Librarian",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            "20242008",
         ),
         userCreate(
             2,
@@ -854,13 +860,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Pham",
             "chiptune2@gmail.com",
-            "999-999-9999",
+            "9999999999",
             "9999 North Monroe CourtWarren, MI 99999",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            "20240030",
         ),
         userCreate(
             3,
@@ -868,13 +875,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "James",
             "james@gmail.com",
-            "999-999-9999",
+            "1111111111",
             "813 Victoria St. Charlotte, NC 28205",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            "20242675",
         ),
         userCreate(
             4,
@@ -882,13 +890,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Jason",
             "jason@gmail.com",
-            "111-111-1111",
+            "1111111111",
             "137 Westminster Court Wakefield, MA 01880",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            20248796
         ),
         userCreate(
             5,
@@ -896,13 +905,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Liam",
             "liam@gmail.com",
-            "999-999-9999",
+            "2222222222",
             "850 Schoolhouse Street Manchester Township, NJ 08759",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            20240010
         ),
         userCreate(
             6,
@@ -910,13 +920,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Henry",
             "henry@gmail.com",
-            "999-999-9999",
+            "3333333333",
             "40 Brookside Avenue Ottumwa, IA 52501",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            20240011
         ),
         userCreate(
             7,
@@ -924,13 +935,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Noah",
             "noah@gmail.com",
-            "999-999-9999",
+            "3333333333",
             "7141 Bear Hill Ave. Pasadena, MD 21122",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            20240017
         ),
         userCreate(
             8,
@@ -938,13 +950,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "Oliver",
             "oliver@gmail.com",
-            "999-999-9999",
+            "3333333333",
             "7578B Paris Hill Dr. Woodside, NY 11377",
             "User",
             true,
-            "img",
+            "",
             false,
-            ""
+            "",
+            20240018
         ),
         userCreate(
             9,
@@ -952,15 +965,14 @@ async function createUser() {
             "$2a$08$7hkynuYVOaiELCEJz3TYP.7k7XjGaPelW56U6STlfQEz7T0L2s/xa",
             "William",
             "william@gmail.com",
-            "222-222-2222",
+            "3333333333",
             "5 Glenridge Lane Loganville, GA 30052",
             "User",
             true,
-            "img",
+            "",
             true,
-            "Student was graduated"
+            "Graduated Student",
+            20230067
         ),
     ])
-
-
 }
