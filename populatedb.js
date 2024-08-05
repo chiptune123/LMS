@@ -52,6 +52,7 @@ async function main() {
     await FeedbackModel.deleteMany({}).exec();
     await ImportLogModel.deleteMany({}).exec();
     await OrderModel.deleteMany({}).exec();
+    await OrderItemModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
@@ -62,6 +63,7 @@ async function main() {
     await createFeedback();
     await createImportLog();
     await createOrder();
+    await createOrderItem();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
@@ -181,14 +183,14 @@ async function importLogCreate(index, createdAt, updatedAt, managerIdIndex, book
     console.log(`Add Import Log: ${index}`);
 }
 
-async function orderItemCreate(index, orderId, bookId, uniqueBarcode, returnDeadline, penaltyAmount, lendStatus, quantity) {
+async function orderItemCreate(index, orderIdIndex, bookIdIndex, returnDeadline, penaltyAmount, lendStatus, pickupStatus, quantity) {
     const orderItemDetail = {
-        orderId: orderId,
-        bookId: bookId,
-        uniqueBarcode: uniqueBarcode,
+        orderId: orders[orderIdIndex],
+        bookId: books[bookIdIndex],
         returnDeadline: returnDeadline,
         penaltyAmount: penaltyAmount,
         lendStatus: lendStatus,
+        pickupStatus: pickupStatus,
         quantity: quantity,
     }
 
@@ -739,7 +741,8 @@ async function createOrder() {
             "Completed",
             1,
         ),
-        orderCreate(3,
+        orderCreate(
+            3,
             "2024-06-01",
             "2024-06-05",
             7,
@@ -752,7 +755,7 @@ async function createOrder() {
             "2024-06-03",
             8,
             "Completed",
-            null,
+            1,
         ),
     ])
 }
@@ -763,52 +766,52 @@ async function createOrderItem() {
     await Promise.all([
         orderItemCreate(
             0,
-            orders[0],
-            books[0],
-            books[0].uniqueBarcode,
+            0,
+            0,
             "2024-09-01",
             0,
-            "",
+            "Borrowed",
+            "Not Ready",
             1,
         ),
         orderItemCreate(
             1,
-            orders[1],
-            books[1],
-            books[1].uniqueBarcode,
+            1,
+            1,
             "2024-09-01",
             0,
-            "",
+            "Borrowed",
+            "Ready",
             1,
         ),
         orderItemCreate(
             2,
-            orders[2],
-            books[2],
-            books[2].uniqueBarcode,
+            2,
+            2,
             "2024-09-01",
             0,
             "Borrowed",
+            "Completed",
             1
         ),
         orderItemCreate(
             3,
-            orders[3],
-            books[3],
-            books[3].uniqueBarcode,
+            3,
+            3,
             "2024-07-01",
             0,
             "Returned",
+            "Completed",
             1,
         ),
         orderItemCreate(
             4,
-            orders[4],
-            books[4],
-            books[4].uniqueBarcode,
+            4,
+            4,
             "2024-07-01",
             50,
             "Overdue",
+            "Completed",
         ),
     ])
 }
