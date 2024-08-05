@@ -50,6 +50,7 @@ async function main() {
     await UserModel.deleteMany({}).exec();
     await AnnouncementModel.deleteMany({}).exec();
     await FeedbackModel.deleteMany({}).exec();
+    await ImportLogModel.deleteMany({}).exec();
 
     // Save data to mongoDB
     console.log("Debug: Save new data to mongoDB");
@@ -58,6 +59,7 @@ async function main() {
     await createUser();
     await createAnnouncement();
     await createFeedback();
+    await createImportLog();
     //await createGenres();
     //await createBooks();
     //await createBookInstances();
@@ -159,11 +161,11 @@ async function feedbackCreate(index, name, email, phoneNumber, feedbackType, fee
     console.log(`Add feedback: ${index}`);
 }
 
-async function importLogCreate(index, createdAt, updatedAt, managerId, bookId, supplier, quantity) {
+async function importLogCreate(index, createdAt, updatedAt, managerIdIndex, bookId, supplier, quantity) {
     const importLogDetail = {
         createdAt: createdAt,
         updatedAt: updatedAt,
-        managerId: managerId,
+        managerId: users[managerIdIndex],
         bookId: bookId,
         supplier: supplier,
         quantity: quantity,
@@ -615,7 +617,7 @@ async function createImportLog() {
             0,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[0],
             "Pearson",
             10,
@@ -624,7 +626,7 @@ async function createImportLog() {
             1,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[1],
             "Pearson",
             10,
@@ -633,7 +635,7 @@ async function createImportLog() {
             2,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[2],
             "Addison-Wesley Professional",
             10,
@@ -642,7 +644,7 @@ async function createImportLog() {
             3,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[3],
             "Addison-Wesley Professional",
             10,
@@ -651,7 +653,7 @@ async function createImportLog() {
             4,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[4],
             "No Starch Press",
             10
@@ -660,16 +662,16 @@ async function createImportLog() {
             5,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[5],
             "O'Reilly Media",
             10,
         ),
-        importLogCreate(6,
+        importLogCreate(
             6,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[6],
             "Cengage Learning EMEA",
             10,
@@ -678,7 +680,7 @@ async function createImportLog() {
             7,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[7],
             "O'Reilly Media",
             10,
@@ -688,7 +690,7 @@ async function createImportLog() {
             8,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[8],
             "Independently Published",
             10,
@@ -697,7 +699,7 @@ async function createImportLog() {
             9,
             "2024-06-01",
             "2024-06-01",
-            users[0],
+            0,
             books[9],
             "Packt Publishing",
             10,
