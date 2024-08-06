@@ -7,6 +7,7 @@ var cookieSession = require("cookie-session");
 var cors = require("cors");
 require('dotenv').config();
 var authJwt = require("./middlewares/authJwt")
+var config = require("./config/auth.config");
 
 // Import Routers
 var indexRouter = require('./routes/index');
@@ -59,7 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   cookieSession({
     name: "Chiptune-session",
-    keys: ["COOKIE_SECRET"],
+    keys: [config.secret],
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   })
