@@ -45,7 +45,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Libgrow is a designed library management software that aims to simplify and improve library operations for both librarians and user. The Web application prioritizes simplicity and providing librarians with the tools needed to efficiently manage a library
+Libgrow is a designed library management software that aims to simplify and improve library operations for both librarians and user. The web application prioritizes simplicity and providing librarians with the tools needed to efficiently manage a library
 
 Here's why:
 * A user-based design. Allowing librarians to take control their library through dashboard screen and seperate space for user to explore their favorite book
@@ -76,7 +76,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+_Please make sure to setup dotenv and session config before running the application_
 
 1. Clone the repo.
    ```sh
@@ -108,20 +108,28 @@ _Below is an example of how you can instruct your audience on installing and set
 
 * Home Page
 <img src="/public/screenshot/home-page.png" alt="Welcome Page">
+
 * Login
 <img src="/public/screenshot/login-page.png" alt="Announcement Page">
+
 * Book Catalog
 <img src="/public/screenshot/book-page.png" alt="Book Page"> 
+
 * Announcement
 <img src="/public/screenshot/announcement-page.png" alt="Announcement Page">
+
 * Dashboard
 <img src="/public/screenshot/dashboard-page.png" alt="Announcement Page">
+
 * Member Management
 <img src="/public/screenshot/member-management.png" alt="Announcement Page">
+
 * Announcement Management
 <img src="/public/screenshot/announcement-management-page.png" alt="Announcement Page">
+
 * Contact 
 <img src="/public/screenshot/contact-page.png" alt="Announcement Page">
+
 * Signup
 <img src="/public/screenshot/signup-page.png" alt="Announcement Page">
 
