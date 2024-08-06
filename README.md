@@ -60,11 +60,7 @@ Here's why:
 [![Node.js][Nodejs.org]][Nodejs-url] 
 [![Express.js][expressjs.com]][Expressjs-url] 
 [![MongoDB][MongoDB.com]][MongoDB-url] [![Javascript][Developer.mozilla.org/javascript]][Javascript-url]
-
 [![Bootstrap][Bootstrap.com]][Bootstrap-url] [![Chartjs][Chartjs.org]][Chartjs-url]
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -110,31 +106,27 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Home Page
+* Home Page
 <img src="/public/screenshot/home-page.png" alt="Welcome Page">
-Login
+* Login
 <img src="/public/screenshot/login-page.png" alt="Announcement Page">
-Book Catalog
+* Book Catalog
 <img src="/public/screenshot/book-page.png" alt="Book Page"> 
-Announcement
+* Announcement
 <img src="/public/screenshot/announcement-page.png" alt="Announcement Page">
-Dashboard
+* Dashboard
 <img src="/public/screenshot/dashboard-page.png" alt="Announcement Page">
-Member Management
+* Member Management
 <img src="/public/screenshot/member-management.png" alt="Announcement Page">
-Announcement Management
+* Announcement Management
 <img src="/public/screenshot/announcement-management-page.png" alt="Announcement Page">
-Contact 
+* Contact 
 <img src="/public/screenshot/contact-page.png" alt="Announcement Page">
-Signup
+* Signup
 <img src="/public/screenshot/signup-page.png" alt="Announcement Page">
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 * [Font Awesome](https://fontawesome.com)
 * [Bootstrap Icon](https://icons.getbootstrap.com/)
